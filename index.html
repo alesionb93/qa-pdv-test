@@ -11,9 +11,11 @@
     <img src="Eyemobile_Branco_Simples.png" class="logo">
 
     <div class="login-box">
-      <input type="text" placeholder="nome do usuário">
-      <input type="password" placeholder="Senha">
-      <button>ACESSAR</button>
+      <input type="text" id="username" placeholder="nome do usuário">
+      <input type="password" id="password" placeholder="Senha">
+      <button onclick="login()">ACESSAR</button>
+      
+      <p id="error-msg" style="color:red; display:none;">Senha inválida</p>  
     </div>
   </div>
 
