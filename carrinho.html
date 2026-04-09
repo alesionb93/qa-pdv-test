@@ -120,6 +120,14 @@ body {
   bottom: 20px;
   font-weight: bold;
   font-size: 18px;
+  z-index: 2100;
+}
+
+/* TOTAL NO CARRINHO (sempre acima dos botões) */
+.cart-total {
+  font-weight: bold;
+  font-size: 18px;
+  margin-bottom: 10px;
 }
 
 /* SETA */
@@ -127,7 +135,7 @@ body {
   position: fixed;
   left: 50%;
   transform: translateX(-50%);
-  bottom: 50px; /* 🔥 leve subida da posição */
+  bottom: 50px; /* leve subida da posição */
   width: 42px;
   height: 42px;
   background: #eee;
@@ -224,7 +232,8 @@ body {
 .buttons {
   display: flex;
   gap: 10px;
-  padding: 10px;
+  padding: 10px 0;
+  flex-direction: column;
 }
 
 button {
@@ -276,6 +285,8 @@ button {
 
 <div class="cart-overlay" id="cartOverlay">
   <div class="cart" id="cart"></div>
+
+  <div class="cart-total" id="cartTotal">Total: R$ 0</div>
 
   <div class="buttons">
     <button class="btn-clear" onclick="clearCart()">Limpar</button>
@@ -345,6 +356,7 @@ function addProduct(name) {
 function updateUI() {
   const cartDiv = document.getElementById('cart');
   const totalSpan = document.getElementById('total');
+  const cartTotal = document.getElementById('cartTotal');
   cartDiv.innerHTML = '';
   let total = 0;
   document.querySelectorAll('.badge').forEach(b => { b.style.display='none'; b.innerText=''; });
@@ -372,6 +384,8 @@ function updateUI() {
   });
 
   totalSpan.innerText = total;
+  cartTotal.innerText = 'Total: R$ ' + total;
+
   if (total === 0) closeCart();
 }
 
