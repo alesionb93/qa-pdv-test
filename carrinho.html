@@ -54,11 +54,6 @@
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
       display: flex;
       flex-direction: column;
-      transition: transform 0.2s;
-    }
-
-    .product:hover {
-      transform: scale(1.05);
     }
 
     .product-image-box {
@@ -116,9 +111,9 @@
       height: 70px;
       background: white;
       box-shadow: 0 -2px 10px rgba(0,0,0,0.2);
-      transition: height 0.4s ease;
+      transition: height 0.3s ease;
       overflow: hidden;
-      display: flex;
+      display: none;
       flex-direction: column;
       z-index: 2000;
     }
@@ -132,16 +127,13 @@
       justify-content: space-between;
       align-items: center;
       padding: 15px;
-      flex-shrink: 0;
     }
 
-    /* TOTAL DESTACADO */
     .total {
       font-size: 20px;
       font-weight: bold;
     }
 
-    /* SCROLL */
     .cart {
       flex: 1;
       overflow-y: auto;
@@ -180,8 +172,8 @@
     .btn-options {
       background: #9E3667;
       color: white;
-      width: 100%;
-      margin: 10px;
+      width: 95%;
+      margin: 10px auto;
     }
 
     .payment {
@@ -228,3 +220,111 @@
             <img src="D_NQ_NP_877710-MLA99447989168_112025-O.webp" class="product-img">
           </div>
           <div class="product-info">
+            <div class="product-price">R$ ${p[1]}</div>
+            <div class="product-name">${p[0]}</div>
+          </div>
+          <div class="badge" id="badge-${p[0]}"></div>
+        </div>
+      `).join(''));
+    </script>
+
+  </div>
+</div>
+
+<div class="footer" id="footer">
+  <div class="footer-header">
+    <span class="total">Total: R$ <span id="total">0</span></span>
+    <button id="toggleBtn" onclick="toggleCart()">⬆️</button>
+  </div>
+
+  <div class="cart" id="cart"></div>
+
+  <div class="buttons">
+    <button class="btn-clear" onclick="clearCart()">Limpar</button>
+    <button class="btn-add" onclick="closeCart()">Adicionar Item</button>
+  </div>
+
+  <button class="btn-options" onclick="goToPayment()">+ Opções</button>
+</div>
+
+<div class="payment" id="payment">
+  Tela de pagamento (em construção 🚧)
+</div>
+
+<script>
+  let cart = {};
+
+  function addProduct(name, price) {
+    if (!cart[name]) cart[name] = { qty: 0, price };
+    cart[name].qty++;
+    updateUI();
+  }
+
+  function updateUI() {
+    const footer = document.getElementById('footer');
+    const cartDiv = document.getElementById('cart');
+    const totalSpan = document.getElementById('total');
+
+    footer.style.display = 'flex';
+
+    cartDiv.innerHTML = '';
+    let total = 0;
+
+    Object.keys(cart).forEach(name => {
+      const item = cart[name];
+      total += item.qty * item.price;
+
+      const badge = document.getElementById('badge-' + name);
+      if (badge) {
+        badge.style.display = 'flex';
+        badge.innerText = item.qty;
+      }
+
+      const div = document.createElement('div');
+      div.className = 'cart-item';
+      div.innerHTML = `${name} x${item.qty} <button onclick="removeItem('${name}')">🗑️</button>`;
+      cartDiv.appendChild(div);
+    });
+
+    totalSpan.innerText = total;
+  }
+
+  function removeItem(name) {
+    delete cart[name];
+    updateUI();
+  }
+
+  function clearCart() {
+    cart = {};
+    document.getElementById('cart').innerHTML = '';
+    document.getElementById('total').innerText = 0;
+    document.getElementById('footer').style.display = 'none';
+    document.querySelectorAll('.badge').forEach(b => b.style.display = 'none');
+  }
+
+  function toggleCart() {
+    const footer = document.getElementById('footer');
+    const btn = document.getElementById('toggleBtn');
+
+    footer.classList.toggle('open');
+
+    btn.innerText = footer.classList.contains('open') ? '⬇️' : '⬆️';
+  }
+
+  function closeCart() {
+    const footer = document.getElementById('footer');
+    const btn = document.getElementById('toggleBtn');
+
+    footer.classList.remove('open');
+    btn.innerText = '⬆️';
+  }
+
+  function goToPayment() {
+    document.getElementById('main').style.display = 'none';
+    document.getElementById('footer').style.display = 'none';
+    document.getElementById('payment').classList.add('active');
+  }
+</script>
+
+</body>
+</html>
