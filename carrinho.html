@@ -47,21 +47,68 @@
       display: none;
     }
 
-    .products {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 20px;
-    }
+   /* GRID (deixa mais compacto) */
+.products {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr); /* mais colunas = menor */
+  gap: 12px;
+}
 
-    .product {
-      background: white;
-      border-radius: 10px;
-      padding: 15px;
-      text-align: center;
-      cursor: pointer;
-      position: relative;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    }
+/* CARD DO PRODUTO */
+.product {
+  background: white;
+  border-radius: 12px;
+  padding: 8px;
+  cursor: pointer;
+  position: relative;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+
+  width: 140px; /* 👈 controla tamanho real */
+}
+
+/* BLOCO DA IMAGEM */
+.product-image-box {
+  width: 100%;
+  height: 100px;
+  background: white;
+  border-radius: 8px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid #eee;
+}
+
+/* IMAGEM */
+.product-img {
+  max-width: 90%;
+  max-height: 90%;
+  object-fit: contain;
+}
+
+/* BLOCO DO NOME (ROSA) */
+.product-name-box {
+  width: 100%;
+  background: #FFEEF4;
+  border-radius: 8px;
+  margin-top: 6px;
+  padding: 6px;
+
+  border: 1px solid #f3c6d4; /* 👈 deixa a divisão visível */
+}
+
+/* NOME */
+.product-name {
+  font-weight: bold;
+  font-size: 13px;
+}
+
+/* PREÇO */
+.product-price {
+  font-size: 12px;
+  color: #555;
+}
 
     .badge {
       position: absolute;
