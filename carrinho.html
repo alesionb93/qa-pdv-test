@@ -419,7 +419,8 @@ function closeCart() {
 }
 
 function goToPayment() {
-  alert("Pagamento em construção 🚧");
+  localStorage.setItem('cart', JSON.stringify(cart));
+  window.location.href = "pagamento.html";
 }
 </script>
 
