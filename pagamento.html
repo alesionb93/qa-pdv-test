@@ -13,7 +13,7 @@ body {
   height: 100vh;
 }
 
-/* LADO ESQUERDO */
+/* LAYOUT NORMAL */
 .left {
   flex: 2;
   background: white;
@@ -28,15 +28,6 @@ body {
   border-bottom: 1px solid #eee;
 }
 
-.item-name {
-  font-weight: bold;
-}
-
-.item-price {
-  color: #555;
-}
-
-/* LADO DIREITO */
 .right {
   flex: 1;
   background: #fafafa;
@@ -46,44 +37,64 @@ body {
   justify-content: space-between;
 }
 
-/* TOTAL */
 .total {
   font-size: 28px;
   font-weight: bold;
   margin-bottom: 20px;
 }
 
-/* BOTÕES */
 .pay-buttons button {
   width: 100%;
   padding: 15px;
   margin-bottom: 10px;
   border: none;
   border-radius: 8px;
-  font-size: 16px;
   cursor: pointer;
-  transition: 0.2s;
 }
 
 .btn-cash { background: #4caf50; color: white; }
 .btn-card { background: #2196f3; color: white; }
 .btn-pix { background: #9c27b0; color: white; }
 
-/* 🔥 BOTÃO SELECIONADO */
 .selected {
   outline: 3px solid #000;
-  transform: scale(1.03);
 }
 
-/* FINALIZAR */
 .finish {
   background: #9E3667;
   color: white;
   padding: 18px;
-  font-size: 18px;
-  border-radius: 10px;
   border: none;
+  border-radius: 10px;
   cursor: pointer;
+}
+
+/* 🔥 TELA DE PAGAMENTO */
+.card-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #BD407B;
+  color: white;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.card-box {
+  background: rgba(255,255,255,0.2);
+  padding: 20px;
+  border-radius: 12px;
+  margin-top: 20px;
+}
+
+.loading {
+  width: 80px;
+  margin-bottom: 20px;
 }
 </style>
 </head>
@@ -100,7 +111,7 @@ body {
 
     <div class="pay-buttons">
       <button class="btn-cash" onclick="selectPayment('Dinheiro', this)">Dinheiro</button>
-      <button class="btn-card" onclick="selectPayment('Cartão', this)">Cartão</button>
+      <button class="btn-card" onclick="selectPayment('Cartao', this)">Cartão</button>
       <button class="btn-pix" onclick="selectPayment('PIX', this)">PIX</button>
     </div>
   </div>
@@ -108,16 +119,26 @@ body {
   <button class="finish" onclick="finalizar()">Finalizar Venda</button>
 </div>
 
-<script>
-// 🧠 pegar carrinho
-const cart = JSON.parse(localStorage.getItem('cart')) || {};
+<!-- 🔥 TELA CARTÃO -->
+<div class="card-screen" id="cardScreen">
+  <img src="loading.gif" class="loading">
+  <h1 id="cardMessage">APROXIME, INSIRA OU PASSE O CARTÃO</h1>
 
+  <div class="card-box">
+    <p>💳 Cartão</p>
+    <p>Valor: R$ <span id="cardTotal"></span></p>
+    <small>Ambiente de teste (mock)</small>
+  </div>
+</div>
+
+<script>
+const cart = JSON.parse(localStorage.getItem('cart')) || {};
 const itemsDiv = document.getElementById('items');
 const totalSpan = document.getElementById('total');
+const cardTotal = document.getElementById('cardTotal');
 
 let total = 0;
 
-// render itens
 Object.keys(cart).forEach(name => {
   const item = cart[name];
   const itemTotal = item.qty * item.price;
@@ -125,38 +146,73 @@ Object.keys(cart).forEach(name => {
 
   itemsDiv.innerHTML += `
     <div class="item">
-      <div class="item-name">${name} x${item.qty}</div>
-      <div class="item-price">R$ ${itemTotal}</div>
+      <div>${name} x${item.qty}</div>
+      <div>R$ ${itemTotal}</div>
     </div>
   `;
 });
 
 totalSpan.innerText = total;
+cardTotal.innerText = total;
 
-// 💳 seleção de pagamento
+// 💳 seleção
 let paymentMethod = null;
 
 function selectPayment(method, btn) {
   paymentMethod = method;
 
-  // limpa seleção
   document.querySelectorAll('.pay-buttons button').forEach(b => {
     b.classList.remove('selected');
   });
 
-  // aplica no clicado
   btn.classList.add('selected');
 }
 
-// 🚀 finalizar
+// 🚀 FINALIZAR
 function finalizar() {
   if (!paymentMethod) {
     alert("Selecione uma forma de pagamento!");
     return;
   }
 
-  alert("Pagamento via " + paymentMethod + " realizado 🚀");
+  if (paymentMethod === "Cartao") {
+    simularCartao();
+  } else {
+    alert("Pagamento via " + paymentMethod + " realizado");
+    finalizarVenda();
+  }
+}
 
+// 🎬 SIMULAÇÃO
+function simularCartao() {
+  const screen = document.getElementById('cardScreen');
+  const msg = document.getElementById('cardMessage');
+
+  screen.style.display = "flex";
+
+  setTimeout(() => {
+    msg.innerText = "PROCESSANDO...";
+  }, 2000);
+
+  setTimeout(() => {
+    msg.innerText = "DÉBITO NUBANK";
+  }, 4000);
+
+  setTimeout(() => {
+    msg.innerText = "PROCESSANDO...";
+  }, 6000);
+
+  setTimeout(() => {
+    msg.innerText = "TRANSAÇÃO APROVADA ✅";
+  }, 8000);
+
+  setTimeout(() => {
+    finalizarVenda();
+  }, 10000);
+}
+
+// 🔚 FINAL
+function finalizarVenda() {
   localStorage.removeItem('cart');
   window.location.href = "index.html";
 }
