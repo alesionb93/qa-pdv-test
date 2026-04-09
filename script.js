@@ -4,7 +4,7 @@ function login() {
   const errorMsg = document.getElementById("error-msg");
 
   if (username === "candidato" && password === "Candidato.22") {
-    window.location.href = "home.html";
+    window.location.href = "carrinho.html";
   } else {
     errorMsg.style.display = "block";
   }
