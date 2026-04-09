@@ -137,6 +137,7 @@ body {
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  z-index: 4000;
 }
 
 .arrow {
@@ -148,11 +149,11 @@ body {
   transition: 0.3s;
 }
 
-.cart-overlay.open ~ .footer-bar .arrow {
+.toggle-btn.open .arrow {
   transform: rotate(135deg);
 }
 
-/* ===== CARRINHO (OVERLAY) ===== */
+/* ===== CARRINHO OVERLAY ===== */
 .cart-overlay {
   position: fixed;
   bottom: 0;
@@ -228,6 +229,13 @@ body {
   padding: 10px;
 }
 
+button {
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
 .btn-clear {
   background: #ff4d6d;
   color: white;
@@ -244,7 +252,6 @@ body {
   background: #9E3667;
   color: white;
   padding: 15px;
-  border: none;
 }
 
 /* PAYMENT */
@@ -288,7 +295,7 @@ body {
     Total: R$ <span id="total">0</span>
   </div>
 
-  <button class="toggle-btn" onclick="toggleCart()">
+  <button class="toggle-btn" id="toggleBtn" onclick="toggleCart()">
     <div class="arrow"></div>
   </button>
 </div>
@@ -380,6 +387,10 @@ function updateUI() {
   });
 
   totalSpan.innerText = total;
+
+  if (total === 0) {
+    closeCart();
+  }
 }
 
 function removeItem(name) {
@@ -389,17 +400,21 @@ function removeItem(name) {
 
 function clearCart() {
   cart = {};
-  document.getElementById('cart').innerHTML = '';
-  document.getElementById('total').innerText = 0;
+  updateUI();
   document.querySelectorAll('.badge').forEach(b => b.style.display = 'none');
 }
 
 function toggleCart() {
-  document.getElementById('cartOverlay').classList.toggle('open');
+  const overlay = document.getElementById('cartOverlay');
+  const btn = document.getElementById('toggleBtn');
+
+  overlay.classList.toggle('open');
+  btn.classList.toggle('open');
 }
 
 function closeCart() {
   document.getElementById('cartOverlay').classList.remove('open');
+  document.getElementById('toggleBtn').classList.remove('open');
 }
 
 function goToPayment() {
