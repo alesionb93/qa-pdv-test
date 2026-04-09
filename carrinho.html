@@ -101,7 +101,7 @@ body {
   justify-content: center;
 }
 
-/* ===== RODAPÉ FIXO ===== */
+/* RODAPÉ */
 .footer-bar {
   position: fixed;
   bottom: 0;
@@ -113,7 +113,6 @@ body {
   z-index: 2000;
 }
 
-/* TOTAL */
 .total-box {
   position: absolute;
   left: 15px;
@@ -124,10 +123,10 @@ body {
 
 /* SETA */
 .toggle-btn {
-  position: absolute;
+  position: fixed;
   left: 50%;
   transform: translateX(-50%);
-  bottom: 20px;
+  bottom: 25px;
   width: 40px;
   height: 40px;
   background: #eee;
@@ -137,7 +136,7 @@ body {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  z-index: 4000;
+  z-index: 5000; /* 🔥 acima de tudo */
 }
 
 .arrow {
@@ -153,7 +152,7 @@ body {
   transform: rotate(135deg);
 }
 
-/* ===== CARRINHO OVERLAY ===== */
+/* CARRINHO */
 .cart-overlay {
   position: fixed;
   bottom: 0;
@@ -172,7 +171,6 @@ body {
   height: 100vh;
 }
 
-/* CART */
 .cart {
   flex: 1;
   overflow-y: auto;
@@ -208,7 +206,6 @@ body {
   max-height: 100%;
 }
 
-/* INFO */
 .cart-info {
   flex: 1;
 }
@@ -246,7 +243,6 @@ button {
   color: white;
 }
 
-/* OPÇÕES */
 .btn-options {
   width: 100%;
   background: #9E3667;
@@ -277,7 +273,6 @@ button {
   <div class="products" id="products"></div>
 </div>
 
-<!-- CARRINHO -->
 <div class="cart-overlay" id="cartOverlay">
   <div class="cart" id="cart"></div>
 
@@ -289,16 +284,15 @@ button {
   <button class="btn-options" onclick="goToPayment()">+ Opções</button>
 </div>
 
-<!-- RODAPÉ -->
 <div class="footer-bar">
   <div class="total-box">
     Total: R$ <span id="total">0</span>
   </div>
-
-  <button class="toggle-btn" id="toggleBtn" onclick="toggleCart()">
-    <div class="arrow"></div>
-  </button>
 </div>
+
+<button class="toggle-btn" id="toggleBtn" onclick="toggleCart()">
+  <div class="arrow"></div>
+</button>
 
 <div class="payment" id="payment">
   Tela de pagamento 🚧
@@ -359,6 +353,11 @@ function updateUI() {
   cartDiv.innerHTML = '';
   let total = 0;
 
+  document.querySelectorAll('.badge').forEach(b => {
+    b.style.display = 'none';
+    b.innerText = '';
+  });
+
   Object.keys(cart).forEach(name => {
     const item = cart[name];
     const itemTotal = item.qty * item.price;
@@ -401,7 +400,6 @@ function removeItem(name) {
 function clearCart() {
   cart = {};
   updateUI();
-  document.querySelectorAll('.badge').forEach(b => b.style.display = 'none');
 }
 
 function toggleCart() {
