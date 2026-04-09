@@ -33,3 +33,8 @@ function validateForm() {
 function goToCarrinho() {
   window.location.href = "carrinho.html";
 }
+
+function toggleCart() {
+  const footer = document.getElementById('footer');
+  footer.classList.toggle('open');
+}
