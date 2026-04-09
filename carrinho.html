@@ -11,16 +11,13 @@
       background: #f5f5f5;
     }
 
-    /* HEADER */
     .header {
       width: 100%;
       height: 20vh;
       background: #9E3667;
-
       display: flex;
       align-items: center;
       padding-left: 30px;
-
       position: fixed;
       top: 0;
       left: 0;
@@ -33,7 +30,6 @@
       font-size: 32px;
     }
 
-    /* CONTAINER */
     .container {
       max-width: 1200px;
       margin: auto;
@@ -41,32 +37,26 @@
       margin-top: 22vh;
     }
 
-    /* GRID */
+    /* 🔥 6 POR LINHA */
     .products {
       display: grid;
-      grid-template-columns: repeat(5, 1fr);
+      grid-template-columns: repeat(6, 1fr);
       gap: 16px;
     }
 
-    /* CARD */
     .product {
       width: 160px;
       height: 240px;
-
       background: white;
       border-radius: 16px;
       overflow: hidden;
-
       cursor: pointer;
       position: relative;
-
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-
       display: flex;
       flex-direction: column;
     }
 
-    /* IMAGEM */
     .product-image-box {
       height: 140px;
       display: flex;
@@ -81,14 +71,11 @@
       object-fit: contain;
     }
 
-    /* BASE ROSA (AGORA PERFEITA) */
     .product-info {
       background: #FFEEF4;
       padding: 12px;
       text-align: center;
-
-      margin-top: auto; /* 🔥 cola no fundo */
-      border: none; /* 🔥 remove linha */
+      margin-top: auto;
     }
 
     .product-price {
@@ -101,7 +88,6 @@
       color: #333;
     }
 
-    /* BADGE */
     .badge {
       position: absolute;
       top: 8px;
@@ -117,7 +103,6 @@
       font-size: 13px;
     }
 
-    /* FOOTER */
     .footer {
       position: fixed;
       bottom: 0;
@@ -205,45 +190,81 @@
 </div>
 
 <div class="container" id="main">
-
   <div class="products">
 
+    <!-- PRODUTO 1 -->
     <div class="product" onclick="addProduct('Whey Protein', 100)">
-      
       <div class="product-image-box">
         <img src="D_NQ_NP_877710-MLA99447989168_112025-O.webp" class="product-img">
       </div>
-
       <div class="product-info">
         <div class="product-price">R$ 100</div>
         <div class="product-name">Whey Protein</div>
       </div>
-
       <div class="badge" id="badge-Whey Protein"></div>
     </div>
 
+    <!-- PRODUTO 2 -->
+    <div class="product" onclick="addProduct('Creatina', 80)">
+      <div class="product-image-box">
+        <img src="D_NQ_NP_877710-MLA99447989168_112025-O.webp" class="product-img">
+      </div>
+      <div class="product-info">
+        <div class="product-price">R$ 80</div>
+        <div class="product-name">Creatina</div>
+      </div>
+      <div class="badge" id="badge-Creatina"></div>
+    </div>
+
+    <!-- PRODUTO 3 -->
+    <div class="product" onclick="addProduct('Pré Treino', 70)">
+      <div class="product-image-box">
+        <img src="D_NQ_NP_877710-MLA99447989168_112025-O.webp" class="product-img">
+      </div>
+      <div class="product-info">
+        <div class="product-price">R$ 70</div>
+        <div class="product-name">Pré Treino</div>
+      </div>
+      <div class="badge" id="badge-Pré Treino"></div>
+    </div>
+
+    <!-- PRODUTO 4 -->
+    <div class="product" onclick="addProduct('BCAA', 60)">
+      <div class="product-image-box">
+        <img src="D_NQ_NP_877710-MLA99447989168_112025-O.webp" class="product-img">
+      </div>
+      <div class="product-info">
+        <div class="product-price">R$ 60</div>
+        <div class="product-name">BCAA</div>
+      </div>
+      <div class="badge" id="badge-BCAA"></div>
+    </div>
+
+    <!-- PRODUTO 5 -->
+    <div class="product" onclick="addProduct('Albumina', 50)">
+      <div class="product-image-box">
+        <img src="D_NQ_NP_877710-MLA99447989168_112025-O.webp" class="product-img">
+      </div>
+      <div class="product-info">
+        <div class="product-price">R$ 50</div>
+        <div class="product-name">Albumina</div>
+      </div>
+      <div class="badge" id="badge-Albumina"></div>
+    </div>
+
+    <!-- PRODUTO 6 -->
+    <div class="product" onclick="addProduct('Hipercalórico', 120)">
+      <div class="product-image-box">
+        <img src="D_NQ_NP_877710-MLA99447989168_112025-O.webp" class="product-img">
+      </div>
+      <div class="product-info">
+        <div class="product-price">R$ 120</div>
+        <div class="product-name">Hipercalórico</div>
+      </div>
+      <div class="badge" id="badge-Hipercalórico"></div>
+    </div>
+
   </div>
-
-</div>
-
-<div class="footer" id="footer">
-  <div class="footer-header">
-    <span>Total: R$ <span id="total">0</span></span>
-    <button onclick="toggleCart()">⬆️</button>
-  </div>
-
-  <div class="cart" id="cart"></div>
-
-  <div class="buttons">
-    <button class="btn-clear" onclick="clearCart()">Limpar</button>
-    <button class="btn-add" onclick="closeCart()">Adicionar Item</button>
-  </div>
-
-  <button class="btn-options" onclick="goToPayment()">+ Opções</button>
-</div>
-
-<div class="payment" id="payment">
-  Tela de pagamento (em construção 🚧)
 </div>
 
 <script>
@@ -256,57 +277,13 @@
   }
 
   function updateUI() {
-    const footer = document.getElementById('footer');
-    const cartDiv = document.getElementById('cart');
-    const totalSpan = document.getElementById('total');
-
-    footer.classList.add('active');
-
-    cartDiv.innerHTML = '';
-    let total = 0;
-
     Object.keys(cart).forEach(name => {
-      const item = cart[name];
-      total += item.qty * item.price;
-
       const badge = document.getElementById('badge-' + name);
-      badge.style.display = 'flex';
-      badge.innerText = item.qty;
-
-      const div = document.createElement('div');
-      div.className = 'cart-item';
-      div.innerHTML = `${name} x${item.qty} <button onclick="removeItem('${name}')">🗑️</button>`;
-      cartDiv.appendChild(div);
+      if (badge) {
+        badge.style.display = 'flex';
+        badge.innerText = cart[name].qty;
+      }
     });
-
-    totalSpan.innerText = total;
-  }
-
-  function removeItem(name) {
-    delete cart[name];
-    updateUI();
-  }
-
-  function clearCart() {
-    cart = {};
-    document.getElementById('cart').innerHTML = '';
-    document.getElementById('total').innerText = 0;
-    document.getElementById('footer').classList.remove('active');
-    document.querySelectorAll('.badge').forEach(b => b.style.display = 'none');
-  }
-
-  function toggleCart() {
-    document.getElementById('cart').classList.toggle('active');
-  }
-
-  function closeCart() {
-    document.getElementById('cart').classList.remove('active');
-  }
-
-  function goToPayment() {
-    document.getElementById('main').style.display = 'none';
-    document.getElementById('footer').style.display = 'none';
-    document.getElementById('payment').classList.add('active');
   }
 </script>
 
