@@ -62,12 +62,20 @@ body {
   border-radius: 8px;
   font-size: 16px;
   cursor: pointer;
+  transition: 0.2s;
 }
 
 .btn-cash { background: #4caf50; color: white; }
 .btn-card { background: #2196f3; color: white; }
 .btn-pix { background: #9c27b0; color: white; }
 
+/* 🔥 BOTÃO SELECIONADO */
+.selected {
+  outline: 3px solid #000;
+  transform: scale(1.03);
+}
+
+/* FINALIZAR */
 .finish {
   background: #9E3667;
   color: white;
@@ -91,9 +99,9 @@ body {
     </div>
 
     <div class="pay-buttons">
-      <button class="btn-cash">Dinheiro</button>
-      <button class="btn-card">Cartão</button>
-      <button class="btn-pix">PIX</button>
+      <button class="btn-cash" onclick="selectPayment('Dinheiro', this)">Dinheiro</button>
+      <button class="btn-card" onclick="selectPayment('Cartão', this)">Cartão</button>
+      <button class="btn-pix" onclick="selectPayment('PIX', this)">PIX</button>
     </div>
   </div>
 
@@ -101,7 +109,7 @@ body {
 </div>
 
 <script>
-// 🔥 PEGAR DADOS DO CARRINHO
+// 🧠 pegar carrinho
 const cart = JSON.parse(localStorage.getItem('cart')) || {};
 
 const itemsDiv = document.getElementById('items');
@@ -109,6 +117,7 @@ const totalSpan = document.getElementById('total');
 
 let total = 0;
 
+// render itens
 Object.keys(cart).forEach(name => {
   const item = cart[name];
   const itemTotal = item.qty * item.price;
@@ -116,9 +125,7 @@ Object.keys(cart).forEach(name => {
 
   itemsDiv.innerHTML += `
     <div class="item">
-      <div>
-        <div class="item-name">${name} x${item.qty}</div>
-      </div>
+      <div class="item-name">${name} x${item.qty}</div>
       <div class="item-price">R$ ${itemTotal}</div>
     </div>
   `;
@@ -126,9 +133,30 @@ Object.keys(cart).forEach(name => {
 
 totalSpan.innerText = total;
 
-// FINALIZAR
+// 💳 seleção de pagamento
+let paymentMethod = null;
+
+function selectPayment(method, btn) {
+  paymentMethod = method;
+
+  // limpa seleção
+  document.querySelectorAll('.pay-buttons button').forEach(b => {
+    b.classList.remove('selected');
+  });
+
+  // aplica no clicado
+  btn.classList.add('selected');
+}
+
+// 🚀 finalizar
 function finalizar() {
-  alert("Venda finalizada 🚀");
+  if (!paymentMethod) {
+    alert("Selecione uma forma de pagamento!");
+    return;
+  }
+
+  alert("Pagamento via " + paymentMethod + " realizado 🚀");
+
   localStorage.removeItem('cart');
   window.location.href = "index.html";
 }
