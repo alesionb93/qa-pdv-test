@@ -3,197 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <title>PDV Web</title>
-<style>
-  body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    background: #f5f5f5;
-  }
-
-  /* HEADER */
-  .header {
-    width: 100%;
-    height: 20vh;
-    background: #9E3667;
-    display: flex;
-    align-items: center;
-    padding-left: 30px;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 1000;
-  }
-
-  .header h1 {
-    color: white;
-    margin: 0;
-    font-size: 32px;
-  }
-
-  /* CONTAINER */
-  .container {
-    max-width: 1200px;
-    margin: auto;
-    padding: 20px;
-    margin-top: 22vh;
-  }
-
-  /* GRID */
-  .products {
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    gap: 16px;
-  }
-
-  /* CARD */
-  .product {
-    width: 160px;
-    height: 240px;
-    background: white;
-    border-radius: 16px;
-    overflow: hidden;
-    cursor: pointer;
-    position: relative;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    display: flex;
-    flex-direction: column;
-  }
-
-  .product-image-box {
-    height: 140px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 10px;
-  }
-
-  .product-img {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
-  }
-
-  .product-info {
-    background: #FFEEF4;
-    padding: 12px;
-    text-align: center;
-    margin-top: auto;
-  }
-
-  .product-price {
-    font-size: 18px;
-    font-weight: bold;
-  }
-
-  .product-name {
-    font-size: 13px;
-    color: #333;
-  }
-
-  /* BADGE */
-  .badge {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    background: #ff4d6d;
-    color: white;
-    border-radius: 50%;
-    width: 28px;
-    height: 28px;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    font-size: 13px;
-  }
-
-  /* FOOTER (CARRINHO) */
-  .footer {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 70px; /* barra mínima */
-    background: white;
-    box-shadow: 0 -2px 6px rgba(0,0,0,0.1);
-    padding: 15px;
-    display: flex;
-    flex-direction: column;
-    transition: height 0.3s ease;
-    z-index: 1000;
-  }
-
-  .footer.open {
-    top: 0; /* vai até o topo */
-    height: 100vh; /* full screen */
-  }
-
-  .footer-header {
-    flex-shrink: 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .cart {
-    flex: 1; /* ocupa espaço */
-    overflow-y: auto; /* scroll interno */
-    margin-top: 10px;
-    display: none;
-  }
-
-  .footer.open .cart {
-    display: block;
-  }
-
-  .cart-item {
-    display: flex;
-    justify-content: space-between;
-    margin: 5px 0;
-  }
-
-  .buttons {
-    flex-shrink: 0;
-    display: flex;
-    gap: 10px;
-    margin-top: 10px;
-  }
-
-  button {
-    padding: 10px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-  }
-
-  .btn-clear {
-    background: #ff4d6d;
-    color: white;
-  }
-
-  .btn-add {
-    background: #2196f3;
-    color: white;
-  }
-
-  .btn-options {
-    margin-top: 10px;
-    background: #9E3667;
-    color: white;
-    width: 100%;
-    flex-shrink: 0;
-  }
-
-  .payment {
-    display: none;
-    text-align: center;
-    padding: 100px;
-    font-size: 24px;
-  }
-
-  .payment.active {
-    display: block;
-  }
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -235,14 +45,19 @@
   </div>
 </div>
 
+<!-- FOOTER / CARRINHO -->
 <div class="footer" id="footer">
   <div class="footer-header">
     <span>Total: R$ <span id="total">0</span></span>
     <button id="toggleBtn">⬆️</button>
   </div>
 
-  <div class="cart" id="cart"></div>
+  <!-- wrapper scroll -->
+  <div class="cart-wrapper" style="flex:1; display:flex; flex-direction:column;">
+    <div class="cart" id="cart"></div>
+  </div>
 
+  <!-- BOTÕES FIXOS EMBAIXO -->
   <div class="buttons">
     <button class="btn-clear" onclick="clearCart()">Limpar</button>
     <button class="btn-add" onclick="closeCart()">Adicionar Item</button>
@@ -255,71 +70,72 @@
   Tela de pagamento (em construção 🚧)
 </div>
 
+<script src="script.js"></script>
 <script>
-let cart = {};
+  let cart = {};
 
-function addProduct(name, price) {
-  if (!cart[name]) cart[name] = { qty: 0, price };
-  cart[name].qty++;
-  updateUI();
-}
+  function addProduct(name, price) {
+    if (!cart[name]) cart[name] = { qty: 0, price };
+    cart[name].qty++;
+    updateUI();
+  }
 
-function updateUI() {
-  const cartDiv = document.getElementById('cart');
-  const totalSpan = document.getElementById('total');
+  function updateUI() {
+    const cartDiv = document.getElementById('cart');
+    const totalSpan = document.getElementById('total');
 
-  cartDiv.innerHTML = '';
-  let total = 0;
+    cartDiv.innerHTML = '';
+    let total = 0;
 
-  Object.keys(cart).forEach(name => {
-    const item = cart[name];
-    total += item.qty * item.price;
+    Object.keys(cart).forEach(name => {
+      const item = cart[name];
+      total += item.qty * item.price;
 
-    const badge = document.getElementById('badge-' + name);
-    if (badge) {
-      badge.style.display = 'flex';
-      badge.innerText = item.qty;
-    }
+      const badge = document.getElementById('badge-' + name);
+      if (badge) {
+        badge.style.display = 'flex';
+        badge.innerText = item.qty;
+      }
 
-    const div = document.createElement('div');
-    div.className = 'cart-item';
-    div.innerHTML = `${name} x${item.qty} <button onclick="removeItem('${name}')">🗑️</button>`;
-    cartDiv.appendChild(div);
-  });
+      const div = document.createElement('div');
+      div.className = 'cart-item';
+      div.innerHTML = `${name} x${item.qty} <button onclick="removeItem('${name}')">🗑️</button>`;
+      cartDiv.appendChild(div);
+    });
 
-  totalSpan.innerText = total;
-}
+    totalSpan.innerText = total;
+  }
 
-function removeItem(name) {
-  delete cart[name];
-  updateUI();
-}
+  function removeItem(name) {
+    delete cart[name];
+    updateUI();
+  }
 
-function clearCart() {
-  cart = {};
-  document.getElementById('cart').innerHTML = '';
-  document.getElementById('total').innerText = 0;
-  closeCart();
-  document.querySelectorAll('.badge').forEach(b => b.style.display = 'none');
-}
+  function clearCart() {
+    cart = {};
+    document.getElementById('cart').innerHTML = '';
+    document.getElementById('total').innerText = 0;
+    closeCart();
+    document.querySelectorAll('.badge').forEach(b => b.style.display = 'none');
+  }
 
-function toggleCart() {
-  const footer = document.getElementById('footer');
-  footer.classList.toggle('open');
-}
+  function toggleCart() {
+    const footer = document.getElementById('footer');
+    footer.classList.toggle('open');
+  }
 
-function closeCart() {
-  const footer = document.getElementById('footer');
-  footer.classList.remove('open');
-}
+  function closeCart() {
+    const footer = document.getElementById('footer');
+    footer.classList.remove('open');
+  }
 
-document.getElementById('toggleBtn').addEventListener('click', toggleCart);
+  document.getElementById('toggleBtn').addEventListener('click', toggleCart);
 
-function goToPayment() {
-  document.getElementById('main').style.display = 'none';
-  document.getElementById('footer').style.display = 'none';
-  document.getElementById('payment').classList.add('active');
-}
+  function goToPayment() {
+    document.getElementById('main').style.display = 'none';
+    document.getElementById('footer').style.display = 'none';
+    document.getElementById('payment').classList.add('active');
+  }
 </script>
 
 </body>
