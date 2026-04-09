@@ -25,6 +25,11 @@ function validateForm() {
     button.classList.remove("active");
   }
 
-  // 🔥 MELHORIA: esconde erro ao digitar novamente
+  // Esconde erro ao digitar novamente
   errorMsg.style.display = "none";
+}
+
+// 🚀 NOVA FUNÇÃO (ligação com carrinho)
+function goToCarrinho() {
+  window.location.href = "carrinho.html";
 }
