@@ -37,7 +37,6 @@
       margin-top: 22vh;
     }
 
-    /* 🔥 6 POR LINHA */
     .products {
       display: grid;
       grid-template-columns: repeat(6, 1fr);
@@ -102,84 +101,6 @@
       justify-content: center;
       font-size: 13px;
     }
-
-    .footer {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: white;
-      box-shadow: 0 -2px 6px rgba(0,0,0,0.1);
-      padding: 15px;
-      display: none;
-      flex-direction: column;
-    }
-
-    .footer.active {
-      display: flex;
-    }
-
-    .footer-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .cart {
-      margin-top: 10px;
-      display: none;
-    }
-
-    .cart.active {
-      display: block;
-    }
-
-    .cart-item {
-      display: flex;
-      justify-content: space-between;
-      margin: 5px 0;
-    }
-
-    .buttons {
-      display: flex;
-      gap: 10px;
-      margin-top: 10px;
-    }
-
-    button {
-      padding: 10px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-
-    .btn-clear {
-      background: #ff4d6d;
-      color: white;
-    }
-
-    .btn-add {
-      background: #2196f3;
-      color: white;
-    }
-
-    .btn-options {
-      margin-top: 10px;
-      background: #9E3667;
-      color: white;
-      width: 100%;
-    }
-
-    .payment {
-      display: none;
-      text-align: center;
-      padding: 100px;
-      font-size: 24px;
-    }
-
-    .payment.active {
-      display: block;
-    }
   </style>
 </head>
 
@@ -189,10 +110,10 @@
   <h1>Venda de Produtos</h1>
 </div>
 
-<div class="container" id="main">
+<div class="container">
   <div class="products">
 
-    <!-- PRODUTO 1 -->
+    <!-- LINHA 1 -->
     <div class="product" onclick="addProduct('Whey Protein', 100)">
       <div class="product-image-box">
         <img src="D_NQ_NP_877710-MLA99447989168_112025-O.webp" class="product-img">
@@ -204,7 +125,6 @@
       <div class="badge" id="badge-Whey Protein"></div>
     </div>
 
-    <!-- PRODUTO 2 -->
     <div class="product" onclick="addProduct('Creatina', 80)">
       <div class="product-image-box">
         <img src="D_NQ_NP_877710-MLA99447989168_112025-O.webp" class="product-img">
@@ -216,7 +136,6 @@
       <div class="badge" id="badge-Creatina"></div>
     </div>
 
-    <!-- PRODUTO 3 -->
     <div class="product" onclick="addProduct('Pré Treino', 70)">
       <div class="product-image-box">
         <img src="D_NQ_NP_877710-MLA99447989168_112025-O.webp" class="product-img">
@@ -228,7 +147,6 @@
       <div class="badge" id="badge-Pré Treino"></div>
     </div>
 
-    <!-- PRODUTO 4 -->
     <div class="product" onclick="addProduct('BCAA', 60)">
       <div class="product-image-box">
         <img src="D_NQ_NP_877710-MLA99447989168_112025-O.webp" class="product-img">
@@ -240,7 +158,6 @@
       <div class="badge" id="badge-BCAA"></div>
     </div>
 
-    <!-- PRODUTO 5 -->
     <div class="product" onclick="addProduct('Albumina', 50)">
       <div class="product-image-box">
         <img src="D_NQ_NP_877710-MLA99447989168_112025-O.webp" class="product-img">
@@ -252,7 +169,6 @@
       <div class="badge" id="badge-Albumina"></div>
     </div>
 
-    <!-- PRODUTO 6 -->
     <div class="product" onclick="addProduct('Hipercalórico', 120)">
       <div class="product-image-box">
         <img src="D_NQ_NP_877710-MLA99447989168_112025-O.webp" class="product-img">
@@ -264,6 +180,73 @@
       <div class="badge" id="badge-Hipercalórico"></div>
     </div>
 
+    <!-- LINHA 2 -->
+    <div class="product" onclick="addProduct('Barra Proteica', 10)">
+      <div class="product-image-box">
+        <img src="D_NQ_NP_877710-MLA99447989168_112025-O.webp" class="product-img">
+      </div>
+      <div class="product-info">
+        <div class="product-price">R$ 10</div>
+        <div class="product-name">Barra Proteica</div>
+      </div>
+      <div class="badge" id="badge-Barra Proteica"></div>
+    </div>
+
+    <div class="product" onclick="addProduct('Glutamina', 90)">
+      <div class="product-image-box">
+        <img src="D_NQ_NP_877710-MLA99447989168_112025-O.webp" class="product-img">
+      </div>
+      <div class="product-info">
+        <div class="product-price">R$ 90</div>
+        <div class="product-name">Glutamina</div>
+      </div>
+      <div class="badge" id="badge-Glutamina"></div>
+    </div>
+
+    <div class="product" onclick="addProduct('Multivitamínico', 40)">
+      <div class="product-image-box">
+        <img src="D_NQ_NP_877710-MLA99447989168_112025-O.webp" class="product-img">
+      </div>
+      <div class="product-info">
+        <div class="product-price">R$ 40</div>
+        <div class="product-name">Multivitamínico</div>
+      </div>
+      <div class="badge" id="badge-Multivitamínico"></div>
+    </div>
+
+    <div class="product" onclick="addProduct('Cafeína', 30)">
+      <div class="product-image-box">
+        <img src="D_NQ_NP_877710-MLA99447989168_112025-O.webp" class="product-img">
+      </div>
+      <div class="product-info">
+        <div class="product-price">R$ 30</div>
+        <div class="product-name">Cafeína</div>
+      </div>
+      <div class="badge" id="badge-Cafeína"></div>
+    </div>
+
+    <div class="product" onclick="addProduct('Coqueteleira', 25)">
+      <div class="product-image-box">
+        <img src="D_NQ_NP_877710-MLA99447989168_112025-O.webp" class="product-img">
+      </div>
+      <div class="product-info">
+        <div class="product-price">R$ 25</div>
+        <div class="product-name">Coqueteleira</div>
+      </div>
+      <div class="badge" id="badge-Coqueteleira"></div>
+    </div>
+
+    <div class="product" onclick="addProduct('Termogênico', 110)">
+      <div class="product-image-box">
+        <img src="D_NQ_NP_877710-MLA99447989168_112025-O.webp" class="product-img">
+      </div>
+      <div class="product-info">
+        <div class="product-price">R$ 110</div>
+        <div class="product-name">Termogênico</div>
+      </div>
+      <div class="badge" id="badge-Termogênico"></div>
+    </div>
+
   </div>
 </div>
 
@@ -273,17 +256,12 @@
   function addProduct(name, price) {
     if (!cart[name]) cart[name] = { qty: 0, price };
     cart[name].qty++;
-    updateUI();
-  }
 
-  function updateUI() {
-    Object.keys(cart).forEach(name => {
-      const badge = document.getElementById('badge-' + name);
-      if (badge) {
-        badge.style.display = 'flex';
-        badge.innerText = cart[name].qty;
-      }
-    });
+    const badge = document.getElementById('badge-' + name);
+    if (badge) {
+      badge.style.display = 'flex';
+      badge.innerText = cart[name].qty;
+    }
   }
 </script>
 
