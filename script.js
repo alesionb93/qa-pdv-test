@@ -9,3 +9,17 @@ function login() {
     errorMsg.style.display = "block";
   }
 }
+
+function validateForm() {
+  const username = document.getElementById("username").value;
+  const password = document.getElementById("password").value;
+  const button = document.getElementById("login-btn");
+
+  if (username.trim() !== "" && password.trim() !== "") {
+    button.disabled = false;
+    button.classList.add("active");
+  } else {
+    button.disabled = true;
+    button.classList.remove("active");
+  }
+}
