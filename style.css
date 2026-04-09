@@ -3,7 +3,6 @@ body {
   font-family: Arial, sans-serif;
   background-color: #9E3667;
   height: 100vh;
-
   display: flex;
   justify-content: center;
   align-items: center;
@@ -38,7 +37,6 @@ body {
   padding: 10px;
 }
 
-/* BOTÃO PADRÃO (desabilitado) */
 #login-btn {
   width: 100%;
   padding: 12px;
@@ -50,17 +48,16 @@ body {
   transition: all 0.3s ease;
 }
 
-/* BOTÃO ATIVO */
 #login-btn.active {
   background: #9E3667;
   color: #ffffff;
   cursor: pointer;
 }
 
-/* GRID */
+/* GRID DE PRODUTOS */
 .products {
   display: grid;
-  grid-template-columns: repeat(6, 1fr); /* 🔥 já deixei 6 por linha */
+  grid-template-columns: repeat(6, 1fr);
   gap: 16px;
 }
 
@@ -68,16 +65,12 @@ body {
 .product {
   width: 160px;
   height: 240px;
-
   background: white;
   border-radius: 16px;
   overflow: hidden;
-
   cursor: pointer;
   position: relative;
-
   box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-
   display: flex;
   flex-direction: column;
 }
@@ -133,29 +126,26 @@ body {
   font-size: 13px;
 }
 
-/* 🔥 CARRINHO FIXO ESTILO APP */
+/* CARRINHO FIXO FULLSCREEN */
 .footer {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
-
-  height: 80vh; /* 🔥 trava altura */
-  max-height: 80vh;
-
+  top: 0; /* 🔥 vai até o topo */
   background: white;
   box-shadow: 0 -2px 6px rgba(0,0,0,0.1);
-
   padding: 15px;
   display: none;
   flex-direction: column;
 }
 
+/* ATIVO */
 .footer.active {
   display: flex;
 }
 
-/* HEADER DO CARRINHO */
+/* HEADER FIXO DO CARRINHO */
 .footer-header {
   flex-shrink: 0;
   display: flex;
@@ -165,14 +155,9 @@ body {
 
 /* LISTA COM SCROLL */
 .cart {
-  flex: 1;
-  overflow-y: auto;
+  flex: 1; /* ocupa o espaço disponível */
+  overflow-y: auto; /* 🔥 scroll interno */
   margin-top: 10px;
-  display: none;
-}
-
-.cart.active {
-  display: block;
 }
 
 /* ITENS */
@@ -182,7 +167,7 @@ body {
   margin: 5px 0;
 }
 
-/* BOTÕES FIXOS */
+/* BOTÕES FIXOS EMBAIXO */
 .buttons {
   flex-shrink: 0;
   display: flex;
