@@ -102,16 +102,6 @@
       font-size: 13px;
     }
 
-    /* TOTAL FIXO */
-    .fixed-total {
-      position: fixed;
-      bottom: 80px;
-      left: 20px;
-      font-size: 22px;
-      font-weight: bold;
-      z-index: 3000;
-    }
-
     /* FOOTER */
     .footer {
       position: fixed;
@@ -134,8 +124,14 @@
 
     .footer-header {
       display: flex;
-      justify-content: flex-end;
-      padding: 10px;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 15px;
+    }
+
+    .total {
+      font-size: 18px;
+      font-weight: bold;
     }
 
     .cart {
@@ -154,9 +150,21 @@
       border-radius: 10px;
     }
 
-    .cart-item img {
-      width: 50px;
-      height: 50px;
+    /* BOX IGUAL AO PRODUTO */
+    .cart-img-box {
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+      background: #fff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    .cart-img-box img {
+      max-width: 100%;
+      max-height: 100%;
       object-fit: contain;
     }
 
@@ -226,12 +234,9 @@
   <div class="products" id="products"></div>
 </div>
 
-<div class="fixed-total">
-  Total: R$ <span id="total">0</span>
-</div>
-
 <div class="footer" id="footer">
   <div class="footer-header">
+    <span class="total">Total: R$ <span id="total">0</span></span>
     <button id="toggleBtn" onclick="toggleCart()">⬆️</button>
   </div>
 
@@ -256,7 +261,13 @@
     {nome:"Pré Treino", preco:70, img:"D_NQ_NP_877710-MLA99447989168_112025-O.webp"},
     {nome:"BCAA", preco:60, img:"D_NQ_NP_877710-MLA99447989168_112025-O.webp"},
     {nome:"Albumina", preco:50, img:"D_NQ_NP_877710-MLA99447989168_112025-O.webp"},
-    {nome:"Hipercalórico", preco:120, img:"D_NQ_NP_877710-MLA99447989168_112025-O.webp"}
+    {nome:"Hipercalórico", preco:120, img:"D_NQ_NP_877710-MLA99447989168_112025-O.webp"},
+    {nome:"Barra Proteica", preco:10, img:"D_NQ_NP_877710-MLA99447989168_112025-O.webp"},
+    {nome:"Glutamina", preco:90, img:"D_NQ_NP_877710-MLA99447989168_112025-O.webp"},
+    {nome:"Multivitamínico", preco:40, img:"D_NQ_NP_877710-MLA99447989168_112025-O.webp"},
+    {nome:"Cafeína", preco:30, img:"D_NQ_NP_877710-MLA99447989168_112025-O.webp"},
+    {nome:"Coqueteleira", preco:25, img:"D_NQ_NP_877710-MLA99447989168_112025-O.webp"},
+    {nome:"Termogênico", preco:110, img:"D_NQ_NP_877710-MLA99447989168_112025-O.webp"}
   ];
 
   const productsDiv = document.getElementById('products');
@@ -312,7 +323,9 @@
 
       cartDiv.innerHTML += `
         <div class="cart-item">
-          <img src="${item.img}">
+          <div class="cart-img-box">
+            <img src="${item.img}">
+          </div>
           <div class="cart-info">
             <div class="cart-name">${name} x${item.qty}</div>
             <div class="cart-price">R$ ${itemTotal}</div>
