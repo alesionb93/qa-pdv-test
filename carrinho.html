@@ -108,7 +108,7 @@ body {
   bottom: 0;
   left: 0;
   right: 0;
-  height: 70px;
+  height: 90px; /* aumentado pra não cortar seta */
   background: white;
   box-shadow: 0 -2px 10px rgba(0,0,0,0.2);
   transition: height 0.3s ease;
@@ -118,17 +118,8 @@ body {
   z-index: 2000;
 }
 
-/* ABERTO */
 .footer.open {
   height: 100vh;
-}
-
-/* HEADER DO CARRINHO */
-.footer-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 15px;
 }
 
 /* TOTAL */
@@ -164,18 +155,22 @@ body {
   border-radius: 10px;
 }
 
-/* IMAGEM */
+/* BOX IGUAL AO PRODUTO */
 .cart-img-box {
   width: 60px;
   height: 60px;
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 
 .cart-img-box img {
   max-width: 100%;
   max-height: 100%;
+  object-fit: contain;
 }
 
 /* INFO */
@@ -195,10 +190,14 @@ body {
 /* BOTÕES */
 .buttons {
   position: absolute;
-  bottom: 70px;
+  bottom: 80px;
   left: 10px;
-  display: flex;
+  display: none;
   gap: 10px;
+}
+
+.footer.open .buttons {
+  display: flex;
 }
 
 button {
@@ -226,12 +225,17 @@ button {
   background: #9E3667;
   color: white;
   padding: 15px;
+  display: none;
 }
 
-/* BOTÃO SETA */
+.footer.open .btn-options {
+  display: block;
+}
+
+/* SETA */
 .toggle-btn {
   position: absolute;
-  bottom: 50px;
+  bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
   width: 40px;
