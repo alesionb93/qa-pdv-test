@@ -129,20 +129,22 @@ body {
 /* CARRINHO FIXO FULLSCREEN */
 .footer {
   position: fixed;
-  bottom: 0;
+  bottom: 0;  /* sempre grudado no rodapé */
   left: 0;
   right: 0;
-  top: 0; /* 🔥 vai até o topo */
+  height: 60px; /* altura mínima quando fechado */
   background: white;
   box-shadow: 0 -2px 6px rgba(0,0,0,0.1);
-  padding: 15px;
-  display: none;
+  display: flex;
   flex-direction: column;
+  transition: height 0.3s ease;
+  overflow: hidden;
+  z-index: 1000;
 }
 
-/* ATIVO */
-.footer.active {
-  display: flex;
+/* CARRINHO ABERTO (de baixo para cima) */
+.footer.open {
+  height: 100vh; /* ocupa toda a tela */
 }
 
 /* HEADER FIXO DO CARRINHO */
@@ -151,53 +153,29 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding-bottom: 10px;
 }
 
-/* LISTA COM SCROLL */
+/* LISTA COM SCROLL (cresce para cima) */
 .cart {
-  flex: 1; /* ocupa o espaço disponível */
-  overflow-y: auto; /* 🔥 scroll interno */
-  margin-top: 10px;
+  flex: 1; /* ocupa o espaço entre header e botão */
+  overflow-y: auto;
 }
 
-/* ITENS */
-.cart-item {
-  display: flex;
-  justify-content: space-between;
-  margin: 5px 0;
-}
-
-/* BOTÕES FIXOS EMBAIXO */
-.buttons {
+/* BOTÕES FIXOS EMBAIXO (fora do scroll) */
+.buttons, .btn-options {
   flex-shrink: 0;
+}
+.buttons {
   display: flex;
   gap: 10px;
   margin-top: 10px;
 }
-
-button {
-  padding: 10px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.btn-clear {
-  background: #ff4d6d;
-  color: white;
-}
-
-.btn-add {
-  background: #2196f3;
-  color: white;
-}
-
 .btn-options {
+  width: 100%;
   margin-top: 10px;
   background: #9E3667;
   color: white;
-  width: 100%;
-  flex-shrink: 0;
 }
 
 /* PAGAMENTO */
