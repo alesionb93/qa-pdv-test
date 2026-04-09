@@ -101,18 +101,19 @@ body {
   justify-content: center;
 }
 
-/* RODAPÉ */
+/* ===== RODAPÉ ===== */
 .footer-bar {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
-  height: 90px;
+  height: 110px; /* 🔥 aumentado */
   background: white;
   box-shadow: 0 -2px 10px rgba(0,0,0,0.2);
   z-index: 2000;
 }
 
+/* TOTAL */
 .total-box {
   position: absolute;
   left: 15px;
@@ -126,17 +127,17 @@ body {
   position: fixed;
   left: 50%;
   transform: translateX(-50%);
-  bottom: 25px;
-  width: 40px;
-  height: 40px;
+  bottom: 45px; /* 🔥 mais pra cima */
+  width: 42px;
+  height: 42px;
   background: #eee;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  z-index: 5000; /* 🔥 acima de tudo */
+  z-index: 5000;
 }
 
 .arrow {
@@ -152,7 +153,7 @@ body {
   transform: rotate(135deg);
 }
 
-/* CARRINHO */
+/* ===== CARRINHO ===== */
 .cart-overlay {
   position: fixed;
   bottom: 0;
@@ -387,9 +388,7 @@ function updateUI() {
 
   totalSpan.innerText = total;
 
-  if (total === 0) {
-    closeCart();
-  }
+  if (total === 0) closeCart();
 }
 
 function removeItem(name) {
