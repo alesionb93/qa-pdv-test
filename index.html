@@ -11,15 +11,35 @@
     <img src="Eyemobile_Branco_Simples.png" class="logo">
 
     <div class="login-box">
-      <input type="text" id="username" placeholder="nome do usuário">
-      <input type="password" id="password" placeholder="Senha">
-      <button onclick="login()">ACESSAR</button>
+      <input 
+        type="text" 
+        id="username" 
+        placeholder="nome do usuário"
+        oninput="validateForm()"
+      >
+
+      <input 
+        type="password" 
+        id="password" 
+        placeholder="Senha"
+        oninput="validateForm()"
+      >
+
+      <button 
+        id="login-btn" 
+        onclick="login()" 
+        disabled
+      >
+        ACESSAR
+      </button>
       
-      <p id="error-msg" style="color:red; display:none;">Senha inválida</p>  
+      <p id="error-msg" style="color:red; display:none;">
+        Senha inválida
+      </p>  
     </div>
   </div>
 
-<script src="script.js"></script>
-  
+  <script src="script.js"></script>
+
 </body>
 </html>
