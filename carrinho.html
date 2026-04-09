@@ -102,6 +102,16 @@
       font-size: 13px;
     }
 
+    /* TOTAL FIXO */
+    .fixed-total {
+      position: fixed;
+      bottom: 80px;
+      left: 20px;
+      font-size: 22px;
+      font-weight: bold;
+      z-index: 3000;
+    }
+
     /* FOOTER */
     .footer {
       position: fixed;
@@ -124,14 +134,8 @@
 
     .footer-header {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 15px;
-    }
-
-    .total {
-      font-size: 20px;
-      font-weight: bold;
+      justify-content: flex-end;
+      padding: 10px;
     }
 
     .cart {
@@ -142,8 +146,31 @@
 
     .cart-item {
       display: flex;
-      justify-content: space-between;
-      margin: 8px 0;
+      align-items: center;
+      gap: 10px;
+      margin: 10px 0;
+      background: #fff;
+      padding: 10px;
+      border-radius: 10px;
+    }
+
+    .cart-item img {
+      width: 50px;
+      height: 50px;
+      object-fit: contain;
+    }
+
+    .cart-info {
+      flex: 1;
+    }
+
+    .cart-name {
+      font-weight: bold;
+    }
+
+    .cart-price {
+      font-size: 14px;
+      color: #555;
     }
 
     .buttons {
@@ -196,44 +223,15 @@
 </div>
 
 <div class="container" id="main">
-  <div class="products">
+  <div class="products" id="products"></div>
+</div>
 
-    <script>
-      const produtos = [
-        ["Whey Protein",100],
-        ["Creatina",80],
-        ["Pré Treino",70],
-        ["BCAA",60],
-        ["Albumina",50],
-        ["Hipercalórico",120],
-        ["Barra Proteica",10],
-        ["Glutamina",90],
-        ["Multivitamínico",40],
-        ["Cafeína",30],
-        ["Coqueteleira",25],
-        ["Termogênico",110]
-      ];
-
-      document.write(produtos.map(p => `
-        <div class="product" onclick="addProduct('${p[0]}', ${p[1]})">
-          <div class="product-image-box">
-            <img src="D_NQ_NP_877710-MLA99447989168_112025-O.webp" class="product-img">
-          </div>
-          <div class="product-info">
-            <div class="product-price">R$ ${p[1]}</div>
-            <div class="product-name">${p[0]}</div>
-          </div>
-          <div class="badge" id="badge-${p[0]}"></div>
-        </div>
-      `).join(''));
-    </script>
-
-  </div>
+<div class="fixed-total">
+  Total: R$ <span id="total">0</span>
 </div>
 
 <div class="footer" id="footer">
   <div class="footer-header">
-    <span class="total">Total: R$ <span id="total">0</span></span>
     <button id="toggleBtn" onclick="toggleCart()">⬆️</button>
   </div>
 
@@ -252,10 +250,41 @@
 </div>
 
 <script>
+  const produtos = [
+    {nome:"Whey Protein", preco:100, img:"D_NQ_NP_877710-MLA99447989168_112025-O.webp"},
+    {nome:"Creatina", preco:80, img:"D_NQ_NP_877710-MLA99447989168_112025-O.webp"},
+    {nome:"Pré Treino", preco:70, img:"D_NQ_NP_877710-MLA99447989168_112025-O.webp"},
+    {nome:"BCAA", preco:60, img:"D_NQ_NP_877710-MLA99447989168_112025-O.webp"},
+    {nome:"Albumina", preco:50, img:"D_NQ_NP_877710-MLA99447989168_112025-O.webp"},
+    {nome:"Hipercalórico", preco:120, img:"D_NQ_NP_877710-MLA99447989168_112025-O.webp"}
+  ];
+
+  const productsDiv = document.getElementById('products');
+
+  produtos.forEach(p => {
+    productsDiv.innerHTML += `
+      <div class="product" onclick="addProduct('${p.nome}')">
+        <div class="product-image-box">
+          <img src="${p.img}" class="product-img">
+        </div>
+        <div class="product-info">
+          <div class="product-price">R$ ${p.preco}</div>
+          <div class="product-name">${p.nome}</div>
+        </div>
+        <div class="badge" id="badge-${p.nome}"></div>
+      </div>
+    `;
+  });
+
   let cart = {};
 
-  function addProduct(name, price) {
-    if (!cart[name]) cart[name] = { qty: 0, price };
+  function addProduct(name) {
+    const produto = produtos.find(p => p.nome === name);
+
+    if (!cart[name]) {
+      cart[name] = { qty: 0, price: produto.preco, img: produto.img };
+    }
+
     cart[name].qty++;
     updateUI();
   }
@@ -272,7 +301,8 @@
 
     Object.keys(cart).forEach(name => {
       const item = cart[name];
-      total += item.qty * item.price;
+      const itemTotal = item.qty * item.price;
+      total += itemTotal;
 
       const badge = document.getElementById('badge-' + name);
       if (badge) {
@@ -280,10 +310,16 @@
         badge.innerText = item.qty;
       }
 
-      const div = document.createElement('div');
-      div.className = 'cart-item';
-      div.innerHTML = `${name} x${item.qty} <button onclick="removeItem('${name}')">🗑️</button>`;
-      cartDiv.appendChild(div);
+      cartDiv.innerHTML += `
+        <div class="cart-item">
+          <img src="${item.img}">
+          <div class="cart-info">
+            <div class="cart-name">${name} x${item.qty}</div>
+            <div class="cart-price">R$ ${itemTotal}</div>
+          </div>
+          <button onclick="removeItem('${name}')">🗑️</button>
+        </div>
+      `;
     });
 
     totalSpan.innerText = total;
@@ -307,7 +343,6 @@
     const btn = document.getElementById('toggleBtn');
 
     footer.classList.toggle('open');
-
     btn.innerText = footer.classList.contains('open') ? '⬇️' : '⬆️';
   }
 
