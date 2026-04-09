@@ -3,11 +3,39 @@
 <head>
   <meta charset="UTF-8">
   <title>Home</title>
+
+  <style>
+    body {
+      font-family: Arial;
+      text-align: center;
+      margin-top: 100px;
+    }
+
+    button {
+      padding: 12px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      background-color: #ccc;
+      color: white;
+      font-size: 16px;
+    }
+
+    button.active {
+      background-color: #9E3667;
+      color: white;
+    }
+  </style>
 </head>
-<body style="font-family: Arial; text-align:center; margin-top:100px;">
+<body>
 
   <h1>Login com sucesso</h1>
-  <p>Tela em construção...</p>
+  <p>Bem-vindo ao sistema</p>
 
+  <button id="login-btn" class="active" onclick="goToCarrinho()">
+    Acessar PDV
+  </button>
+
+  <script src="script.js"></script>
 </body>
 </html>
