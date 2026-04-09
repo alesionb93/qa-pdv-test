@@ -107,50 +107,18 @@ body {
   bottom: 0;
   left: 0;
   right: 0;
-  height: 110px; /* tamanho aumentado */
+  height: 110px;
   background: white;
   box-shadow: 0 -2px 10px rgba(0,0,0,0.2);
   z-index: 2000;
 }
 
-/* TOTAL */
 .total-box {
   position: absolute;
   left: 15px;
   bottom: 20px;
   font-weight: bold;
   font-size: 18px;
-}
-
-/* SETA */
-.toggle-btn {
-  position: fixed;
-  left: 50%;
-  transform: translateX(-50%);
-  bottom: 50px; /* 🔥 leve subida da posição */
-  width: 42px;
-  height: 42px;
-  background: #eee;
-  border: none;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  z-index: 5000;
-}
-
-.arrow {
-  width: 10px;
-  height: 10px;
-  border-right: 2px solid #333;
-  border-top: 2px solid #333;
-  transform: rotate(-45deg);
-  transition: 0.3s;
-}
-
-.toggle-btn.open .arrow {
-  transform: rotate(135deg);
 }
 
 /* ===== CARRINHO ===== */
@@ -179,15 +147,17 @@ body {
   margin-top: 80px;
 }
 
-/* ITEM */
+/* ITEM (🔥 NOVO VISUAL) */
 .cart-item {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin: 10px 0;
+  margin-bottom: 12px;
   background: #fff;
-  padding: 10px;
-  border-radius: 10px;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
 }
 
 /* IMG BOX */
@@ -199,7 +169,6 @@ body {
   justify-content: center;
   border-radius: 10px;
   background: #fff;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 
 .cart-img-box img {
@@ -218,6 +187,26 @@ body {
 .cart-price {
   font-size: 14px;
   color: #555;
+}
+
+/* 🗑️ BOTÃO */
+.delete-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.delete-btn img {
+  width: 20px;
+  height: 20px;
+}
+
+/* TOTAL DENTRO DO CARRINHO */
+.total-cart {
+  padding: 10px 20px;
+  font-weight: bold;
+  font-size: 18px;
+  border-top: 1px solid #eee;
 }
 
 /* BOTÕES */
@@ -250,17 +239,6 @@ button {
   color: white;
   padding: 15px;
 }
-
-/* PAYMENT */
-.payment {
-  display: none;
-  text-align: center;
-  padding: 100px;
-}
-
-.payment.active {
-  display: block;
-}
 </style>
 </head>
 
@@ -277,12 +255,17 @@ button {
 <div class="cart-overlay" id="cartOverlay">
   <div class="cart" id="cart"></div>
 
+  <!-- 💰 TOTAL AGORA AQUI -->
+  <div class="total-cart">
+    Total: R$ <span id="totalCart">0</span>
+  </div>
+
   <div class="buttons">
     <button class="btn-clear" onclick="clearCart()">Limpar</button>
     <button class="btn-add" onclick="closeCart()">Adicionar Item</button>
   </div>
 
-  <button class="btn-options" onclick="goToPayment()">+ Opções</button>
+  <button class="btn-options">+ Opções</button>
 </div>
 
 <div class="footer-bar">
@@ -291,35 +274,18 @@ button {
   </div>
 </div>
 
-<button class="toggle-btn" id="toggleBtn" onclick="toggleCart()">
-  <div class="arrow"></div>
-</button>
-
-<div class="payment" id="payment">
-  Tela de pagamento 🚧
-</div>
-
 <script>
 const produtos = [
   {nome:"Whey Protein", preco:100, img:"D_NQ_NP_877710-MLA99447989168_112025-O.webp"},
   {nome:"Creatina", preco:80, img:"D_NQ_NP_877710-MLA99447989168_112025-O.webp"},
-  {nome:"Pré Treino", preco:70, img:"D_NQ_NP_877710-MLA99447989168_112025-O.webp"},
-  {nome:"BCAA", preco:60, img:"D_NQ_NP_877710-MLA99447989168_112025-O.webp"},
-  {nome:"Albumina", preco:50, img:"D_NQ_NP_877710-MLA99447989168_112025-O.webp"},
-  {nome:"Hipercalórico", preco:120, img:"D_NQ_NP_877710-MLA99447989168_112025-O.webp"},
-  {nome:"Barra Proteica", preco:10, img:"D_NQ_NP_877710-MLA99447989168_112025-O.webp"},
-  {nome:"Glutamina", preco:90, img:"D_NQ_NP_877710-MLA99447989168_112025-O.webp"},
-  {nome:"Multivitamínico", preco:40, img:"D_NQ_NP_877710-MLA99447989168_112025-O.webp"},
-  {nome:"Cafeína", preco:30, img:"D_NQ_NP_877710-MLA99447989168_112025-O.webp"},
-  {nome:"Coqueteleira", preco:25, img:"D_NQ_NP_877710-MLA99447989168_112025-O.webp"},
-  {nome:"Termogênico", preco:110, img:"D_NQ_NP_877710-MLA99447989168_112025-O.webp"}
+  {nome:"Pré Treino", preco:70, img:"D_NQ_NP_877710-MLA99447989168_112025-O.webp"}
 ];
 
 const productsDiv = document.getElementById('products');
 
+let html = '';
 produtos.forEach(p => {
-  const idSafe = p.nome.replace(/\s/g, '-');
-  productsDiv.innerHTML += `
+  html += `
     <div class="product" onclick="addProduct('${p.nome}')">
       <div class="product-image-box">
         <img src="${p.img}" class="product-img">
@@ -328,10 +294,10 @@ produtos.forEach(p => {
         <div class="product-price">R$ ${p.preco}</div>
         <div class="product-name">${p.nome}</div>
       </div>
-      <div class="badge" id="badge-${idSafe}"></div>
     </div>
   `;
 });
+productsDiv.innerHTML = html;
 
 let cart = {};
 
@@ -345,17 +311,15 @@ function addProduct(name) {
 function updateUI() {
   const cartDiv = document.getElementById('cart');
   const totalSpan = document.getElementById('total');
+  const totalCart = document.getElementById('totalCart');
+
   cartDiv.innerHTML = '';
   let total = 0;
-  document.querySelectorAll('.badge').forEach(b => { b.style.display='none'; b.innerText=''; });
 
   Object.keys(cart).forEach(name => {
     const item = cart[name];
     const itemTotal = item.qty * item.price;
     total += itemTotal;
-    const idSafe = name.replace(/\s/g, '-');
-    const badge = document.getElementById('badge-' + idSafe);
-    if (badge) { badge.style.display='flex'; badge.innerText = item.qty; }
 
     cartDiv.innerHTML += `
       <div class="cart-item">
@@ -366,35 +330,25 @@ function updateUI() {
           <div class="cart-name">${name} x${item.qty}</div>
           <div class="cart-price">R$ ${itemTotal}</div>
         </div>
-        <button onclick="removeItem('${name}')">🗑️</button>
+        <button class="delete-btn" onclick="removeItem('${name}'); event.stopPropagation();">
+          <img src="lixeira.ico">
+        </button>
       </div>
     `;
   });
 
   totalSpan.innerText = total;
-  if (total === 0) closeCart();
+  totalCart.innerText = total;
 }
 
-function removeItem(name) { delete cart[name]; updateUI(); }
-
-function clearCart() { cart={}; updateUI(); }
-
-function toggleCart() {
-  const overlay = document.getElementById('cartOverlay');
-  const btn = document.getElementById('toggleBtn');
-  overlay.classList.toggle('open');
-  btn.classList.toggle('open');
+function removeItem(name) {
+  delete cart[name];
+  updateUI();
 }
 
-function closeCart() {
-  document.getElementById('cartOverlay').classList.remove('open');
-  document.getElementById('toggleBtn').classList.remove('open');
-}
-
-function goToPayment() {
-  document.getElementById('main').style.display = 'none';
-  document.getElementById('cartOverlay').style.display = 'none';
-  document.getElementById('payment').classList.add('active');
+function clearCart() {
+  cart = {};
+  updateUI();
 }
 </script>
 
