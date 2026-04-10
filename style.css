@@ -14,17 +14,24 @@ body {
   align-items: center;
   justify-content: center;
   gap: 40px;
+  padding: 20px;
+  width: 100%;
+  max-width: 400px;
+  box-sizing: border-box;
 }
 
 .logo {
   width: 280px;
+  max-width: 80vw;
 }
 
 .login-box {
   background: #e5e5e5;
-  width: 320px;
+  width: 100%;
+  max-width: 320px;
   padding: 30px;
   border-radius: 30px;
+  box-sizing: border-box;
 }
 
 .login-box input {
@@ -35,6 +42,8 @@ body {
   border-bottom: 1px solid #999;
   background: transparent;
   padding: 10px;
+  box-sizing: border-box;
+  font-size: 16px;
 }
 
 #login-btn {
@@ -46,6 +55,7 @@ body {
   cursor: not-allowed;
   border-radius: 10px;
   transition: all 0.3s ease;
+  font-size: 16px;
 }
 
 #login-btn.active {
@@ -57,14 +67,14 @@ body {
 /* GRID DE PRODUTOS */
 .products {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
   gap: 16px;
 }
 
 /* CARD */
 .product {
-  width: 160px;
-  height: 240px;
+  width: 100%;
+  min-height: 200px;
   background: white;
   border-radius: 16px;
   overflow: hidden;
@@ -132,7 +142,7 @@ body {
   bottom: 0;
   left: 0;
   right: 0;
-  height: 60px; /* altura mínima */
+  height: 60px;
   background: white;
   box-shadow: 0 -2px 6px rgba(0,0,0,0.1);
   display: flex;
@@ -142,10 +152,10 @@ body {
   z-index: 1000;
 }
 
-/* CARRINHO ABERTO (cresce de baixo para cima) */
+/* CARRINHO ABERTO */
 .footer.open {
   height: 100vh;
-  bottom: 0;  /* mantém no rodapé */
+  bottom: 0;
 }
 
 /* HEADER DO CARRINHO */
@@ -190,4 +200,17 @@ body {
 
 .payment.active {
   display: block;
+}
+
+/* MEDIA QUERIES */
+@media (max-width: 480px) {
+  .container {
+    gap: 25px;
+  }
+  .logo {
+    width: 200px;
+  }
+  .login-box {
+    padding: 20px;
+  }
 }
