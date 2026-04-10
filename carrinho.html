@@ -18,7 +18,7 @@ body {
   background: #9E3667;
   display: flex;
   align-items: center;
-  padding-left: 30px;
+  padding-left: 60px;
   position: fixed;
   top: 0;
   left: 0;
@@ -27,6 +27,62 @@ body {
 
 .header h1 {
   color: white;
+}
+
+/* 🍔 BOTÃO */
+.menu-btn {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  font-size: 26px;
+  color: white;
+  cursor: pointer;
+  z-index: 5001;
+}
+
+/* MENU LATERAL */
+.side-menu {
+  position: fixed;
+  top: 20vh;
+  left: -250px;
+  width: 20%;
+  height: calc(100vh - 20vh);
+  background: white;
+  box-shadow: 2px 0 10px rgba(0,0,0,0.2);
+  transition: 0.3s;
+  z-index: 4000;
+  display: flex;
+  flex-direction: column;
+}
+
+.side-menu.open {
+  left: 0;
+}
+
+.menu-item {
+  padding: 20px;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+}
+
+.menu-item:hover {
+  background: #f5f5f5;
+}
+
+/* OVERLAY */
+.menu-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.4);
+  display: none;
+  z-index: 3000;
+}
+
+.menu-overlay.show {
+  display: block;
 }
 
 /* CONTAINER */
@@ -178,7 +234,6 @@ body {
   margin-top: 80px;
 }
 
-/* ITEM (🔥 melhorado) */
 .cart-item {
   display: flex;
   align-items: center;
@@ -190,7 +245,6 @@ body {
   border: 1px solid #ddd;
 }
 
-/* IMG BOX */
 .cart-img-box {
   width: 60px;
   height: 60px;
@@ -217,7 +271,6 @@ body {
   color: #555;
 }
 
-/* 🗑️ botão */
 .delete-btn {
   background: none;
   border: none;
@@ -229,7 +282,6 @@ body {
   height: 20px;
 }
 
-/* 💰 TOTAL DENTRO DO CARRINHO */
 .total-cart {
   padding: 15px;
   font-weight: bold;
@@ -237,7 +289,6 @@ body {
   border-top: 1px solid #eee;
 }
 
-/* BOTÕES */
 .buttons {
   display: flex;
   gap: 10px;
@@ -272,6 +323,17 @@ button {
 
 <body>
 
+<!-- 🍔 BOTÃO -->
+<div class="menu-btn" onclick="toggleMenu()">☰</div>
+
+<!-- MENU -->
+<div class="side-menu" id="sideMenu">
+  <div class="menu-item" onclick="goHome()">Início</div>
+  <div class="menu-item" onclick="logout()">Sair</div>
+</div>
+
+<div class="menu-overlay" id="menuOverlay" onclick="toggleMenu()"></div>
+
 <div class="header">
   <h1>Venda de Produtos</h1>
 </div>
@@ -283,7 +345,6 @@ button {
 <div class="cart-overlay" id="cartOverlay">
   <div class="cart" id="cart"></div>
 
-  <!-- 💰 NOVO TOTAL -->
   <div class="total-cart">
     Total: R$ <span id="totalCart">0</span>
   </div>
@@ -307,6 +368,22 @@ button {
 </button>
 
 <script>
+// MENU
+function toggleMenu() {
+  document.getElementById('sideMenu').classList.toggle('open');
+  document.getElementById('menuOverlay').classList.toggle('show');
+}
+
+function goHome() {
+  closeCart();
+  toggleMenu();
+}
+
+function logout() {
+  window.location.href = "login.html";
+}
+
+// PRODUTOS
 const produtos = [
   {nome:"Whey Protein", preco:100, img:"D_NQ_NP_877710-MLA99447989168_112025-O.webp"},
   {nome:"Creatina", preco:80, img:"creatina-250g-creapure-growth-supplements-1.jpg"},
