@@ -103,7 +103,7 @@ body {
 .btn-red { background: #e74c3c; }
 .btn-green { background: #2ecc71; }
 
-/* Modais de Erro e Login */
+/* Modais de Erro */
 #errorModal, #loginModal, #erroLoginModal {
   position: fixed; inset: 0; background: rgba(0,0,0,0.6);
   display: none; align-items: center; justify-content: center;
@@ -114,30 +114,15 @@ body {
   padding: 25px 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
 }
 
-/* Login - Layout corrigido */
-#loginModal .modal-box {
-  padding: 25px 20px;
-}
+/* Login */
 #loginModal input {
-  width: 100%; 
-  padding: 12px; 
-  margin: 8px 0 15px 0;
-  border: 1px solid #ddd; 
-  border-radius: 8px; 
-  font-size: 16px;
-  box-sizing: border-box;
+  width: 100%; padding: 12px; margin: 8px 0 15px 0;
+  border: 1px solid #ddd; border-radius: 8px; font-size: 16px;
 }
 #loginModal button {
-  width: 100%; 
-  padding: 14px; 
-  background: #9E3667;
-  color: white; 
-  border: none; 
-  border-radius: 12px;
-  font-size: 16px; 
-  font-weight: bold; 
-  cursor: pointer;
-  margin-top: 10px;
+  width: 100%; padding: 14px; background: #9E3667;
+  color: white; border: none; border-radius: 12px;
+  font-size: 16px; font-weight: bold; cursor: pointer;
 }
 </style>
 </head>
@@ -231,14 +216,32 @@ body {
   </div>
 </div>
 
-<!-- Modal Limite 10% -->
+<!-- Modal Erro Inválido (0 ou >= total) - Apenas EYE WEB + OK -->
+<div id="erroInvalidoModal">
+  <div class="modal-box">
+    <div style="font-size:18px; font-weight:bold; margin-bottom:15px;">EYE WEB</div>
+    <div style="font-size:15px; color:#666; margin-bottom:25px;">Valor inválido para o desconto</div>
+    <button onclick="fecharErroInvalido()" 
+            style="background:#9E3667; color:white; padding:12px 40px; border:none; border-radius:12px; font-weight:bold;">
+      OK
+    </button>
+  </div>
+</div>
+
+<!-- Modal Limite Superior (>10%) - Com Autorizar -->
 <div id="errorModal">
   <div class="modal-box">
     <div id="errorTitle" style="font-size:18px; font-weight:bold; margin-bottom:15px;">AUTORIZAR</div>
     <div id="errorMessage" style="font-size:15px; color:#666; margin-bottom:25px; line-height:1.5;"></div>
     <div style="display:flex; gap:12px; justify-content:center;">
-      <button onclick="abrirModalLogin()" style="background:#e74c3c; color:white; padding:12px 30px; border:none; border-radius:12px; font-weight:bold;">Autorizar</button>
-      <button onclick="fecharErroERetornar()" style="background:#9E3667; color:white; padding:12px 30px; border:none; border-radius:12px; font-weight:bold;">OK</button>
+      <button onclick="abrirModalLogin()" 
+              style="background:#e74c3c; color:white; padding:12px 30px; border:none; border-radius:12px; font-weight:bold;">
+        Autorizar
+      </button>
+      <button onclick="fecharErroERetornar()" 
+              style="background:#9E3667; color:white; padding:12px 30px; border:none; border-radius:12px; font-weight:bold;">
+        OK
+      </button>
     </div>
   </div>
 </div>
@@ -265,7 +268,10 @@ body {
   <div class="modal-box">
     <div style="font-size:18px; font-weight:bold; color:#333; margin-bottom:10px;">EYE PRO</div>
     <div style="font-size:15px; color:#666; margin-bottom:25px;">Usuário/senha incorreto</div>
-    <button onclick="fecharErroLogin()" style="background:#9E3667; color:white; padding:12px 40px; border:none; border-radius:12px; font-weight:bold;">OK</button>
+    <button onclick="fecharErroLogin()" 
+            style="background:#9E3667; color:white; padding:12px 40px; border:none; border-radius:12px; font-weight:bold;">
+      OK
+    </button>
   </div>
 </div>
 
@@ -403,13 +409,13 @@ function validarEDescontar(){
 
   if (tipo === "percent") {
     if (valorDigitado <= 0 || valorDigitado >= 100) {
-      mostrarModalErro("Valor inválido para o desconto");
+      mostrarModalErroInvalido();
       return;
     }
     if (valorDigitado > LIMITE_PERCENTUAL) {
       descontoPendente = valorDigitado;
       tipoPendente = "percent";
-      mostrarModalLimite(`Não é possivel adicionar o desconto.<br>O limite de desconto é de ${LIMITE_PERCENTUAL}%`);
+      mostrarModalLimiteSuperior(`Não é possivel adicionar o desconto.<br>O limite de desconto é de ${LIMITE_PERCENTUAL}%`);
       return;
     }
     desconto = valorDigitado;
@@ -419,13 +425,13 @@ function validarEDescontar(){
     const limiteEmReais = base * (LIMITE_PERCENTUAL / 100);
 
     if (valorDesconto <= 0 || valorDesconto >= base) {
-      mostrarModalErro("Valor inválido para o desconto");
+      mostrarModalErroInvalido();
       return;
     }
     if (valorDesconto > limiteEmReais) {
       descontoPendente = valorDesconto;
       tipoPendente = "valor";
-      mostrarModalLimite(`Não é possivel adicionar o desconto.<br>O limite de desconto é de R$ ${limiteEmReais.toFixed(2)}`);
+      mostrarModalLimiteSuperior(`Não é possivel adicionar o desconto.<br>O limite de desconto é de R$ ${limiteEmReais.toFixed(2)}`);
       return;
     }
     desconto = valorDesconto;
@@ -436,16 +442,17 @@ function validarEDescontar(){
   atualizarBotaoDesconto();
 }
 
-/* Modal Erro Simples (0 ou >= total) - Apenas EYE WEB + OK */
-function mostrarModalErro(mensagem) {
-  document.getElementById('errorTitle').innerText = "EYE WEB";
-  document.getElementById('errorMessage').innerHTML = mensagem;
-  document.getElementById('errorModal').style.display = "flex";
+/* Modal Erro Inválido - Apenas EYE WEB + OK */
+function mostrarModalErroInvalido() {
+  document.getElementById('erroInvalidoModal').style.display = "flex";
 }
 
-/* Modal Limite 10% - Com botão Autorizar */
-function mostrarModalLimite(mensagem) {
-  document.getElementById('errorTitle').innerText = "AUTORIZAR";
+function fecharErroInvalido() {
+  document.getElementById('erroInvalidoModal').style.display = "none";
+}
+
+/* Modal Limite Superior (>10%) */
+function mostrarModalLimiteSuperior(mensagem) {
   document.getElementById('errorMessage').innerHTML = mensagem;
   document.getElementById('errorModal').style.display = "flex";
 }
@@ -465,7 +472,7 @@ function tentarLogin() {
     desconto = descontoPendente;
     tipo = tipoPendente;
     document.getElementById('loginModal').style.display = "none";
-    fecharModal();                    // Fecha o teclado numérico
+    fecharModal();                    // Fecha o teclado
     atualizarTotais();
     atualizarBotaoDesconto();
     descontoPendente = null;
