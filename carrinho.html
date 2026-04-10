@@ -31,13 +31,14 @@ body {
   margin: 0;
 }
 
-/* MENU */
+/* 🍔 BOTÃO */
 .menu-btn {
   font-size: 26px;
   color: white;
   cursor: pointer;
 }
 
+/* MENU LATERAL */
 .side-menu {
   position: fixed;
   top: 20vh;
@@ -52,12 +53,18 @@ body {
   flex-direction: column;
 }
 
-.side-menu.open { left: 0; }
+.side-menu.open {
+  left: 0;
+}
 
 .menu-item {
   padding: 20px;
   border-bottom: 1px solid #eee;
   cursor: pointer;
+}
+
+.menu-item:hover {
+  background: #f5f5f5;
 }
 
 /* OVERLAY MENU */
@@ -67,12 +74,14 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  display: none;
   background: rgba(0,0,0,0.4);
+  display: none;
   z-index: 3000;
 }
 
-.menu-overlay.show { display: block; }
+.menu-overlay.show {
+  display: block;
+}
 
 /* CONTAINER */
 .container {
@@ -82,7 +91,7 @@ body {
   margin-top: 22vh;
 }
 
-/* GRID (SEU ORIGINAL RESTAURADO) */
+/* GRID */
 .products {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
@@ -123,67 +132,27 @@ body {
   margin-top: auto;
 }
 
-/* CART */
-.cart-overlay {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 0;
-  background: white;
-  overflow: hidden;
-  transition: 0.3s;
-  z-index: 3000;
-  display: flex;
-  flex-direction: column;
+.product-price {
+  font-weight: bold;
 }
 
-.cart-overlay.open { height: 100vh; }
-
-.cart {
-  flex: 1;
-  overflow-y: auto;
-  padding: 20px;
-  margin-top: 80px;
+.product-name {
+  font-size: 13px;
 }
 
-.cart-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px;
-  border-bottom: 1px solid #eee;
-}
-
-/* BUTTONS */
-.buttons {
-  display: flex;
-  gap: 10px;
-  padding: 10px;
-}
-
-.btn-clear {
+/* BADGE */
+.badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
   background: #ff4d6d;
   color: white;
-  border: none;
-  padding: 10px;
-  border-radius: 6px;
-}
-
-.btn-add {
-  background: #2196f3;
-  color: white;
-  border: none;
-  padding: 10px;
-  border-radius: 6px;
-}
-
-.btn-options {
-  width: 100%;
-  background: #9E3667;
-  color: white;
-  padding: 15px;
-  border: none;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: none;
+  align-items: center;
+  justify-content: center;
 }
 
 /* FOOTER */
@@ -206,7 +175,7 @@ body {
   font-size: 18px;
 }
 
-/* TOGGLE */
+/* SETA */
 .toggle-btn {
   position: fixed;
   left: 50%;
@@ -224,7 +193,132 @@ body {
   z-index: 5000;
 }
 
-/* ===== MODAIS ===== */
+.arrow {
+  width: 10px;
+  height: 10px;
+  border-right: 2px solid #333;
+  border-top: 2px solid #333;
+  transform: rotate(-45deg);
+  transition: 0.3s;
+}
+
+.toggle-btn.open .arrow {
+  transform: rotate(135deg);
+}
+
+/* CARRINHO */
+.cart-overlay {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 0;
+  background: white;
+  overflow: hidden;
+  transition: 0.3s;
+  z-index: 3000;
+  display: flex;
+  flex-direction: column;
+}
+
+.cart-overlay.open {
+  height: 100vh;
+}
+
+.cart {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  margin-top: 80px;
+}
+
+.cart-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 10px 0;
+  background: #fff;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+}
+
+.cart-img-box {
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cart-img-box img {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.cart-info {
+  flex: 1;
+}
+
+.cart-name {
+  font-weight: bold;
+}
+
+.cart-price {
+  font-size: 14px;
+  color: #555;
+}
+
+.delete-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.delete-btn img {
+  width: 20px;
+  height: 20px;
+}
+
+.total-cart {
+  padding: 15px;
+  font-weight: bold;
+  font-size: 18px;
+  border-top: 1px solid #eee;
+}
+
+.buttons {
+  display: flex;
+  gap: 10px;
+  padding: 10px;
+}
+
+button {
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-clear {
+  background: #ff4d6d;
+  color: white;
+}
+
+.btn-add {
+  background: #2196f3;
+  color: white;
+}
+
+.btn-options {
+  width: 100%;
+  background: #9E3667;
+  color: white;
+  padding: 15px;
+}
+
+/* ================= MODAIS ================= */
+
 .modal {
   position: fixed;
   top: 0;
@@ -238,32 +332,28 @@ body {
   z-index: 9999;
 }
 
-.modal-content {
+.modal-box {
   background: white;
   padding: 25px;
   border-radius: 12px;
   text-align: center;
-  width: 320px;
+  width: 300px;
 }
 
 .modal-buttons {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
+  gap: 10px;
   margin-top: 20px;
 }
 
-.btn-no {
-  background: #ccc;
-  border: none;
-  padding: 10px;
-  border-radius: 6px;
+.btn-yes {
+  background: #4caf50;
+  color: white;
 }
 
-.btn-yes {
-  background: #2ecc71;
-  border: none;
-  padding: 10px;
-  border-radius: 6px;
+.btn-no {
+  background: #e53935;
   color: white;
 }
 </style>
@@ -277,25 +367,29 @@ body {
 </div>
 
 <div class="side-menu" id="sideMenu">
+  <div class="menu-item" onclick="goHome()">Início</div>
   <div class="menu-item" onclick="logout()">Sair</div>
 </div>
 
 <div class="menu-overlay" id="menuOverlay" onclick="toggleMenu()"></div>
 
-<div class="container">
+<div class="container" id="main">
   <div class="products" id="products"></div>
 </div>
 
-<!-- CART -->
 <div class="cart-overlay" id="cartOverlay">
   <div class="cart" id="cart"></div>
 
-  <div class="buttons">
-    <button class="btn-clear" onclick="openCancelAll()">Limpar</button>
-    <button class="btn-add" onclick="closeCart()">Continuar</button>
+  <div class="total-cart">
+    Total: R$ <span id="totalCart">0</span>
   </div>
 
-  <button class="btn-options">+ Opções</button>
+  <div class="buttons">
+    <button class="btn-clear" onclick="openClearModal()">Limpar</button>
+    <button class="btn-add" onclick="closeCart()">Adicionar Item</button>
+  </div>
+
+  <button class="btn-options" onclick="goToPayment()">+ Opções</button>
 </div>
 
 <div class="footer-bar">
@@ -304,145 +398,196 @@ body {
   </div>
 </div>
 
-<button class="toggle-btn" onclick="toggleCart()">⬆</button>
+<button class="toggle-btn" id="toggleBtn" onclick="toggleCart()">
+  <div class="arrow"></div>
+</button>
 
 <!-- MODAL ITEM -->
-<div class="modal" id="modalItem">
-  <div class="modal-content">
+<div class="modal" id="itemModal">
+  <div class="modal-box">
     <h3>Você deseja remover este item?</h3>
     <div class="modal-buttons">
-      <button class="btn-no" onclick="closeModal('modalItem')">Não</button>
-      <button class="btn-yes" onclick="confirmRemoveItem()">Sim</button>
+      <button class="btn-no" onclick="closeModal()">NÃO</button>
+      <button class="btn-yes" onclick="confirmRemove()">SIM</button>
     </div>
   </div>
 </div>
 
-<!-- MODAL CANCEL -->
-<div class="modal" id="modalCancel">
-  <div class="modal-content">
+<!-- MODAL CANCELAMENTO -->
+<div class="modal" id="clearModal">
+  <div class="modal-box">
     <h3>Cancelar transação</h3>
     <p>Você deseja realmente cancelar esta transação?</p>
     <div class="modal-buttons">
-      <button class="btn-no" onclick="closeModal('modalCancel')">Não</button>
-      <button class="btn-yes" onclick="confirmCancel()">Sim</button>
+      <button class="btn-no" onclick="closeModal()">NÃO</button>
+      <button class="btn-yes" onclick="confirmClear()">SIM</button>
     </div>
   </div>
 </div>
 
 <script>
+
+let cart = {};
+let itemToRemove = null;
+
+// MENU
+function toggleMenu() {
+  document.getElementById('sideMenu').classList.toggle('open');
+  document.getElementById('menuOverlay').classList.toggle('show');
+}
+
+function logout() {
+  localStorage.clear();
+  window.location.href = "index.html";
+}
+
+// PRODUTOS (mantido igual)
 const produtos = [
   {nome:"Whey Protein", preco:100, img:"D_NQ_NP_877710-MLA99447989168_112025-O.webp"},
   {nome:"Creatina", preco:80, img:"creatina-250g-creapure-growth-supplements-1.jpg"},
   {nome:"Pré Treino", preco:70, img:"pr-treino-haze-hardcore-300g-growth-supplements.jpg"},
   {nome:"BCAA", preco:60, img:"bcaa-10-1-1-200g-em-p-growth-supplements.jpg"},
   {nome:"Albumina", preco:50, img:"albumina-500g-growth-supplements.jpg"},
-  {nome:"Hipercalórico", preco:120, img:"hiper-mass-1kg-sabor-chocolate-growth-supplements.jpg"}
+  {nome:"Hipercalórico", preco:120, img:"hiper-mass-1kg-sabor-chocolate-growth-supplements.jpg"},
+  {nome:"Barra Proteica", preco:10, img:"barra-de-prote-na-barrinha-de-prote-na-display-c-12-un-growth-supplements.webp"},
+  {nome:"Glutamina", preco:90, img:"l-glutamina-250g-growth-supplements-1.jpg"},
+  {nome:"Multivitamínico", preco:40, img:"multivitam-nico-120-c-ps-nova-f-rmula-growth-supplements-1.jpg"},
+  {nome:"Cafeína", preco:30, img:"cafe-na-200mg-60-caps-growth-supplements-termog-nico.jpg"},
+  {nome:"Coqueteleira", preco:25, img:"coqueteleira-preta-600ml-growth-supplements.jpg"},
+  {nome:"Termogênico", preco:110, img:"hot.webp"}
 ];
 
-let cart = {};
-let itemToRemove = null;
-
-/* PRODUTOS */
+// render
 const productsDiv = document.getElementById('products');
 
 produtos.forEach(p => {
+  const idSafe = p.nome.replace(/\s/g, '-');
   productsDiv.innerHTML += `
     <div class="product" onclick="addProduct('${p.nome}')">
       <div class="product-image-box">
         <img src="${p.img}" class="product-img">
       </div>
       <div class="product-info">
-        <div>${p.nome}</div>
-        <div>R$ ${p.preco}</div>
+        <div class="product-price">R$ ${p.preco}</div>
+        <div class="product-name">${p.nome}</div>
       </div>
+      <div class="badge" id="badge-${idSafe}"></div>
     </div>
   `;
 });
 
-/* ADD */
-function addProduct(name){
-  const p = produtos.find(x => x.nome === name);
-  if(!cart[name]) cart[name] = {qty:0, price:p.preco};
+function addProduct(name) {
+  const produto = produtos.find(p => p.nome === name);
+  if (!cart[name]) cart[name] = { qty: 0, price: produto.preco, img: produto.img };
   cart[name].qty++;
-  updateCart();
+  updateUI();
 }
 
-/* UPDATE */
-function updateCart(){
+function updateUI() {
   const cartDiv = document.getElementById('cart');
+  const totalSpan = document.getElementById('total');
+  const totalCart = document.getElementById('totalCart');
+
   cartDiv.innerHTML = '';
   let total = 0;
 
-  Object.keys(cart).forEach(name=>{
+  Object.keys(cart).forEach(name => {
     const item = cart[name];
-    total += item.qty * item.price;
+    const itemTotal = item.qty * item.price;
+    total += itemTotal;
+
+    const idSafe = name.replace(/\s/g, '-');
+    const badge = document.getElementById('badge-' + idSafe);
+    if (badge) {
+      badge.style.display = 'flex';
+      badge.innerText = item.qty;
+    }
 
     cartDiv.innerHTML += `
       <div class="cart-item">
-        ${name} x${item.qty}
-        <button onclick="askRemove('${name}')">🗑️</button>
+        <div class="cart-img-box">
+          <img src="${item.img}">
+        </div>
+        <div class="cart-info">
+          <div class="cart-name">${name} x${item.qty}</div>
+          <div class="cart-price">R$ ${itemTotal}</div>
+        </div>
+        <button class="delete-btn" onclick="askRemove('${name}')">
+          <img src="lixeira.ico">
+        </button>
       </div>
     `;
   });
 
-  document.getElementById('total').innerText = total;
+  totalSpan.innerText = total;
+  totalCart.innerText = total;
+
+  if (total === 0) closeCart();
 }
 
-/* REMOVE FLOW */
-function askRemove(name){
+// MODAIS LOGIC
+function askRemove(name) {
   itemToRemove = name;
-  openModal('modalItem');
+  document.getElementById('itemModal').style.display = 'flex';
 }
 
-function confirmRemoveItem(){
-  const keys = Object.keys(cart);
+function confirmRemove() {
+  const items = Object.keys(cart);
 
-  delete cart[itemToRemove];
-  closeModal('modalItem');
+  document.getElementById('itemModal').style.display = 'none';
 
-  if(keys.length === 1){
-    setTimeout(()=>openModal('modalCancel'),300);
+  if (items.length === 1) {
+    openClearModal();
+    return;
   }
 
-  updateCart();
+  delete cart[itemToRemove];
+  itemToRemove = null;
+  updateUI();
 }
 
-/* CANCEL ALL */
-function openCancelAll(){
-  openModal('modalCancel');
+function openClearModal() {
+  document.getElementById('clearModal').style.display = 'flex';
 }
 
-function confirmCancel(){
+function confirmClear() {
   cart = {};
-  updateCart();
-  closeModal('modalCancel');
+  updateUI();
+  closeModal();
 }
 
-/* MODAL CTRL */
-function openModal(id){
-  document.getElementById(id).style.display='flex';
-}
-function closeModal(id){
-  document.getElementById(id).style.display='none';
+function closeModal() {
+  document.getElementById('itemModal').style.display = 'none';
+  document.getElementById('clearModal').style.display = 'none';
 }
 
-/* MENU */
-function toggleMenu(){
-  document.getElementById('sideMenu').classList.toggle('open');
-  document.getElementById('menuOverlay').classList.toggle('show');
+// resto normal
+function clearCart() {
+  openClearModal();
 }
 
-function logout(){
-  window.location.href = "index.html";
+function toggleCart() {
+  const overlay = document.getElementById('cartOverlay');
+  const btn = document.getElementById('toggleBtn');
+  overlay.classList.toggle('open');
+  btn.classList.toggle('open');
 }
 
-/* CART */
-function toggleCart(){
-  document.getElementById('cartOverlay').classList.toggle('open');
-}
-function closeCart(){
+function closeCart() {
   document.getElementById('cartOverlay').classList.remove('open');
+  document.getElementById('toggleBtn').classList.remove('open');
 }
+
+function goToPayment() {
+  localStorage.setItem('cart', JSON.stringify(cart));
+  window.location.href = "pagamento.html";
+}
+
+function goHome() {
+  closeCart();
+  toggleMenu();
+}
+
 </script>
 
 </body>
