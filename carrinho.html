@@ -71,8 +71,14 @@ body {
   padding: 20px;
   margin-top: 22vh;
 }
+.products {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 16px;
+  justify-content: center;
+}
 
-/* FOOTER BAR */
+/* FOOTER */
 .footer-bar {
   position: fixed;
   bottom: 0;
@@ -86,7 +92,6 @@ body {
   align-items: center;
 }
 .footer-bar.show { display: flex; }
-
 .total-box {
   position: absolute;
   left: 15px;
@@ -100,7 +105,7 @@ body {
   position: fixed;
   left: 50%;
   transform: translateX(-50%);
-  bottom: 118px;
+  bottom: 65px;
   width: 42px;
   height: 42px;
   background: #eee;
@@ -136,7 +141,6 @@ body {
   flex-direction: column;
 }
 .cart-overlay.open { height: 100vh; }
-
 .cart {
   flex: 1;
   overflow-y: auto;
@@ -144,6 +148,7 @@ body {
   margin-top: 80px;
 }
 
+/* ESTILO DOS ITENS DO CARRINHO */
 .cart-item {
   display: flex;
   align-items: center;
@@ -154,21 +159,17 @@ body {
   border-radius: 12px;
   border: 1px solid #ddd;
 }
-
 .cart-img-box { width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; }
 .cart-img-box img { max-width: 100%; max-height: 100%; }
-
 .cart-info { flex: 1; }
 .cart-name { font-weight: bold; }
 .cart-price { font-size: 14px; color: #555; }
-
 .delete-btn {
   background: none;
   border: none;
   cursor: pointer;
   padding: 5px;
 }
-.delete-btn img { width: 22px; height: 22px; }
 
 /* TOTAL E TAXA */
 .total-cart {
@@ -177,7 +178,6 @@ body {
   font-size: 18px;
   border-top: 1px solid #eee;
 }
-
 .service-fee {
   padding: 10px 15px;
   border-top: 1px solid #eee;
@@ -186,7 +186,6 @@ body {
   font-size: 14px;
   gap: 10px;
 }
-
 .switch {
   position: relative;
   width: 44px;
@@ -215,13 +214,13 @@ body {
 /* ====================== BOTÕES AJUSTADOS ====================== */
 .buttons {
   display: flex;
-  gap: 10px;
-  padding: 12px 15px 8px 15px;
+  gap: 12px;
+  padding: 12px 15px;
 }
 
 .btn-clear {
   flex: 1;
-  padding: 12px;
+  padding: 13px 20px;     /* menor que antes */
   background: #ff4d6d;
   color: white;
   border: none;
@@ -233,7 +232,7 @@ body {
 
 .btn-add {
   flex: 1;
-  padding: 12px;
+  padding: 13px 20px;
   background: #2196f3;
   color: white;
   border: none;
@@ -252,7 +251,6 @@ body {
   border-radius: 12px;
   font-weight: bold;
   cursor: pointer;
-  margin-top: 4px;
 }
 
 /* MODAIS */
@@ -292,7 +290,6 @@ body {
   <div class="products" id="products"></div>
 </div>
 
-<!-- CARRINHO -->
 <div class="cart-overlay" id="cartOverlay">
   <div class="cart" id="cart"></div>
   
@@ -332,9 +329,9 @@ body {
 <div class="modal" id="itemModal">
   <div class="modal-box">
     <h3>Você deseja remover este item?</h3>
-    <div class="modal-buttons" style="display:flex; justify-content:center; gap:10px; margin-top:20px;">
-      <button class="btn-no" onclick="closeModal()" style="background:#e53935; color:white; padding:10px 20px; border:none; border-radius:8px;">NÃO</button>
-      <button class="btn-yes" onclick="confirmRemove()" style="background:#4caf50; color:white; padding:10px 20px; border:none; border-radius:8px;">SIM</button>
+    <div style="display:flex; justify-content:center; gap:10px; margin-top:20px;">
+      <button onclick="closeModal()" style="background:#e53935; color:white; padding:10px 20px; border:none; border-radius:8px;">NÃO</button>
+      <button onclick="confirmRemove()" style="background:#4caf50; color:white; padding:10px 20px; border:none; border-radius:8px;">SIM</button>
     </div>
   </div>
 </div>
@@ -343,9 +340,9 @@ body {
   <div class="modal-box">
     <h3>Cancelar transação</h3>
     <p>Você deseja realmente cancelar esta transação?</p>
-    <div class="modal-buttons" style="display:flex; justify-content:center; gap:10px; margin-top:20px;">
-      <button class="btn-no" onclick="closeModal()" style="background:#e53935; color:white; padding:10px 20px; border:none; border-radius:8px;">NÃO</button>
-      <button class="btn-yes" onclick="confirmClear()" style="background:#4caf50; color:white; padding:10px 20px; border:none; border-radius:8px;">SIM</button>
+    <div style="display:flex; justify-content:center; gap:10px; margin-top:20px;">
+      <button onclick="closeModal()" style="background:#e53935; color:white; padding:10px 20px; border:none; border-radius:8px;">NÃO</button>
+      <button onclick="confirmClear()" style="background:#4caf50; color:white; padding:10px 20px; border:none; border-radius:8px;">SIM</button>
     </div>
   </div>
 </div>
@@ -447,7 +444,6 @@ function updateUI() {
   syncServiceToggleUI();
 }
 
-/* ==================== FUNÇÕES ==================== */
 function askRemove(name) {
   itemToRemove = name;
   document.getElementById('itemModal').style.display = 'flex';
@@ -522,7 +518,6 @@ function goHome() {
   toggleMenu();
 }
 
-/* INIT */
 updateUI();
 </script>
 </body>
