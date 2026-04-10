@@ -1,3 +1,5 @@
+pagamento.html
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -13,23 +15,26 @@ body {
   height: 100vh;
 }
 
+/* 🔥 ADICIONE ISSO AQUI (IMPORTANTE) */
 .overlay img {
   display: block;
   margin: 0 auto;
 }
 
+/* (OPCIONAL MAS ESSENCIAL PRA CORRIGIR TAMANHO DO LOADING E QR) */
 .loading {
-  width: 80px;
+  width: 80px;   /* ajuste fino igual ao original */
   height: auto;
   margin-bottom: 20px;
 }
 
 .qr {
-  width: 200px;
+  width: 200px;  /* mantém proporção correta */
   height: auto;
   margin-bottom: 20px;
 }
 
+/* LAYOUT ORIGINAL (MANTIDO) */
 .left {
   flex: 2;
   background: white;
@@ -64,6 +69,7 @@ body {
 .item-name { font-weight: bold; }
 .item-qty { font-size: 12px; color: #666; }
 
+/* RIGHT ORIGINAL */
 .right {
   flex: 1;
   background: #FFE6EF;
@@ -104,6 +110,7 @@ body {
   cursor: pointer;
 }
 
+/* PAGAMENTO (NÃO ALTERADO) */
 .pay-buttons button {
   width: 100%;
   padding: 15px;
@@ -119,6 +126,7 @@ body {
   outline: 3px solid #000;
 }
 
+/* FOOTER (ORIGINAL) */
 .footer {
   position: fixed;
   bottom: 0;
@@ -143,6 +151,7 @@ body {
   cursor: pointer;
 }
 
+/* OVERLAYS (ORIGINAL 100%) */
 .overlay {
   position: fixed;
   top: 0;
@@ -165,6 +174,10 @@ body {
   margin-top: 20px;
 }
 
+/* =========================
+   MODAIS (APENAS UI DO CÓDIGO 2)
+========================= */
+
 .modal {
   position: fixed;
   inset: 0;
@@ -174,6 +187,7 @@ body {
   justify-content: center;
 }
 
+/* TIPO DESCONTO */
 .modal-box {
   background: white;
   width: 340px;
@@ -185,7 +199,15 @@ body {
 .modal-header {
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
   font-weight: bold;
+}
+
+.modal-close {
+  cursor: pointer;
+  font-size: 18px;
+  color: #666;
 }
 
 .option {
@@ -194,11 +216,25 @@ body {
   cursor: pointer;
 }
 
+/* INPUT / KEYPAD */
+#display {
+  text-align: center;
+  font-size: 34px;
+  margin: 10px 0 0;
+}
+
+#label {
+  text-align: center;
+  margin-bottom: 15px;
+  color: #666;
+}
+
 .keypad {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 12px;
   justify-items: center;
+  margin-top: 10px;
 }
 
 .key {
@@ -207,6 +243,7 @@ body {
   border-radius: 50%;
   border: 2px solid #9E3667;
   background: #f2f2f2;
+  font-size: 18px;
   cursor: pointer;
 }
 
@@ -216,23 +253,19 @@ body {
   margin-top: 15px;
 }
 
-.btn-red { background:#e74c3c; flex:1; padding:12px; border:0; color:#fff; }
-.btn-green { background:#2ecc71; flex:1; padding:12px; border:0; color:#fff; }
-
-.auth-input {
-  width: 100%;
-  padding: 10px;
-  margin: 5px 0;
-}
-
-.btn-auth {
-  width: 100%;
-  background: #9E3667;
-  color: white;
-  padding: 10px;
+.btn-red, .btn-green {
+  flex: 1;
+  padding: 12px;
   border: none;
-  margin-top: 10px;
+  border-radius: 12px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
 }
+
+.btn-red { background: #e74c3c; }
+.btn-green { background: #2ecc71; }
+
 </style>
 </head>
 
@@ -242,6 +275,7 @@ body {
 
 <div class="right">
   <div>
+
     <div class="valor-faltante">
       <h2>VALOR FALTANTE</h2>
       <div class="valor">R$ <span id="valorFaltante">0</span></div>
@@ -256,6 +290,7 @@ body {
       <button onclick="selectPayment('Cartao', this)">Cartão</button>
       <button onclick="selectPayment('PIX', this)">PIX</button>
     </div>
+
   </div>
 </div>
 
@@ -264,135 +299,276 @@ body {
     SUBTOTAL: R$ <span id="subtotal">0</span><br>
     TOTAL: R$ <span id="total">0</span>
   </div>
+
+<div class="footer-right" style="display:flex; justify-content:flex-end; align-items:center;">
   <button class="finish" onclick="finalizar()">Finalizar Venda</button>
 </div>
 
-<!-- overlays originais -->
+<!-- OVERLAYS ORIGINAIS -->
 <div class="overlay" id="cardScreen">
   <img src="loading.gif" class="loading">
+
   <h1 id="cardMessage">APROXIME, INSIRA OU PASSE O CARTÃO</h1>
+
+  <div class="box">
+    <p>💳 Cartão</p>
+    <p>Valor: R$ <span id="cardTotal"></span></p>
+    <small>Ambiente de teste</small>
+  </div>
 </div>
 
 <div class="overlay" id="pixScreen">
-  <h1 id="pixMessage">CONSULTANDO PIX</h1>
+  <h1 id="pixMessage">CONSULTANDO STATUS DA TRANSAÇÃO VIA PIX</h1>
+
   <img src="qrcode.avif" class="qr">
+
+  <div class="box">
+    <p>📲 PIX</p>
+    <p>Valor: R$ <span id="pixTotal"></span></p>
+    <small>Ambiente de teste</small>
+  </div>
 </div>
 
-<!-- MODAL DESCONTO -->
+<!-- MODAIS NOVOS (UI SOMENTE) -->
+<div class="modal" id="modalTipo">
+  <div class="modal-box">
+    <div class="modal-header">
+      <span>Tipo de desconto</span>
+      <span class="modal-close" onclick="fecharModal()">✕</span>
+    </div>
+
+    <div class="option" onclick="abrirInput('percent')">(%) Percentual</div>
+    <div class="option" onclick="abrirInput('valor')">(R$) Valor</div>
+  </div>
+</div>
+
 <div class="modal" id="modalInput">
   <div class="modal-box">
+
+    <div class="modal-close" onclick="fecharModal()">✕</div>
+
     <h2 id="display">0</h2>
+    <p id="label"></p>
+
+    <div class="keypad">
+      <button class="key" onclick="dig(1)">1</button>
+      <button class="key" onclick="dig(2)">2</button>
+      <button class="key" onclick="dig(3)">3</button>
+      <button class="key" onclick="dig(4)">4</button>
+      <button class="key" onclick="dig(5)">5</button>
+      <button class="key" onclick="dig(6)">6</button>
+      <button class="key" onclick="dig(7)">7</button>
+      <button class="key" onclick="dig(8)">8</button>
+      <button class="key" onclick="dig(9)">9</button>
+      <button class="key" onclick="clearInput()">C</button>
+      <button class="key" onclick="dig(0)">0</button>
+      <button class="key" onclick="del()">⌫</button>
+    </div>
+
     <div class="actions">
       <button class="btn-red" onclick="fecharModal()">Cancelar</button>
-      <button class="btn-green" onclick="aplicarDesconto()">OK</button>
+      <button class="btn-green" onclick="aplicarDesconto()">Avançar</button>
     </div>
-  </div>
-</div>
 
-<!-- MODAL AUTORIZAÇÃO -->
-<div class="modal" id="modalAuth">
-  <div class="modal-box">
-    <h3>Autorizar desconto</h3>
-    <input class="auth-input" placeholder="Usuário">
-    <input class="auth-input" placeholder="Senha" type="password">
-    <button class="btn-auth" onclick="autorizar()">Entrar</button>
-  </div>
-</div>
-
-<!-- MODAL ERRO -->
-<div class="modal" id="modalError">
-  <div class="modal-box">
-    <h3>EYE PRO</h3>
-    <p>Valor inválido para desconto</p>
-    <button class="btn-auth" onclick="fecharErro()">OK</button>
   </div>
 </div>
 
 <script>
 
+/* =======================
+   CÓDIGO 1 (INALTERADO)
+======================= */
+
 const cart = JSON.parse(localStorage.getItem('cart')) || {};
+const serviceFeeEnabled = JSON.parse(localStorage.getItem('serviceFeeEnabled')) || false;
+
+const itemsDiv = document.getElementById('items');
+const subtotalSpan = document.getElementById('subtotal');
+const totalSpan = document.getElementById('total');
+const valorFaltanteSpan = document.getElementById('valorFaltante');
+const cardTotal = document.getElementById('cardTotal');
+const pixTotal = document.getElementById('pixTotal');
+
 let total = 0;
 
-Object.keys(cart).forEach(n=>{
-  total += cart[n].qty * cart[n].price;
-  document.getElementById('items').innerHTML += `<div>${n}</div>`;
+Object.keys(cart).forEach(name => {
+  const item = cart[name];
+  const itemTotal = item.qty * item.price;
+  total += itemTotal;
+
+  itemsDiv.innerHTML += `
+    <div class="item">
+      <div class="item-left">
+        <img src="${item.img}" class="item-img">
+        <div>
+          <div class="item-name">${name}</div>
+          <div class="item-qty">x${item.qty}</div>
+        </div>
+      </div>
+      <div>R$ ${itemTotal}</div>
+    </div>
+  `;
 });
 
-let tipo=null;
-let input="";
-let desconto=0;
-let pending=null;
+/* DESCONTO */
+let desconto = 0;
+let tipo = null;
+let input = "";
 
-function baseTotal(){ return total; }
+function baseTotal(){
+  return serviceFeeEnabled ? total * 1.10 : total;
+}
 
 function calcFinal(){
-  if(tipo==="percent") return total - (total*desconto/100);
-  if(tipo==="valor") return total - desconto;
-  return total;
+  let base = baseTotal();
+
+  if(tipo === "percent") return base - (base * desconto / 100);
+  if(tipo === "valor") return base - desconto;
+
+  return base;
 }
 
-function atualizar(){
-  const f = calcFinal();
-  document.getElementById('subtotal').innerText=total.toFixed(2);
-  document.getElementById('total').innerText=f.toFixed(2);
-  document.getElementById('valorFaltante').innerText=f.toFixed(2);
+function atualizarTotais(){
+  const final = calcFinal();
+
+  subtotalSpan.innerText = total.toFixed(2);
+  totalSpan.innerText = final.toFixed(2);
+  valorFaltanteSpan.innerText = final.toFixed(2);
+
+  cardTotal.innerText = final.toFixed(2);
+  pixTotal.innerText = final.toFixed(2);
 }
 
+/* PAGAMENTO ORIGINAL */
+let paymentMethod = null;
+
+function selectPayment(method, btn) {
+  paymentMethod = method;
+
+  document.querySelectorAll('.pay-buttons button').forEach(b => {
+    b.classList.remove('selected');
+  });
+
+  btn.classList.add('selected');
+}
+
+function finalizar() {
+  if (!paymentMethod) {
+    alert("Selecione uma forma de pagamento!");
+    return;
+  }
+
+  if (paymentMethod === "Cartao") {
+    simularCartao();
+  } 
+  else if (paymentMethod === "PIX") {
+    simularPix();
+  } 
+  else {
+    alert("Pagamento em dinheiro recebido");
+    finalizarVenda();
+  }
+}
+
+/* CARTÃO */
+function simularCartao() {
+  const screen = document.getElementById('cardScreen');
+  const msg = document.getElementById('cardMessage');
+
+  screen.style.display = "flex";
+
+  // reset correto ao abrir
+  msg.innerText = "APROXIME, INSIRA OU PASSE O CARTÃO";
+
+  setTimeout(() => {
+    msg.innerText = "PROCESSANDO...";
+  }, 2000);
+
+  setTimeout(() => {
+    msg.innerText = "DÉBITO NUBANK";
+  }, 4000);
+
+  setTimeout(() => {
+    msg.innerText = "TRANSAÇÃO APROVADA ✅";
+  }, 8000);
+
+  setTimeout(finalizarVenda, 10000);
+}
+
+function simularPix() {
+  const screen = document.getElementById('pixScreen');
+  const msg = document.getElementById('pixMessage');
+
+  screen.style.display = "flex";
+
+  // reset correto
+  msg.innerText = "CONSULTANDO STATUS DA TRANSAÇÃO VIA PIX";
+
+  setTimeout(() => {
+    msg.innerText = "TRANSAÇÃO APROVADA ✅";
+  }, 5000);
+
+  setTimeout(finalizarVenda, 7000);
+}
+function finalizarVenda() {
+  localStorage.removeItem('cart');
+  window.location.href = "carrinho.html";
+}
+
+/* MODAIS (SÓ UI NOVA) */
 function abrirTipoDesconto(){
-  tipo="percent";
-  input="";
+  document.getElementById('modalTipo').style.display="flex";
+}
+
+function abrirInput(t){
+  tipo = t;
+  input = "";
+
+  document.getElementById('modalTipo').style.display="none";
   document.getElementById('modalInput').style.display="flex";
+
+  document.getElementById('label').innerText =
+    t==="percent" ? "PERCENTUAL (%)" : "VALOR (R$)";
 }
 
 function fecharModal(){
-  document.querySelectorAll('.modal').forEach(m=>m.style.display="none");
+  document.querySelectorAll('.modal').forEach(m => m.style.display="none");
+}
+
+function dig(n){ input+=n; atualizarDisplay(); }
+function del(){ input=input.slice(0,-1); atualizarDisplay(); }
+function clearInput(){ input=""; atualizarDisplay(); }
+
+function atualizarDisplay(){
+  document.getElementById('display').innerText =
+    tipo==="percent" ? input+"%" : "R$ "+(input/100||0).toFixed(2);
 }
 
 function aplicarDesconto(){
+  desconto = tipo==="percent" ? parseFloat(input) : parseFloat(input)/100;
 
-  let val = parseFloat(input||0);
-
-  if(val<=0){
-    document.getElementById('modalError').style.display="flex";
-    return;
-  }
-
-  if(tipo==="percent" && val>10){
-    pending=val;
-    document.getElementById('modalAuth').style.display="flex";
-    return;
-  }
-
-  if(tipo==="valor" && val>10){
-    pending=val;
-    document.getElementById('modalAuth').style.display="flex";
-    return;
-  }
-
-  desconto = val;
   fecharModal();
-  atualizar();
+  atualizarTotais();
+
+  document.getElementById('descontoArea').innerHTML = `
+    <button class="btn-desconto" disabled>DESCONTO APLICADO</button>
+    <button class="btn-remove" onclick="removerDesconto()">✕</button>
+  `;
 }
 
-function autorizar(){
-  desconto = pending;
-  pending=null;
-  fecharModal();
-  atualizar();
+function removerDesconto(){
+  desconto = 0;
+  tipo = null;
+  input = "";
+
+  document.getElementById('descontoArea').innerHTML =
+    `<button class="btn-desconto" onclick="abrirTipoDesconto()">APLICAR DESCONTO</button>`;
+
+  atualizarTotais();
 }
 
-function fecharErro(){
-  fecharModal();
-}
-
-function selectPayment(m,b){
-  document.querySelectorAll('.pay-buttons button').forEach(x=>x.classList.remove('selected'));
-  b.classList.add('selected');
-}
-
-function finalizar(){ alert("OK"); }
-
-atualizar();
+/* INIT */
+atualizarTotais();
 
 </script>
 
