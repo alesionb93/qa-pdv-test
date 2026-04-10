@@ -56,20 +56,40 @@ body {
 
 .right {
   flex: 1;
-  background: #fafafa;
+  background: #FFE6EF; /* ALTERADO */
   padding: 20px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
 
-.total {
-  font-size: 26px;
-  font-weight: bold;
+/* NOVO BLOCO VALOR FALTANTE */
+.valor-faltante {
+  text-align: center;
   margin-bottom: 20px;
-  line-height: 1.4;
 }
 
+.valor-faltante h2 {
+  margin: 0;
+  font-weight: normal;
+}
+
+.valor-faltante .valor {
+  font-size: 40px;
+  font-weight: bold;
+  margin: 10px 0;
+}
+
+.btn-desconto {
+  background: #2196f3;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* BOTÕES */
 .pay-buttons button {
   width: 100%;
   padding: 15px;
@@ -77,23 +97,46 @@ body {
   border: none;
   border-radius: 8px;
   cursor: pointer;
+  background: #9E3667; /* ALTERADO */
+  color: white;
 }
-
-.btn-cash { background: #4caf50; color: white; }
-.btn-card { background: #2196f3; color: white; }
-.btn-pix { background: #9c27b0; color: white; }
 
 .selected {
   outline: 3px solid #000;
 }
 
 .finish {
-  background: #9E3667;
+  background: #22B14C; /* ALTERADO */
   color: white;
   padding: 18px;
   border: none;
   border-radius: 10px;
   cursor: pointer;
+}
+
+/* RODAPÉ */
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100px;
+  background: #FFE6EF;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 30px;
+  box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+}
+
+.footer-left {
+  font-size: 22px;
+  font-weight: bold;
+  line-height: 1.4;
+}
+
+.footer-right {
+  width: 300px;
 }
 
 /* OVERLAYS */
@@ -137,19 +180,32 @@ body {
 
 <div class="right">
   <div>
-    <div class="total">
-      <div>SUBTOTAL: R$ <span id="subtotal">0</span></div>
-      <div>TOTAL: R$ <span id="total">0</span></div>
+
+    <!-- NOVO TOPO -->
+    <div class="valor-faltante">
+      <h2>VALOR FALTANTE</h2>
+      <div class="valor">R$ <span id="valorFaltante">0</span></div>
+      <button class="btn-desconto">APLICAR DESCONTO</button>
     </div>
 
     <div class="pay-buttons">
-      <button class="btn-cash" onclick="selectPayment('Dinheiro', this)">Dinheiro</button>
-      <button class="btn-card" onclick="selectPayment('Cartao', this)">Cartão</button>
-      <button class="btn-pix" onclick="selectPayment('PIX', this)">PIX</button>
+      <button onclick="selectPayment('Dinheiro', this)">Dinheiro</button>
+      <button onclick="selectPayment('Cartao', this)">Cartão</button>
+      <button onclick="selectPayment('PIX', this)">PIX</button>
     </div>
   </div>
+</div>
 
-  <button class="finish" onclick="finalizar()">Finalizar Venda</button>
+<!-- RODAPÉ -->
+<div class="footer">
+  <div class="footer-left">
+    <div>SUBTOTAL: R$ <span id="subtotal">0</span></div>
+    <div>TOTAL: R$ <span id="total">0</span></div>
+  </div>
+
+  <div class="footer-right">
+    <button class="finish" onclick="finalizar()">Finalizar Venda</button>
+  </div>
 </div>
 
 <!-- 💳 CARTÃO -->
@@ -185,6 +241,7 @@ const serviceFeeEnabled = JSON.parse(localStorage.getItem('serviceFeeEnabled')) 
 const itemsDiv = document.getElementById('items');
 const subtotalSpan = document.getElementById('subtotal');
 const totalSpan = document.getElementById('total');
+const valorFaltanteSpan = document.getElementById('valorFaltante');
 const cardTotal = document.getElementById('cardTotal');
 const pixTotal = document.getElementById('pixTotal');
 
@@ -209,13 +266,15 @@ Object.keys(cart).forEach(name => {
   `;
 });
 
-// SUBTOTAL = sem taxa
+// SUBTOTAL
 subtotalSpan.innerText = total.toFixed(2);
 
-// TOTAL = com taxa (se ativada)
+// TOTAL
 const finalTotal = serviceFeeEnabled ? total * 1.10 : total;
 
 totalSpan.innerText = finalTotal.toFixed(2);
+valorFaltanteSpan.innerText = finalTotal.toFixed(2);
+
 cardTotal.innerText = finalTotal.toFixed(2);
 pixTotal.innerText = finalTotal.toFixed(2);
 
