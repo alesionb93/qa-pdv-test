@@ -31,14 +31,12 @@ body {
   margin: 0;
 }
 
-/* 🍔 BOTÃO */
 .menu-btn {
   font-size: 26px;
   color: white;
   cursor: pointer;
 }
 
-/* MENU LATERAL */
 .side-menu {
   position: fixed;
   top: 20vh;
@@ -53,9 +51,7 @@ body {
   flex-direction: column;
 }
 
-.side-menu.open {
-  left: 0;
-}
+.side-menu.open { left: 0; }
 
 .menu-item {
   padding: 20px;
@@ -63,11 +59,6 @@ body {
   cursor: pointer;
 }
 
-.menu-item:hover {
-  background: #f5f5f5;
-}
-
-/* OVERLAY */
 .menu-overlay {
   position: fixed;
   top: 0;
@@ -79,11 +70,8 @@ body {
   z-index: 3000;
 }
 
-.menu-overlay.show {
-  display: block;
-}
+.menu-overlay.show { display: block; }
 
-/* CONTAINER */
 .container {
   max-width: 1200px;
   margin: auto;
@@ -91,14 +79,12 @@ body {
   margin-top: 22vh;
 }
 
-/* GRID */
 .products {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   gap: 16px;
 }
 
-/* CARD */
 .product {
   width: 160px;
   height: 240px;
@@ -140,7 +126,6 @@ body {
   font-size: 13px;
 }
 
-/* BADGE */
 .badge {
   position: absolute;
   top: 8px;
@@ -155,7 +140,6 @@ body {
   justify-content: center;
 }
 
-/* FOOTER */
 .footer-bar {
   position: fixed;
   bottom: 0;
@@ -206,7 +190,6 @@ body {
   transform: rotate(135deg);
 }
 
-/* CARRINHO */
 .cart-overlay {
   position: fixed;
   bottom: 0;
@@ -221,9 +204,7 @@ body {
   flex-direction: column;
 }
 
-.cart-overlay.open {
-  height: 100vh;
-}
+.cart-overlay.open { height: 100vh; }
 
 .cart {
   flex: 1;
@@ -256,18 +237,11 @@ body {
   max-height: 100%;
 }
 
-.cart-info {
-  flex: 1;
-}
+.cart-info { flex: 1; }
 
-.cart-name {
-  font-weight: bold;
-}
+.cart-name { font-weight: bold; }
 
-.cart-price {
-  font-size: 14px;
-  color: #555;
-}
+.cart-price { font-size: 14px; color: #555; }
 
 .delete-btn {
   background: none;
@@ -287,17 +261,14 @@ body {
   border-top: 1px solid #eee;
 }
 
-/* 🆕 TAXA DE SERVIÇO (AJUSTE LAYOUT) */
+/* TAXA */
 .service-fee {
   padding: 10px 15px;
   border-top: 1px solid #eee;
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  font-size: 14px;
 }
 
-/* LABEL + TOGGLE LADO A LADO */
 .fee-label {
   display: flex;
   align-items: center;
@@ -311,9 +282,7 @@ body {
   height: 24px;
 }
 
-.switch input {
-  display: none;
-}
+.switch input { display: none; }
 
 .slider {
   position: absolute;
@@ -346,75 +315,6 @@ body {
 .switch input:checked + .slider:before {
   transform: translateX(20px);
 }
-
-.buttons {
-  display: flex;
-  gap: 10px;
-  padding: 10px;
-}
-
-button {
-  padding: 10px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.btn-clear {
-  background: #ff4d6d;
-  color: white;
-}
-
-.btn-add {
-  background: #2196f3;
-  color: white;
-}
-
-.btn-options {
-  width: 100%;
-  background: #9E3667;
-  color: white;
-  padding: 15px;
-}
-
-/* MODAIS */
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.6);
-  display: none;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
-}
-
-.modal-box {
-  background: white;
-  padding: 25px;
-  border-radius: 12px;
-  text-align: center;
-  width: 300px;
-}
-
-.modal-buttons {
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-  margin-top: 20px;
-}
-
-.btn-yes {
-  background: #4caf50;
-  color: white;
-}
-
-.btn-no {
-  background: #e53935;
-  color: white;
-}
 </style>
 </head>
 
@@ -432,7 +332,7 @@ button {
 
 <div class="menu-overlay" id="menuOverlay" onclick="toggleMenu()"></div>
 
-<div class="container" id="main">
+<div class="container">
   <div class="products" id="products"></div>
 </div>
 
@@ -443,7 +343,6 @@ button {
     Total: R$ <span id="totalCart">0</span>
   </div>
 
-  <!-- 🆕 TAXA (AJUSTE) -->
   <div class="service-fee">
     <div class="fee-label">
       Taxa de serviço (10%)
@@ -454,12 +353,9 @@ button {
     </div>
   </div>
 
-  <div class="buttons">
-    <button class="btn-clear" onclick="openClearModal()">Limpar</button>
-    <button class="btn-add" onclick="closeCart()">Adicionar Item</button>
-  </div>
-
-  <button class="btn-options" onclick="goToPayment()">+ Opções</button>
+  <button onclick="openClearModal()">Limpar</button>
+  <button onclick="closeCart()">Adicionar Item</button>
+  <button onclick="goToPayment()">+ Opções</button>
 </div>
 
 <div class="footer-bar">
@@ -468,17 +364,35 @@ button {
   </div>
 </div>
 
-<button class="toggle-btn" id="toggleBtn" onclick="toggleCart()">
+<button class="toggle-btn" onclick="toggleCart()">
   <div class="arrow"></div>
 </button>
+
+<!-- MODAIS -->
+<div class="modal" id="itemModal">
+  <div class="modal-box">
+    <h3>Remover item?</h3>
+    <button onclick="closeModal()">NÃO</button>
+    <button onclick="confirmRemove()">SIM</button>
+  </div>
+</div>
+
+<div class="modal" id="clearModal">
+  <div class="modal-box">
+    <h3>Limpar carrinho?</h3>
+    <button onclick="closeModal()">NÃO</button>
+    <button onclick="confirmClear()">SIM</button>
+  </div>
+</div>
 
 <script>
 
 let cart = {};
 let itemToRemove = null;
 
-// 🆕 TAXA
-let serviceFeeEnabled = JSON.parse(localStorage.getItem('serviceFeeEnabled')) || false;
+// 🔥 FIX 1: FORÇA DEFAULT OFF SEM BUG DE STRING
+let serviceFeeEnabled = false;
+localStorage.setItem('serviceFeeEnabled', 'false');
 
 function calculateTotal(total){
   return serviceFeeEnabled ? total * 1.10 : total;
@@ -490,48 +404,16 @@ function toggleServiceFee(){
   updateUI();
 }
 
-// MENU
-function toggleMenu() {
-  document.getElementById('sideMenu').classList.toggle('open');
-  document.getElementById('menuOverlay').classList.toggle('show');
-}
-
-function logout() {
-  localStorage.clear();
-  window.location.href = "index.html";
-}
-
 // PRODUTOS
 const produtos = [
-  {nome:"Whey Protein", preco:100, img:"D_NQ_NP_877710-MLA99447989168_112025-O.webp"},
-  {nome:"Creatina", preco:80, img:"creatina-250g-creapure-growth-supplements-1.jpg"},
-  {nome:"Pré Treino", preco:70, img:"pr-treino-haze-hardcore-300g-growth-supplements.jpg"},
-  {nome:"BCAA", preco:60, img:"bcaa-10-1-1-200g-em-p-growth-supplements.jpg"},
-  {nome:"Albumina", preco:50, img:"albumina-500g-growth-supplements.jpg"},
-  {nome:"Hipercalórico", preco:120, img:"hiper-mass-1kg-sabor-chocolate-growth-supplements.jpg"},
-  {nome:"Barra Proteica", preco:10, img:"barra-de-prote-na-barrinha-de-prote-na-display-c-12-un-growth-supplements.webp"},
-  {nome:"Glutamina", preco:90, img:"l-glutamina-250g-growth-supplements-1.jpg"},
-  {nome:"Multivitamínico", preco:40, img:"multivitam-nico-120-c-ps-nova-f-rmula-growth-supplements-1.jpg"},
-  {nome:"Cafeína", preco:30, img:"cafe-na-200mg-60-caps-growth-supplements-termog-nico.jpg"},
-  {nome:"Coqueteleira", preco:25, img:"coqueteleira-preta-600ml-growth-supplements.jpg"},
-  {nome:"Termogênico", preco:110, img:"hot.webp"}
+  {nome:"Whey Protein", preco:100, img:"D_NQ_NP_877710-MLA99447989168_112025-O.webp"}
 ];
 
 const productsDiv = document.getElementById('products');
 
 produtos.forEach(p => {
-  const idSafe = p.nome.replace(/\s/g, '-');
   productsDiv.innerHTML += `
-    <div class="product" onclick="addProduct('${p.nome}')">
-      <div class="product-image-box">
-        <img src="${p.img}" class="product-img">
-      </div>
-      <div class="product-info">
-        <div class="product-price">R$ ${p.preco}</div>
-        <div class="product-name">${p.nome}</div>
-      </div>
-      <div class="badge" id="badge-${idSafe}"></div>
-    </div>
+    <div onclick="addProduct('${p.nome}')">${p.nome}</div>
   `;
 });
 
@@ -544,71 +426,41 @@ function addProduct(name) {
 
 function updateUI() {
   const cartDiv = document.getElementById('cart');
-  const totalSpan = document.getElementById('total');
-  const totalCart = document.getElementById('totalCart');
-
-  cartDiv.innerHTML = '';
   let total = 0;
 
-  document.querySelectorAll('.badge').forEach(b => {
-    b.style.display = 'none';
-    b.innerText = '';
-  });
+  cartDiv.innerHTML = '';
 
   Object.keys(cart).forEach(name => {
     const item = cart[name];
     const itemTotal = item.qty * item.price;
     total += itemTotal;
 
-    const idSafe = name.replace(/\s/g, '-');
-    const badge = document.getElementById('badge-' + idSafe);
-
-    if (badge) {
-      badge.style.display = 'flex';
-      badge.innerText = item.qty;
-    }
-
-    cartDiv.innerHTML += `
-      <div class="cart-item">
-        <div class="cart-img-box">
-          <img src="${item.img}">
-        </div>
-        <div class="cart-info">
-          <div class="cart-name">${name} x${item.qty}</div>
-          <div class="cart-price">R$ ${itemTotal}</div>
-        </div>
-        <button class="delete-btn" onclick="askRemove('${name}')">
-          <img src="lixeira.ico">
-        </button>
-      </div>
-    `;
+    cartDiv.innerHTML += `<div>${name} x${item.qty}</div>`;
   });
 
   const finalTotal = calculateTotal(total);
 
-  totalSpan.innerText = finalTotal.toFixed(2);
-  totalCart.innerText = finalTotal.toFixed(2);
+  document.getElementById('total').innerText = finalTotal.toFixed(2);
+  document.getElementById('totalCart').innerText = finalTotal.toFixed(2);
 
   document.getElementById('serviceToggle').checked = serviceFeeEnabled;
 
   if (total === 0) closeCart();
 }
 
-// MODAIS
-function askRemove(name) {
+// MODAIS FIX
+function askRemove(name){
   itemToRemove = name;
   document.getElementById('itemModal').style.display = 'flex';
 }
 
-function confirmRemove() {
-  const items = Object.keys(cart);
+function confirmRemove(){
   document.getElementById('itemModal').style.display = 'none';
 
-  if (items.length === 1) {
-
+  if (Object.keys(cart).length === 1) {
     cart = {};
     serviceFeeEnabled = false;
-    localStorage.setItem('serviceFeeEnabled', false);
+    localStorage.setItem('serviceFeeEnabled','false');
     updateUI();
     closeModal();
     return;
@@ -619,44 +471,39 @@ function confirmRemove() {
   updateUI();
 }
 
-function openClearModal() {
+function openClearModal(){
   document.getElementById('clearModal').style.display = 'flex';
 }
 
-function confirmClear() {
+function confirmClear(){
   cart = {};
   serviceFeeEnabled = false;
-  localStorage.setItem('serviceFeeEnabled', false);
+  localStorage.setItem('serviceFeeEnabled','false');
   updateUI();
   closeModal();
 }
 
-function closeModal() {
+function closeModal(){
   document.getElementById('itemModal').style.display = 'none';
   document.getElementById('clearModal').style.display = 'none';
 }
 
-// ACTIONS
-function toggleCart() {
-  const overlay = document.getElementById('cartOverlay');
-  const btn = document.getElementById('toggleBtn');
-  overlay.classList.toggle('open');
-  btn.classList.toggle('open');
+function toggleCart(){
+  document.getElementById('cartOverlay').classList.toggle('open');
 }
 
-function closeCart() {
-  document.getElementById('cartOverlay').classList.remove('open');
-  document.getElementById('toggleBtn').classList.remove('open');
-}
-
-function goToPayment() {
+function goToPayment(){
   localStorage.setItem('cart', JSON.stringify(cart));
   window.location.href = "pagamento.html";
 }
 
-function goHome() {
-  closeCart();
-  toggleMenu();
+function toggleMenu(){
+  document.getElementById('sideMenu').classList.toggle('open');
+}
+
+function logout(){
+  localStorage.clear();
+  window.location.href = "index.html";
 }
 
 </script>
