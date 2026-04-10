@@ -11,7 +11,6 @@ body {
   display: flex;
   height: 100vh;
 }
-
 .left { flex: 2; background: white; padding: 20px; overflow-y: auto; }
 .item {
   display: flex; align-items: center; justify-content: space-between;
@@ -24,11 +23,9 @@ body {
 }
 .item-name { font-weight: bold; }
 .item-qty { font-size: 12px; color: #666; }
-
 .right { flex: 1; background: #FFE6EF; padding: 20px; display: flex; flex-direction: column; justify-content: space-between; }
 .valor-faltante { text-align: center; margin-bottom: 20px; }
 .valor { font-size: 40px; font-weight: bold; margin: 10px 0; }
-
 .btn-desconto {
   background: #2196f3; color: white; border: none;
   padding: 10px 20px; border-radius: 8px; cursor: pointer;
@@ -37,14 +34,12 @@ body {
   margin-left: 10px; border-radius: 50%; background: red;
   color: white; border: none; width: 30px; height: 30px; cursor: pointer;
 }
-
 .pay-buttons button {
   width: 100%; padding: 15px; margin-bottom: 10px;
   border: none; border-radius: 8px; cursor: pointer;
   background: #9E3667; color: white;
 }
 .selected { outline: 3px solid #000; }
-
 .footer {
   position: fixed; bottom: 0; left: 0; right: 0; height: 100px;
   background: #FFE6EF; display: flex; align-items: center;
@@ -55,7 +50,6 @@ body {
   background: #22B14C; color: white; padding: 18px;
   border: none; border-radius: 10px; cursor: pointer;
 }
-
 .overlay {
   position: fixed; top: 0; left: 0; width: 100%; height: 100%;
   background: #BD407B; color: white; display: none;
@@ -104,7 +98,7 @@ body {
 .btn-red { background: #e74c3c; }
 .btn-green { background: #2ecc71; }
 
-/* Modal de Limite de Desconto (10%) */
+/* Modal de Limite de Desconto */
 #errorModal {
   position: fixed; inset: 0; background: rgba(0,0,0,0.6);
   display: none; align-items: center; justify-content: center;
@@ -227,7 +221,7 @@ body {
       <button class="key" onclick="del()">⌫</button>
     </div>
     <div class="actions">
-      <button class="btn-red" onclick="fecharModal()">Cancelar</button>
+      <button class="btn-red" onclick="cancelarInput()">Cancelar</button>
       <button class="btn-green" onclick="validarEDescontar()">Avançar</button>
     </div>
   </div>
@@ -279,7 +273,6 @@ Object.keys(cart).forEach(name => {
 let desconto = 0;
 let tipo = null;
 let input = "";
-
 const LIMITE_PERCENTUAL = 10;
 
 function baseTotal(){
@@ -350,8 +343,7 @@ function finalizarVenda() {
 
 /* ======================= MODAIS ======================= */
 function abrirTipoDesconto(){
-  // Impede abrir novo desconto se já existe um aplicado
-  if (tipo !== null) return;
+  if (tipo !== null) return;   // impede reabrir se já tem desconto aplicado
   document.getElementById('modalTipo').style.display = "flex";
 }
 
@@ -368,34 +360,37 @@ function fecharModal(){
   document.querySelectorAll('.modal').forEach(m => m.style.display = "none");
 }
 
+/* Nova função: Cancelar o input e resetar tudo */
+function cancelarInput(){
+  tipo = null;        // ← IMPORTANTE: reseta o tipo
+  input = "";
+  fecharModal();
+}
+
 /* ======================= VALIDAÇÃO PRINCIPAL ======================= */
 function validarEDescontar(){
   const base = baseTotal();
   let valorDigitado = parseFloat(input) || 0;
 
   if (tipo === "percent") {
-    // Validação antiga (0 ou >= 100%)
     if (valorDigitado <= 0 || valorDigitado >= 100) {
       mostrarModalErro("Valor inválido para o desconto");
       return;
     }
-    // Nova validação de limite 10%
     if (valorDigitado > LIMITE_PERCENTUAL) {
       mostrarModalLimite(`Não é possivel adicionar o desconto.<br>O limite de desconto é de ${LIMITE_PERCENTUAL}%`);
       return;
     }
     desconto = valorDigitado;
-  } 
+  }
   else { // Valor em R$
     const valorDesconto = valorDigitado / 100;
     const limiteEmReais = base * (LIMITE_PERCENTUAL / 100);
 
-    // Validação antiga (0 ou >= total)
     if (valorDesconto <= 0 || valorDesconto >= base) {
       mostrarModalErro("Valor inválido para o desconto");
       return;
     }
-    // Nova validação de limite 10%
     if (valorDesconto > limiteEmReais) {
       mostrarModalLimite(`Não é possivel adicionar o desconto.<br>O limite de desconto é de R$ ${limiteEmReais.toFixed(2)}`);
       return;
@@ -403,7 +398,7 @@ function validarEDescontar(){
     desconto = valorDesconto;
   }
 
-  // Se chegou aqui = desconto válido
+  // Desconto válido
   fecharModal();
   atualizarTotais();
   atualizarBotaoDesconto();
@@ -413,7 +408,7 @@ function validarEDescontar(){
 function mostrarModalErro(mensagem) {
   document.getElementById('errorTitle').innerText = "EYE WEB";
   document.getElementById('errorMessage').innerHTML = mensagem;
-  document.getElementById('errorAutorizar').style.display = "none"; // esconde Autorizar
+  document.getElementById('errorAutorizar').style.display = "none";
   document.getElementById('errorOK').onclick = fecharErroERetornar;
   document.getElementById('errorModal').style.display = "flex";
 }
@@ -422,7 +417,7 @@ function mostrarModalErro(mensagem) {
 function mostrarModalLimite(mensagem) {
   document.getElementById('errorTitle').innerText = "AUTORIZAR";
   document.getElementById('errorMessage').innerHTML = mensagem;
-  document.getElementById('errorAutorizar').style.display = "inline-block"; // mostra Autorizar
+  document.getElementById('errorAutorizar').style.display = "inline-block";
   document.getElementById('errorOK').onclick = fecharErroERetornar;
   document.getElementById('errorModal').style.display = "flex";
 }
