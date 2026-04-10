@@ -115,7 +115,7 @@ body {
 .btn-red { background: #e74c3c; }
 .btn-green { background: #2ecc71; }
 
-/* === NOVO MODAL DE ERRO === */
+/* MODAL DE ERRO - AJUSTADO */
 #errorModal {
   position: fixed; inset: 0; background: rgba(0,0,0,0.6);
   display: none; align-items: center; justify-content: center;
@@ -132,17 +132,19 @@ body {
   font-size: 15px; color: #666; margin-bottom: 25px;
 }
 #errorBtn {
-  width: 80px; height: 80px; border-radius: 50%;
-  background: #9E3667; color: white; border: none;
-  font-size: 28px; cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  margin: 0 auto;
-  box-shadow: 0 4px 15px rgba(158, 54, 103, 0.4);
+  background: #9E3667;
+  color: white;
+  border: none;
+  padding: 14px 40px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
   transition: all 0.2s;
 }
 #errorBtn:hover {
-  transform: scale(1.08);
   background: #8a2e5a;
+  transform: scale(1.03);
 }
 </style>
 </head>
@@ -172,12 +174,12 @@ body {
     SUBTOTAL: R$ <span id="subtotal">0</span><br>
     TOTAL: R$ <span id="total">0</span>
   </div>
-  <div class="footer-right" style="display:flex; justify-content:flex-end; align-items:center;">
+  <div style="display:flex; justify-content:flex-end; align-items:center;">
     <button class="finish" onclick="finalizar()">Finalizar Venda</button>
   </div>
 </div>
 
-<!-- Overlays originais -->
+<!-- Overlays -->
 <div class="overlay" id="cardScreen">
   <img src="loading.gif" class="loading">
   <h1 id="cardMessage">APROXIME, INSIRA OU PASSE O CARTÃO</h1>
@@ -198,7 +200,7 @@ body {
   </div>
 </div>
 
-<!-- Modais existentes -->
+<!-- Modais -->
 <div class="modal" id="modalTipo">
   <div class="modal-box">
     <div class="modal-header">
@@ -236,7 +238,7 @@ body {
   </div>
 </div>
 
-<!-- NOVO MODAL DE ERRO -->
+<!-- Modal de Erro -->
 <div id="errorModal">
   <div id="errorBox">
     <div id="errorTitle">EYE WEB</div>
@@ -246,7 +248,7 @@ body {
 </div>
 
 <script>
-// ======================= DADOS DO CARRINHO =======================
+// ======================= DADOS =======================
 const cart = JSON.parse(localStorage.getItem('cart')) || {};
 const serviceFeeEnabled = JSON.parse(localStorage.getItem('serviceFeeEnabled')) || false;
 const itemsDiv = document.getElementById('items');
@@ -275,7 +277,6 @@ Object.keys(cart).forEach(name => {
   `;
 });
 
-// ======================= DESCONTO =======================
 let desconto = 0;
 let tipo = null;
 let input = "";
@@ -321,7 +322,7 @@ function finalizar() {
   }
 }
 
-function simularCartao() { /* mantido igual */ 
+function simularCartao() {
   const screen = document.getElementById('cardScreen');
   const msg = document.getElementById('cardMessage');
   screen.style.display = "flex";
@@ -332,7 +333,7 @@ function simularCartao() { /* mantido igual */
   setTimeout(finalizarVenda, 10000);
 }
 
-function simularPix() { /* mantido igual */
+function simularPix() {
   const screen = document.getElementById('pixScreen');
   const msg = document.getElementById('pixMessage');
   screen.style.display = "flex";
@@ -346,7 +347,7 @@ function finalizarVenda() {
   window.location.href = "carrinho.html";
 }
 
-// ======================= MODAIS =======================
+// ======================= DESCONTO COM VALIDAÇÃO =======================
 function abrirTipoDesconto() {
   document.getElementById('modalTipo').style.display = "flex";
 }
@@ -364,26 +365,25 @@ function fecharModal() {
   document.querySelectorAll('.modal').forEach(m => m.style.display = "none");
 }
 
-// ======================= NOVO: VALIDAÇÃO DE DESCONTO =======================
 function validarEDescontar() {
   const base = baseTotal();
   let valorDesconto = 0;
 
   if (tipo === "percent") {
     valorDesconto = parseFloat(input) || 0;
-    if (valorDesconto <= 0 || valorDesconto > 100) {
+    if (valorDesconto <= 0 || valorDesconto >= 100) {   // Alterado: >= 100
       mostrarErro();
       return;
     }
-  } else { // valor fixo
+  } else { // Valor fixo
     valorDesconto = parseFloat(input) || 0;
-    if (valorDesconto <= 0 || valorDesconto > base) {
+    if (valorDesconto <= 0 || valorDesconto >= base) {  // Alterado: >= base
       mostrarErro();
       return;
     }
   }
 
-  // Se passou na validação
+  // Aplica o desconto
   desconto = tipo === "percent" ? valorDesconto : valorDesconto;
   fecharModal();
   atualizarTotais();
@@ -400,7 +400,7 @@ function mostrarErro() {
 
 function fecharErroERetornar() {
   document.getElementById('errorModal').style.display = "none";
-  // Mantém o modal de input aberto para o usuário corrigir
+  // Mantém o usuário no teclado para corrigir
 }
 
 // ======================= KEYPAD =======================
@@ -423,7 +423,7 @@ function atualizarDisplay() {
   if (tipo === "percent") {
     document.getElementById('display').innerText = (input || "0") + "%";
   } else {
-    const valor = (parseFloat(input) || 0) / 100; // mantido como centavos
+    const valor = (parseFloat(input) || 0) / 100;
     document.getElementById('display').innerText = "R$ " + valor.toFixed(2);
   }
 }
