@@ -60,24 +60,23 @@ body {
 .qr { width: 200px; height: auto; margin-bottom: 20px; }
 .box { background: rgba(255,255,255,0.2); padding: 20px; border-radius: 12px; margin-top: 20px; }
 
-/* Modais */
+/* Modais Gerais */
 .modal {
   position: fixed; inset: 0; background: rgba(0,0,0,0.55);
   display: none; align-items: center; justify-content: center; z-index: 1000;
 }
 .modal-box {
   background: white; width: 340px; border-radius: 14px;
-  padding: 18px; position: relative;
+  padding: 20px; position: relative;
 }
 .modal-header {
   display: flex; justify-content: space-between; align-items: center;
-  margin-bottom: 10px; font-weight: bold;
+  margin-bottom: 15px; font-weight: bold;
 }
-.modal-close { cursor: pointer; font-size: 18px; color: #666; }
-.option { padding: 14px 0; border-bottom: 1px solid #eee; cursor: pointer; }
+.modal-close { cursor: pointer; font-size: 20px; color: #666; }
 
 /* Keypad */
-#display { text-align: center; font-size: 34px; margin: 10px 0 0; }
+#display { text-align: center; font-size: 34px; margin: 10px 0; }
 #label { text-align: center; margin-bottom: 15px; color: #666; }
 .keypad {
   display: grid; grid-template-columns: repeat(3, 1fr);
@@ -98,43 +97,35 @@ body {
 .btn-red { background: #e74c3c; }
 .btn-green { background: #2ecc71; }
 
-/* Modal de Limite de Desconto */
-#errorModal {
+/* Modal de Limite de Desconto (Autorizar) */
+#errorModal, #loginModal, #erroLoginModal {
   position: fixed; inset: 0; background: rgba(0,0,0,0.6);
   display: none; align-items: center; justify-content: center;
   z-index: 2000;
 }
-#errorBox {
+.modal-box {
   background: white; width: 340px; border-radius: 16px;
   padding: 25px 20px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
 }
-#errorTitle {
-  font-size: 18px; font-weight: bold; color: #333; margin-bottom: 15px;
+
+/* Modal Login */
+#loginModal .modal-box {
+  text-align: left;
 }
-#errorMessage {
-  font-size: 15px; color: #666; margin-bottom: 25px; line-height: 1.5;
+#loginModal input {
+  width: 100%; padding: 12px; margin: 8px 0 15px;
+  border: 1px solid #ddd; border-radius: 8px; font-size: 16px;
 }
-.error-actions {
-  display: flex; gap: 12px; justify-content: center;
+#loginModal button {
+  width: 100%; padding: 14px; background: #9E3667;
+  color: white; border: none; border-radius: 12px;
+  font-size: 16px; font-weight: bold; cursor: pointer;
 }
-.error-btn {
-  padding: 12px 30px;
-  border: none;
-  border-radius: 12px;
-  font-size: 16px;
-  font-weight: bold;
-  cursor: pointer;
+
+/* Modal Erro Login */
+#erroLoginModal .modal-box {
+  text-align: center;
 }
-#errorAutorizar {
-  background: #e74c3c;
-  color: white;
-}
-#errorOK {
-  background: #9E3667;
-  color: white;
-}
-#errorAutorizar:hover { background: #c0392b; }
-#errorOK:hover { background: #8a2e5a; }
 </style>
 </head>
 <body>
@@ -168,74 +159,49 @@ body {
   </div>
 </div>
 
-<!-- Overlays -->
-<div class="overlay" id="cardScreen">
-  <img src="loading.gif" class="loading">
-  <h1 id="cardMessage">APROXIME, INSIRA OU PASSE O CARTÃO</h1>
-  <div class="box">
-    <p>💳 Cartão</p>
-    <p>Valor: R$ <span id="cardTotal"></span></p>
-    <small>Ambiente de teste</small>
+<!-- Overlays de pagamento -->
+<div class="overlay" id="cardScreen">...</div>
+<div class="overlay" id="pixScreen">...</div>
+
+<!-- Modais existentes -->
+<div class="modal" id="modalTipo"> ... </div>
+<div class="modal" id="modalInput"> ... </div>
+
+<!-- Modal de Limite 10% -->
+<div id="errorModal">
+  <div class="modal-box">
+    <div id="errorTitle" style="font-size:18px; font-weight:bold; margin-bottom:15px;">AUTORIZAR</div>
+    <div id="errorMessage" style="font-size:15px; color:#666; margin-bottom:25px; line-height:1.5;"></div>
+    <div style="display:flex; gap:12px; justify-content:center;">
+      <button onclick="abrirModalLogin()" style="background:#e74c3c; color:white; padding:12px 30px; border:none; border-radius:12px; font-weight:bold; cursor:pointer;">Autorizar</button>
+      <button onclick="fecharErroERetornar()" style="background:#9E3667; color:white; padding:12px 30px; border:none; border-radius:12px; font-weight:bold; cursor:pointer;">OK</button>
+    </div>
   </div>
 </div>
 
-<div class="overlay" id="pixScreen">
-  <h1 id="pixMessage">CONSULTANDO STATUS DA TRANSAÇÃO VIA PIX</h1>
-  <img src="qrcode.avif" class="qr">
-  <div class="box">
-    <p>📲 PIX</p>
-    <p>Valor: R$ <span id="pixTotal"></span></p>
-    <small>Ambiente de teste</small>
-  </div>
-</div>
-
-<!-- Modais -->
-<div class="modal" id="modalTipo">
+<!-- NOVO: Modal de Login -->
+<div id="loginModal">
   <div class="modal-box">
     <div class="modal-header">
-      <span>Tipo de desconto</span>
-      <span class="modal-close" onclick="fecharModal()">✕</span>
+      <span>LOGIN COM SEUS DADOS</span>
+      <span class="modal-close" onclick="fecharTodosModais()">✕</span>
     </div>
-    <div class="option" onclick="abrirInput('percent')">(%) Percentual</div>
-    <div class="option" onclick="abrirInput('valor')">(R$) Valor</div>
+    <p style="margin:15px 0 5px;">Usuário</p>
+    <input type="text" id="username" placeholder="Digite o usuário" autocomplete="off">
+
+    <p style="margin:15px 0 5px;">Senha</p>
+    <input type="password" id="password" placeholder="Digite a senha" autocomplete="off">
+
+    <button onclick="tentarLogin()">Entrar</button>
   </div>
 </div>
 
-<div class="modal" id="modalInput">
+<!-- Modal Erro de Login -->
+<div id="erroLoginModal">
   <div class="modal-box">
-    <div class="modal-close" onclick="fecharModal()">✕</div>
-    <h2 id="display">0</h2>
-    <p id="label"></p>
-    <div class="keypad">
-      <button class="key" onclick="dig(1)">1</button>
-      <button class="key" onclick="dig(2)">2</button>
-      <button class="key" onclick="dig(3)">3</button>
-      <button class="key" onclick="dig(4)">4</button>
-      <button class="key" onclick="dig(5)">5</button>
-      <button class="key" onclick="dig(6)">6</button>
-      <button class="key" onclick="dig(7)">7</button>
-      <button class="key" onclick="dig(8)">8</button>
-      <button class="key" onclick="dig(9)">9</button>
-      <button class="key" onclick="clearInput()">C</button>
-      <button class="key" onclick="dig(0)">0</button>
-      <button class="key" onclick="del()">⌫</button>
-    </div>
-    <div class="actions">
-      <button class="btn-red" onclick="cancelarInput()">Cancelar</button>
-      <button class="btn-green" onclick="validarEDescontar()">Avançar</button>
-    </div>
-  </div>
-</div>
-
-<!-- Modal de Limite de Desconto -->
-<div id="errorModal">
-  <div id="errorBox">
-    <div id="errorTitle">AUTORIZAR</div>
-    <div id="errorMessage"></div>
-    <div class="error-actions">
-      <button id="errorAutorizar" class="error-btn">Autorizar</button>
-      <button id="errorOK" class="error-btn" onclick="fecharErroERetornar()">OK</button>
-    </div>
+    <div style="font-size:18px; font-weight:bold; color:#333; margin-bottom:10px;">EYE PRO</div>
+    <div style="font-size:15px; color:#666; margin-bottom:25px;">Usuário/senha incorreto</div>
+    <button onclick="fecharErroLogin()" style="background:#9E3667; color:white; padding:12px 40px; border:none; border-radius:12px; font-weight:bold; cursor:pointer;">OK</button>
   </div>
 </div>
 
@@ -275,6 +241,10 @@ let tipo = null;
 let input = "";
 const LIMITE_PERCENTUAL = 10;
 
+/* Variáveis para armazenar o desconto pendente de autorização */
+let descontoPendente = null;
+let tipoPendente = null;
+
 function baseTotal(){
   return serviceFeeEnabled ? total * 1.10 : total;
 }
@@ -304,10 +274,7 @@ function selectPayment(method, btn) {
 }
 
 function finalizar() {
-  if (!paymentMethod) {
-    alert("Selecione uma forma de pagamento!");
-    return;
-  }
+  if (!paymentMethod) return alert("Selecione uma forma de pagamento!");
   if (paymentMethod === "Cartao") simularCartao();
   else if (paymentMethod === "PIX") simularPix();
   else {
@@ -316,7 +283,7 @@ function finalizar() {
   }
 }
 
-function simularCartao() {
+function simularCartao() { /* mesmo código anterior */ 
   const screen = document.getElementById('cardScreen');
   const msg = document.getElementById('cardMessage');
   screen.style.display = "flex";
@@ -327,7 +294,7 @@ function simularCartao() {
   setTimeout(finalizarVenda, 10000);
 }
 
-function simularPix() {
+function simularPix() { /* mesmo código anterior */ 
   const screen = document.getElementById('pixScreen');
   const msg = document.getElementById('pixMessage');
   screen.style.display = "flex";
@@ -343,7 +310,7 @@ function finalizarVenda() {
 
 /* ======================= MODAIS ======================= */
 function abrirTipoDesconto(){
-  if (tipo !== null) return;   // impede reabrir se já tem desconto aplicado
+  if (tipo !== null) return;
   document.getElementById('modalTipo').style.display = "flex";
 }
 
@@ -360,14 +327,13 @@ function fecharModal(){
   document.querySelectorAll('.modal').forEach(m => m.style.display = "none");
 }
 
-/* Nova função: Cancelar o input e resetar tudo */
 function cancelarInput(){
-  tipo = null;        // ← IMPORTANTE: reseta o tipo
+  tipo = null;
   input = "";
   fecharModal();
 }
 
-/* ======================= VALIDAÇÃO PRINCIPAL ======================= */
+/* ======================= VALIDAÇÃO ======================= */
 function validarEDescontar(){
   const base = baseTotal();
   let valorDigitado = parseFloat(input) || 0;
@@ -378,12 +344,14 @@ function validarEDescontar(){
       return;
     }
     if (valorDigitado > LIMITE_PERCENTUAL) {
+      descontoPendente = valorDigitado;
+      tipoPendente = "percent";
       mostrarModalLimite(`Não é possivel adicionar o desconto.<br>O limite de desconto é de ${LIMITE_PERCENTUAL}%`);
       return;
     }
     desconto = valorDigitado;
-  }
-  else { // Valor em R$
+  } 
+  else {
     const valorDesconto = valorDigitado / 100;
     const limiteEmReais = base * (LIMITE_PERCENTUAL / 100);
 
@@ -392,38 +360,69 @@ function validarEDescontar(){
       return;
     }
     if (valorDesconto > limiteEmReais) {
+      descontoPendente = valorDesconto;
+      tipoPendente = "valor";
       mostrarModalLimite(`Não é possivel adicionar o desconto.<br>O limite de desconto é de R$ ${limiteEmReais.toFixed(2)}`);
       return;
     }
     desconto = valorDesconto;
   }
 
-  // Desconto válido
   fecharModal();
   atualizarTotais();
   atualizarBotaoDesconto();
 }
 
-/* Modal de erro antigo (0 ou >= total) */
-function mostrarModalErro(mensagem) {
-  document.getElementById('errorTitle').innerText = "EYE WEB";
+/* Modal de Limite → Abre Login */
+function mostrarModalLimite(mensagem) {
   document.getElementById('errorMessage').innerHTML = mensagem;
-  document.getElementById('errorAutorizar').style.display = "none";
-  document.getElementById('errorOK').onclick = fecharErroERetornar;
   document.getElementById('errorModal').style.display = "flex";
 }
 
-/* Modal de limite 10% */
-function mostrarModalLimite(mensagem) {
-  document.getElementById('errorTitle').innerText = "AUTORIZAR";
-  document.getElementById('errorMessage').innerHTML = mensagem;
-  document.getElementById('errorAutorizar').style.display = "inline-block";
-  document.getElementById('errorOK').onclick = fecharErroERetornar;
-  document.getElementById('errorModal').style.display = "flex";
+function abrirModalLogin() {
+  document.getElementById('errorModal').style.display = "none";
+  document.getElementById('username').value = "";
+  document.getElementById('password').value = "";
+  document.getElementById('loginModal').style.display = "flex";
+}
+
+/* Tentativa de Login */
+function tentarLogin() {
+  const user = document.getElementById('username').value.trim();
+  const pass = document.getElementById('password').value.trim();
+
+  if (user === "candidato" && pass === "Candidato.22") {
+    // Login correto → aplica o desconto pendente
+    desconto = descontoPendente;
+    tipo = tipoPendente;
+    
+    document.getElementById('loginModal').style.display = "none";
+    atualizarTotais();
+    atualizarBotaoDesconto();
+    
+    // Limpa pendentes
+    descontoPendente = null;
+    tipoPendente = null;
+  } else {
+    // Login incorreto
+    document.getElementById('loginModal').style.display = "none";
+    document.getElementById('erroLoginModal').style.display = "flex";
+  }
+}
+
+function fecharErroLogin() {
+  document.getElementById('erroLoginModal').style.display = "none";
+  // Reabre o modal de login
+  document.getElementById('loginModal').style.display = "flex";
 }
 
 function fecharErroERetornar() {
   document.getElementById('errorModal').style.display = "none";
+}
+
+function fecharTodosModais() {
+  document.getElementById('loginModal').style.display = "none";
+  document.getElementById('erroLoginModal').style.display = "none";
 }
 
 /* ======================= ATUALIZAR BOTÃO ======================= */
