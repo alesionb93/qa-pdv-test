@@ -285,18 +285,26 @@ body {
 
 <!-- OVERLAYS ORIGINAIS -->
 <div class="overlay" id="cardScreen">
+  <img src="loading.gif" class="loading">
+
   <h1 id="cardMessage">APROXIME, INSIRA OU PASSE O CARTÃO</h1>
+
   <div class="box">
     <p>💳 Cartão</p>
     <p>Valor: R$ <span id="cardTotal"></span></p>
+    <small>Ambiente de teste</small>
   </div>
 </div>
 
 <div class="overlay" id="pixScreen">
-  <h1 id="pixMessage">CONSULTANDO PIX</h1>
+  <h1 id="pixMessage">CONSULTANDO STATUS DA TRANSAÇÃO VIA PIX</h1>
+
+  <img src="qrcode.avif" class="qr">
+
   <div class="box">
-    <p>PIX</p>
+    <p>📲 PIX</p>
     <p>Valor: R$ <span id="pixTotal"></span></p>
+    <small>Ambiente de teste</small>
   </div>
 </div>
 
@@ -447,11 +455,22 @@ function simularCartao() {
   const msg = document.getElementById('cardMessage');
 
   screen.style.display = "flex";
+
+  // reset correto ao abrir
   msg.innerText = "APROXIME, INSIRA OU PASSE O CARTÃO";
 
-  setTimeout(() => msg.innerText = "PROCESSANDO...", 2000);
-  setTimeout(() => msg.innerText = "DÉBITO NUBANK", 4000);
-  setTimeout(() => msg.innerText = "TRANSAÇÃO APROVADA ✅", 8000);
+  setTimeout(() => {
+    msg.innerText = "PROCESSANDO...";
+  }, 2000);
+
+  setTimeout(() => {
+    msg.innerText = "DÉBITO NUBANK";
+  }, 4000);
+
+  setTimeout(() => {
+    msg.innerText = "TRANSAÇÃO APROVADA ✅";
+  }, 8000);
+
   setTimeout(finalizarVenda, 10000);
 }
 
@@ -460,6 +479,8 @@ function simularPix() {
   const msg = document.getElementById('pixMessage');
 
   screen.style.display = "flex";
+
+  // reset correto
   msg.innerText = "CONSULTANDO STATUS DA TRANSAÇÃO VIA PIX";
 
   setTimeout(() => {
@@ -468,7 +489,6 @@ function simularPix() {
 
   setTimeout(finalizarVenda, 7000);
 }
-
 function finalizarVenda() {
   localStorage.removeItem('cart');
   window.location.href = "carrinho.html";
