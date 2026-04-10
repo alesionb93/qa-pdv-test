@@ -103,8 +103,8 @@ body {
 .btn-red { background: #e74c3c; }
 .btn-green { background: #2ecc71; }
 
-/* Modais de Erro */
-#errorModal, #loginModal, #erroLoginModal {
+/* Modais de Erro e Login */
+#errorModal, #erroInvalidoModal, #loginModal, #erroLoginModal {
   position: fixed; inset: 0; background: rgba(0,0,0,0.6);
   display: none; align-items: center; justify-content: center;
   z-index: 2000;
@@ -112,6 +112,7 @@ body {
 .modal-box {
   background: white; width: 340px; border-radius: 16px;
   padding: 25px 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  text-align: center;
 }
 
 /* Login */
@@ -219,7 +220,7 @@ body {
 <!-- Modal Erro Inválido (0 ou >= total) - Apenas EYE WEB + OK -->
 <div id="erroInvalidoModal">
   <div class="modal-box">
-    <div style="font-size:18px; font-weight:bold; margin-bottom:15px;">EYE WEB</div>
+    <div style="font-size:18px; font-weight:bold; margin-bottom:12px;">EYE WEB</div>
     <div style="font-size:15px; color:#666; margin-bottom:25px;">Valor inválido para o desconto</div>
     <button onclick="fecharErroInvalido()" 
             style="background:#9E3667; color:white; padding:12px 40px; border:none; border-radius:12px; font-weight:bold;">
@@ -228,7 +229,7 @@ body {
   </div>
 </div>
 
-<!-- Modal Limite Superior (>10%) - Com Autorizar -->
+<!-- Modal Limite Superior (>10%) -->
 <div id="errorModal">
   <div class="modal-box">
     <div id="errorTitle" style="font-size:18px; font-weight:bold; margin-bottom:15px;">AUTORIZAR</div>
@@ -451,7 +452,7 @@ function fecharErroInvalido() {
   document.getElementById('erroInvalidoModal').style.display = "none";
 }
 
-/* Modal Limite Superior (>10%) */
+/* Modal Limite Superior */
 function mostrarModalLimiteSuperior(mensagem) {
   document.getElementById('errorMessage').innerHTML = mensagem;
   document.getElementById('errorModal').style.display = "flex";
@@ -472,7 +473,7 @@ function tentarLogin() {
     desconto = descontoPendente;
     tipo = tipoPendente;
     document.getElementById('loginModal').style.display = "none";
-    fecharModal();                    // Fecha o teclado
+    fecharModal();
     atualizarTotais();
     atualizarBotaoDesconto();
     descontoPendente = null;
