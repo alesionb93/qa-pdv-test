@@ -543,7 +543,35 @@ function atualizarDisplay(){
 }
 
 function aplicarDesconto(){
-  desconto = tipo==="percent" ? parseFloat(input) : parseFloat(input)/100;
+
+  let valor = tipo==="percent" 
+    ? parseFloat(input)
+    : parseFloat(input)/100;
+
+  if(!valor || valor <= 0){
+    document.getElementById('modalErro').style.display="flex";
+    return;
+  }
+
+  const base = baseTotal();
+  const maxPercent = 10;
+  const maxValue = base * 0.10;
+
+  // LIMITE EXCEDIDO
+  if(tipo === "percent" && valor > maxPercent){
+    pendingDiscount = valor;
+    document.getElementById('modalAuth').style.display="flex";
+    return;
+  }
+
+  if(tipo === "valor" && (valor > maxValue || valor <= 0)){
+    pendingDiscount = valor;
+    document.getElementById('modalAuth').style.display="flex";
+    return;
+  }
+
+  // OK NORMAL
+  desconto = valor;
 
   fecharModal();
   atualizarTotais();
@@ -568,6 +596,80 @@ function removerDesconto(){
 /* INIT */
 atualizarTotais();
 
+<!-- ERRO DESCONTO -->
+<div class="modal" id="modalErro">
+  <div class="modal-box">
+    <h2>EYE PRO</h2>
+    <p>Valor inválido para desconto</p>
+    <button class="btn-green" onclick="fecharModal()">OK</button>
+  </div>
+</div>
+
+<!-- AUTORIZAÇÃO -->
+<div class="modal" id="modalAuth">
+  <div class="modal-box">
+    <h3>Autorizar</h3>
+    <p>Limite de desconto excedido</p>
+
+    <div class="actions">
+      <button class="btn-red" onclick="abrirLogin()">Autorizar</button>
+      <button class="btn-green" onclick="fecharModal()">OK</button>
+    </div>
+  </div>
+</div>
+
+<!-- LOGIN -->
+<div class="modal" id="modalLogin">
+  <div class="modal-box">
+    <h3>Login de Autorização</h3>
+
+    <input id="user" placeholder="Usuário" style="width:100%;padding:10px;margin:5px 0;">
+    <input id="pass" type="password" placeholder="Senha" style="width:100%;padding:10px;margin:5px 0;">
+
+    <button class="btn-green" style="background:#9E3667;width:100%;margin-top:10px;" onclick="validarLogin()">
+      Entrar
+    </button>
+  </div>
+</div>
+
+<!-- ERRO DESCONTO -->
+<div class="modal" id="modalErro">
+  <div class="modal-box">
+    <h2>EYE PRO</h2>
+    <p>Valor inválido para desconto</p>
+    <button class="btn-green" onclick="fecharModal()">OK</button>
+  </div>
+</div>
+
+<!-- AUTORIZAÇÃO -->
+<div class="modal" id="modalAuth">
+  <div class="modal-box">
+    <h3>Autorizar</h3>
+    <p>Limite de desconto excedido</p>
+
+    <div class="actions">
+      <button class="btn-red" onclick="abrirLogin()">Autorizar</button>
+      <button class="btn-green" onclick="fecharModal()">OK</button>
+    </div>
+  </div>
+</div>
+
+<!-- LOGIN -->
+<div class="modal" id="modalLogin">
+  <div class="modal-box">
+    <h3>Login de Autorização</h3>
+
+    <input id="user" placeholder="Usuário" style="width:100%;padding:10px;margin:5px 0;">
+    <input id="pass" type="password" placeholder="Senha" style="width:100%;padding:10px;margin:5px 0;">
+
+    <button class="btn-green" style="background:#9E3667;width:100%;margin-top:10px;" onclick="validarLogin()">
+      Entrar
+    </button>
+  </div>
+</div>
+
+
+  
 </script>
 
 </body>
