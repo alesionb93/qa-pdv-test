@@ -21,7 +21,6 @@ body {
   overflow-y: auto;
 }
 
-/* ITEM */
 .item {
   display: flex;
   align-items: center;
@@ -177,7 +176,10 @@ body {
 </div>
 
 <script>
+
 const cart = JSON.parse(localStorage.getItem('cart')) || {};
+const serviceFeeEnabled = JSON.parse(localStorage.getItem('serviceFeeEnabled')) || false;
+
 const itemsDiv = document.getElementById('items');
 const totalSpan = document.getElementById('total');
 const cardTotal = document.getElementById('cardTotal');
@@ -185,7 +187,6 @@ const pixTotal = document.getElementById('pixTotal');
 
 let total = 0;
 
-// render itens
 Object.keys(cart).forEach(name => {
   const item = cart[name];
   const itemTotal = item.qty * item.price;
@@ -205,9 +206,12 @@ Object.keys(cart).forEach(name => {
   `;
 });
 
-totalSpan.innerText = total;
-cardTotal.innerText = total;
-pixTotal.innerText = total;
+// 🆕 TAXA 10%
+const finalTotal = serviceFeeEnabled ? total * 1.10 : total;
+
+totalSpan.innerText = finalTotal.toFixed(2);
+cardTotal.innerText = finalTotal.toFixed(2);
+pixTotal.innerText = finalTotal.toFixed(2);
 
 let paymentMethod = null;
 
@@ -237,7 +241,6 @@ function finalizar() {
   }
 }
 
-// 💳
 function simularCartao() {
   const screen = document.getElementById('cardScreen');
   const msg = document.getElementById('cardMessage');
@@ -251,7 +254,6 @@ function simularCartao() {
   setTimeout(finalizarVenda, 10000);
 }
 
-// 📲
 function simularPix() {
   const screen = document.getElementById('pixScreen');
   const msg = document.getElementById('pixMessage');
@@ -265,11 +267,11 @@ function simularPix() {
   setTimeout(finalizarVenda, 7000);
 }
 
-// ✅ FINAL
 function finalizarVenda() {
   localStorage.removeItem('cart');
   window.location.href = "carrinho.html";
 }
+
 </script>
 
 </body>
