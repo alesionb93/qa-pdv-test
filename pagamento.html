@@ -2,6 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Pagamento</title>
 <style>
 body {
@@ -9,9 +10,10 @@ body {
   font-family: Arial, sans-serif;
   background: #f4f4f4;
   display: flex;
-  height: 100vh;
+  flex-direction: row;
+  min-height: 100vh;
 }
-.left { flex: 2; background: white; padding: 20px; overflow-y: auto; }
+.left { flex: 2; background: white; padding: 20px; overflow-y: auto; padding-bottom: 120px; }
 .item {
   display: flex; align-items: center; justify-content: space-between;
   padding: 12px; border-bottom: 1px solid #eee; gap: 10px;
@@ -20,12 +22,13 @@ body {
 .item-img {
   width: 45px; height: 45px; object-fit: contain;
   border-radius: 8px; background: #fff; border: 1px solid #eee;
+  flex-shrink: 0;
 }
 .item-name { font-weight: bold; }
 .item-qty { font-size: 12px; color: #666; }
-.right { flex: 1; background: #FFE6EF; padding: 20px; display: flex; flex-direction: column; justify-content: space-between; }
+.right { flex: 1; background: #FFE6EF; padding: 20px; display: flex; flex-direction: column; justify-content: space-between; min-width: 280px; }
 .valor-faltante { text-align: center; margin-bottom: 20px; }
-.valor { font-size: 40px; font-weight: bold; margin: 10px 0; }
+.valor { font-size: 36px; font-weight: bold; margin: 10px 0; word-break: break-all; }
 .btn-desconto {
   background: #2196f3; color: white; border: none;
   padding: 10px 20px; border-radius: 8px; cursor: pointer;
@@ -43,22 +46,24 @@ body {
 .footer {
   position: fixed; bottom: 0; left: 0; right: 0; height: 100px;
   background: #FFE6EF; display: flex; align-items: center;
-  justify-content: space-between; padding: 0 30px;
+  justify-content: space-between; padding: 0 20px;
+  box-sizing: border-box;
 }
-.footer-left { font-size: 22px; font-weight: bold; }
+.footer-left { font-size: 18px; font-weight: bold; }
 .finish {
-  background: #22B14C; color: white; padding: 18px;
+  background: #22B14C; color: white; padding: 15px 20px;
   border: none; border-radius: 10px; cursor: pointer;
+  white-space: nowrap;
 }
 .overlay {
   position: fixed; top: 0; left: 0; width: 100%; height: 100%;
   background: #BD407B; color: white; display: none;
   flex-direction: column; align-items: center; justify-content: center;
-  text-align: center;
+  text-align: center; padding: 20px; box-sizing: border-box;
 }
 .loading { width: 80px; height: auto; margin-bottom: 20px; }
-.qr { width: 200px; height: auto; margin-bottom: 20px; }
-.box { background: rgba(255,255,255,0.2); padding: 20px; border-radius: 12px; margin-top: 20px; }
+.qr { width: 200px; max-width: 60vw; height: auto; margin-bottom: 20px; }
+.box { background: rgba(255,255,255,0.2); padding: 20px; border-radius: 12px; margin-top: 20px; max-width: 90vw; }
 
 /* Modais */
 .modal {
@@ -66,8 +71,8 @@ body {
   display: none; align-items: center; justify-content: center; z-index: 1000;
 }
 .modal-box {
-  background: white; width: 340px; border-radius: 14px;
-  padding: 20px; position: relative;
+  background: white; width: 340px; max-width: 90vw; border-radius: 14px;
+  padding: 20px; position: relative; box-sizing: border-box;
 }
 .modal-header {
   display: flex; justify-content: space-between; align-items: center;
@@ -89,7 +94,7 @@ body {
   gap: 12px; justify-items: center; margin-top: 10px;
 }
 .key {
-  width: 62px; height: 62px; border-radius: 50%;
+  width: 56px; height: 56px; border-radius: 50%;
   border: 2px solid #9E3667; background: #f2f2f2;
   font-size: 18px; cursor: pointer;
 }
@@ -109,13 +114,8 @@ body {
   display: none; align-items: center; justify-content: center;
   z-index: 2000;
 }
-.modal-box {
-  background: white; width: 340px; border-radius: 16px;
-  padding: 25px 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-  text-align: center;
-}
 
-/* Login - Layout corrigido e mais espaçoso */
+/* Login */
 #loginModal .modal-box {
   padding: 30px 25px;
 }
@@ -145,6 +145,50 @@ body {
   font-weight: bold; 
   cursor: pointer;
   margin-top: 10px;
+}
+
+/* MEDIA QUERIES */
+@media (max-width: 768px) {
+  body {
+    flex-direction: column;
+  }
+  .left {
+    padding-bottom: 20px;
+  }
+  .right {
+    min-width: unset;
+  }
+  .footer {
+    height: auto;
+    min-height: 80px;
+    padding: 10px 15px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .footer-left {
+    font-size: 15px;
+  }
+  .valor {
+    font-size: 28px;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer-left {
+    font-size: 13px;
+  }
+  .finish {
+    padding: 12px 15px;
+    font-size: 14px;
+  }
+  .valor {
+    font-size: 24px;
+  }
+  .key {
+    width: 48px;
+    height: 48px;
+    font-size: 16px;
+  }
 }
 </style>
 </head>
@@ -268,7 +312,7 @@ body {
   </div>
 </div>
 
-<!-- Modal Login - Layout ajustado -->
+<!-- Modal Login -->
 <div id="loginModal">
   <div class="modal-box">
     <div class="modal-header">
@@ -277,10 +321,8 @@ body {
     </div>
     <p>Usuário</p>
     <input type="text" id="username" placeholder="Digite o usuário">
-
     <p>Senha</p>
     <input type="password" id="password" placeholder="Digite a senha">
-
     <button onclick="tentarLogin()">Entrar</button>
   </div>
 </div>
