@@ -13,7 +13,7 @@ body {
   height: 100vh;
 }
 
-/* LEFT */
+/* ================= LAYOUT ================= */
 .left {
   flex: 2;
   background: white;
@@ -31,7 +31,6 @@ body {
 .item-left {
   display: flex;
   gap: 10px;
-  align-items: center;
 }
 
 .item-img {
@@ -44,7 +43,7 @@ body {
 .item-name { font-weight: bold; }
 .item-qty { font-size: 12px; color: #666; }
 
-/* RIGHT */
+/* ================= RIGHT ================= */
 .right {
   flex: 1;
   background: #FFE6EF;
@@ -59,6 +58,7 @@ body {
   font-weight: bold;
 }
 
+/* desconto */
 .btn-desconto {
   background: #2196f3;
   color: white;
@@ -69,29 +69,32 @@ body {
 }
 
 .btn-remove {
-  width: 30px;
-  height: 30px;
+  margin-left: 10px;
   border-radius: 50%;
-  border: none;
   background: red;
   color: white;
+  border: none;
+  width: 30px;
+  height: 30px;
 }
 
-/* PAYMENT */
+/* pagamentos */
 .pay-buttons button {
   width: 100%;
   padding: 15px;
   margin-bottom: 10px;
   border: none;
   border-radius: 8px;
+  cursor: pointer;
   background: #9E3667;
   color: white;
-  cursor: pointer;
 }
 
-.selected { outline: 3px solid #000; }
+.selected {
+  outline: 3px solid #000;
+}
 
-/* FOOTER */
+/* ================= FOOTER ================= */
 .footer {
   position: fixed;
   bottom: 0;
@@ -102,40 +105,22 @@ body {
   display: flex;
   justify-content: space-between;
   padding: 0 30px;
-  align-items: center;
+}
+
+.footer-left {
+  font-size: 22px;
+  font-weight: bold;
 }
 
 .finish {
   background: #22B14C;
-  border: none;
   color: white;
   padding: 18px;
+  border: none;
   border-radius: 10px;
 }
 
-/* OVERLAYS (DINHEIRO / CARTÃO / PIX) */
-.overlay {
-  position: fixed;
-  inset: 0;
-  background: #BD407B;
-  color: white;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-}
-
-.box {
-  background: rgba(255,255,255,0.2);
-  padding: 20px;
-  border-radius: 12px;
-  margin-top: 20px;
-}
-
-.loading { width: 80px; }
-.qr { width: 200px; }
-
-/* MODAL TIPO */
+/* ================= MODAL DESCONTO ================= */
 .modal {
   position: fixed;
   inset: 0;
@@ -150,6 +135,14 @@ body {
   width: 340px;
   border-radius: 14px;
   padding: 18px;
+  position: relative;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+  margin-bottom: 10px;
 }
 
 .option {
@@ -158,7 +151,7 @@ body {
   cursor: pointer;
 }
 
-/* KEYPAD */
+/* ================= KEYPAD ================= */
 .keypad {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -174,29 +167,32 @@ body {
   background: #f2f2f2;
 }
 
-/* ACTIONS */
+/* actions */
 .actions {
   display: flex;
   gap: 10px;
   margin-top: 15px;
 }
 
-.btn-red {
-  flex: 1;
-  background: #e74c3c;
-  border: none;
+.btn-red { background: #e74c3c; color: white; flex:1; border:none; padding:12px; border-radius:10px;}
+.btn-green { background: #2ecc71; color: white; flex:1; border:none; padding:12px; border-radius:10px;}
+
+/* ================= OVERLAYS (IMPORTANTE RESTAURADO) ================= */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: #BD407B;
   color: white;
-  border-radius: 12px;
-  padding: 12px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
 }
 
-.btn-green {
-  flex: 1;
-  background: #2ecc71;
-  border: none;
-  color: white;
+.box {
+  background: rgba(255,255,255,0.2);
+  padding: 20px;
   border-radius: 12px;
-  padding: 12px;
 }
 </style>
 </head>
@@ -226,8 +222,7 @@ body {
 </div>
 
 <div class="footer">
-  <div>
-    SUBTOTAL: R$ <span id="subtotal">0</span><br>
+  <div class="footer-left">
     TOTAL: R$ <span id="total">0</span>
   </div>
 
@@ -236,29 +231,24 @@ body {
 
 <!-- CARTÃO -->
 <div class="overlay" id="cardScreen">
-  <img src="loading.gif" class="loading">
   <h1 id="cardMessage">APROXIME O CARTÃO</h1>
-  <div class="box">
-    <p>Cartão</p>
-    <p>R$ <span id="cardTotal"></span></p>
-  </div>
 </div>
 
 <!-- PIX -->
 <div class="overlay" id="pixScreen">
-  <h1 id="pixMessage">GERANDO PIX</h1>
-  <img src="qrcode.avif" class="qr">
-  <div class="box">
-    <p>PIX</p>
-    <p>R$ <span id="pixTotal"></span></p>
-  </div>
+  <h1 id="pixMessage">PIX EM PROCESSAMENTO</h1>
 </div>
 
 <!-- MODAL DESCONTO -->
 <div class="modal" id="modalTipo">
   <div class="modal-box">
-    <div class="option" onclick="abrirInput('percent')">Percentual (%)</div>
-    <div class="option" onclick="abrirInput('valor')">Valor (R$)</div>
+    <div class="modal-header">
+      Tipo de desconto
+      <span onclick="fecharModal()">✕</span>
+    </div>
+
+    <div class="option" onclick="abrirInput('percent')">(%) Percentual</div>
+    <div class="option" onclick="abrirInput('valor')">(R$) Valor</div>
   </div>
 </div>
 
@@ -294,110 +284,124 @@ body {
 
 <script>
 
-/* CART */
+/* ================= CART ================= */
 const cart = JSON.parse(localStorage.getItem('cart')) || {};
+
 let total = 0;
 
 Object.keys(cart).forEach(name => {
   const item = cart[name];
-  const itemTotal = item.qty * item.price;
-  total += itemTotal;
-
+  total += item.qty * item.price;
   document.getElementById('items').innerHTML += `
     <div class="item">
-      <div class="item-left">
-        <img class="item-img" src="${item.img}">
-        <div>
-          <div class="item-name">${name}</div>
-          <div class="item-qty">x${item.qty}</div>
-        </div>
-      </div>
-      <div>R$ ${itemTotal}</div>
+      <div>${name}</div>
+      <div>R$ ${item.qty * item.price}</div>
     </div>
   `;
 });
 
-function atualizarTotais() {
-  document.getElementById('subtotal').innerText = total.toFixed(2);
-  document.getElementById('total').innerText = total.toFixed(2);
-  document.getElementById('valorFaltante').innerText = total.toFixed(2);
-  document.getElementById('cardTotal').innerText = total.toFixed(2);
-  document.getElementById('pixTotal').innerText = total.toFixed(2);
+/* ================= DESCONTO ================= */
+let desconto = 0;
+let tipo = null;
+let input = "";
+
+function calcFinal(){
+  if(tipo === "percent") return total - (total * desconto / 100);
+  if(tipo === "valor") return total - desconto;
+  return total;
 }
 
-atualizarTotais();
+function atualizarTotais(){
+  const final = calcFinal();
+  document.getElementById('total').innerText = final.toFixed(2);
+  document.getElementById('valorFaltante').innerText = final.toFixed(2);
+}
 
-/* PAYMENT */
+/* ================= PAGAMENTO (RESTAURADO) ================= */
 let paymentMethod = null;
 
-function selectPayment(m, btn) {
-  paymentMethod = m;
-  document.querySelectorAll('.pay-buttons button').forEach(b => b.classList.remove('selected'));
+function selectPayment(method, btn){
+  paymentMethod = method;
+  document.querySelectorAll('.pay-buttons button').forEach(b=>b.classList.remove('selected'));
   btn.classList.add('selected');
 }
 
-/* 🔥 RESTAURADO FLUXO ORIGINAL */
-function finalizar() {
-  if (!paymentMethod) return alert("Selecione pagamento");
+function finalizar(){
 
-  if (paymentMethod === "Cartao") simularCartao();
-  else if (paymentMethod === "PIX") simularPix();
-  else simularDinheiro();
+  if(!paymentMethod){
+    alert("Selecione pagamento");
+    return;
+  }
+
+  if(paymentMethod === "Cartao"){
+    simularCartao();
+  }
+
+  else if(paymentMethod === "PIX"){
+    simularPix();
+  }
+
+  else {
+    alert("Pagamento em dinheiro recebido");
+    window.location.href = "carrinho.html";
+  }
 }
 
-function simularDinheiro() {
-  finalizarVenda();
+/* ================= FLUXOS RESTAURADOS ================= */
+function simularCartao(){
+  const screen = document.getElementById("cardScreen");
+  const msg = document.getElementById("cardMessage");
+
+  screen.style.display = "flex";
+
+  setTimeout(()=>msg.innerText="PROCESSANDO...",2000);
+  setTimeout(()=>msg.innerText="APROVADO ✔",6000);
+  setTimeout(()=>window.location.href="carrinho.html",9000);
 }
 
-function simularCartao() {
-  const s = document.getElementById('cardScreen');
-  const m = document.getElementById('cardMessage');
+function simularPix(){
+  const screen = document.getElementById("pixScreen");
+  const msg = document.getElementById("pixMessage");
 
-  s.style.display = "flex";
+  screen.style.display = "flex";
 
-  setTimeout(() => m.innerText = "PROCESSANDO...", 2000);
-  setTimeout(() => m.innerText = "APROVADO ✅", 7000);
-  setTimeout(finalizarVenda, 9000);
+  setTimeout(()=>msg.innerText="PIX CONFIRMADO ✔",5000);
+  setTimeout(()=>window.location.href="carrinho.html",8000);
 }
 
-function simularPix() {
-  const s = document.getElementById('pixScreen');
-  const m = document.getElementById('pixMessage');
-
-  s.style.display = "flex";
-
-  setTimeout(() => m.innerText = "TRANSAÇÃO APROVADA ✅", 5000);
-  setTimeout(finalizarVenda, 7000);
+/* ================= MODAL ================= */
+function abrirTipoDesconto(){
+  document.getElementById("modalTipo").style.display="flex";
 }
 
-function finalizarVenda() {
-  localStorage.removeItem('cart');
-  window.location.href = "carrinho.html";
+function abrirInput(t){
+  tipo = t;
+  input = "";
+  fecharModal();
+  document.getElementById("modalInput").style.display="flex";
 }
 
-/* MODAIS */
-function abrirTipoDesconto() {
-  document.getElementById('modalTipo').style.display = "flex";
+function fecharModal(){
+  document.querySelectorAll(".modal").forEach(m=>m.style.display="none");
 }
 
-function abrirInput(t) {
-  document.getElementById('modalTipo').style.display = "none";
-  document.getElementById('modalInput').style.display = "flex";
-}
+/* keypad */
+function dig(n){ input+=n; atualizarDisplay(); }
+function del(){ input=input.slice(0,-1); atualizarDisplay(); }
+function clearInput(){ input=""; atualizarDisplay(); }
 
-function fecharModal() {
-  document.querySelectorAll('.modal').forEach(m => m.style.display = "none");
+function atualizarDisplay(){
+  document.getElementById("display").innerText =
+    tipo==="percent" ? input+"%" : "R$ "+(input/100||0).toFixed(2);
 }
-
-/* desconto simples (mantido leve) */
-let input = "";
-function dig(n){ input += n; }
-function del(){ input = input.slice(0,-1); }
-function clearInput(){ input = ""; }
 
 function aplicarDesconto(){
+  desconto = tipo==="percent" ? parseFloat(input) : parseFloat(input)/100;
   fecharModal();
+  atualizarTotais();
 }
+
+atualizarTotais();
 
 </script>
 
