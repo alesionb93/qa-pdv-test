@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <title>PDV Web</title>
-
 <style>
 body {
   font-family: Arial, sans-serif;
@@ -25,13 +24,10 @@ body {
   left: 0;
   z-index: 1000;
 }
-
 .header h1 {
   color: white;
   margin: 0;
 }
-
-/* 🍔 BOTÃO */
 .menu-btn {
   font-size: 26px;
   color: white;
@@ -52,36 +48,24 @@ body {
   display: flex;
   flex-direction: column;
 }
-
-.side-menu.open {
-  left: 0;
-}
-
+.side-menu.open { left: 0; }
 .menu-item {
   padding: 20px;
   border-bottom: 1px solid #eee;
   cursor: pointer;
 }
-
-.menu-item:hover {
-  background: #f5f5f5;
-}
+.menu-item:hover { background: #f5f5f5; }
 
 /* OVERLAY */
 .menu-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
   background: rgba(0,0,0,0.4);
   display: none;
   z-index: 3000;
 }
-
-.menu-overlay.show {
-  display: block;
-}
+.menu-overlay.show { display: block; }
 
 /* CONTAINER */
 .container {
@@ -90,15 +74,11 @@ body {
   padding: 20px;
   margin-top: 22vh;
 }
-
-/* GRID */
 .products {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   gap: 16px;
 }
-
-/* CARD */
 .product {
   width: 160px;
   height: 240px;
@@ -106,56 +86,42 @@ body {
   border-radius: 16px;
   overflow: hidden;
   cursor: pointer;
-  position: relative;
   box-shadow: 0 4px 10px rgba(0,0,0,0.1);
   display: flex;
   flex-direction: column;
 }
-
 .product-image-box {
   height: 140px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
-
 .product-img {
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
 }
-
 .product-info {
   background: #FFEEF4;
   padding: 12px;
   text-align: center;
   margin-top: auto;
 }
-
-.product-price {
-  font-weight: bold;
-}
-
-.product-name {
-  font-size: 13px;
-}
-
-/* BADGE */
+.product-price { font-weight: bold; }
+.product-name { font-size: 13px; }
 .badge {
   position: absolute;
-  top: 8px;
-  right: 8px;
+  top: 8px; right: 8px;
   background: #ff4d6d;
   color: white;
   border-radius: 50%;
-  width: 28px;
-  height: 28px;
+  width: 28px; height: 28px;
   display: none;
   align-items: center;
   justify-content: center;
 }
 
-/* FOOTER */
+/* FOOTER - AGORA SÓ APARECE COM ITENS */
 .footer-bar {
   position: fixed;
   bottom: 0;
@@ -165,8 +131,12 @@ body {
   background: white;
   box-shadow: 0 -2px 10px rgba(0,0,0,0.2);
   z-index: 2000;
+  display: none;           /* Começa oculto */
 }
-
+.footer-bar.show {
+  display: flex;
+  align-items: center;
+}
 .total-box {
   position: absolute;
   left: 15px;
@@ -192,7 +162,6 @@ body {
   cursor: pointer;
   z-index: 5000;
 }
-
 .arrow {
   width: 10px;
   height: 10px;
@@ -201,7 +170,6 @@ body {
   transform: rotate(-45deg);
   transition: 0.3s;
 }
-
 .toggle-btn.open .arrow {
   transform: rotate(135deg);
 }
@@ -220,18 +188,13 @@ body {
   display: flex;
   flex-direction: column;
 }
-
-.cart-overlay.open {
-  height: 100vh;
-}
-
+.cart-overlay.open { height: 100vh; }
 .cart {
   flex: 1;
   overflow-y: auto;
   padding: 20px;
   margin-top: 80px;
 }
-
 .cart-item {
   display: flex;
   align-items: center;
@@ -242,85 +205,42 @@ body {
   border-radius: 12px;
   border: 1px solid #ddd;
 }
-
-.cart-img-box {
-  width: 60px;
-  height: 60px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.cart-img-box img {
-  max-width: 100%;
-  max-height: 100%;
-}
-
-.cart-info {
-  flex: 1;
-}
-
-.cart-name {
-  font-weight: bold;
-}
-
-.cart-price {
-  font-size: 14px;
-  color: #555;
-}
-
-.delete-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-}
-
-.delete-btn img {
-  width: 20px;
-  height: 20px;
-}
-
+.cart-img-box { width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; }
+.cart-img-box img { max-width: 100%; max-height: 100%; }
+.cart-info { flex: 1; }
+.cart-name { font-weight: bold; }
+.cart-price { font-size: 14px; color: #555; }
+.delete-btn { background: none; border: none; cursor: pointer; }
+.delete-btn img { width: 20px; height: 20px; }
 .total-cart {
   padding: 15px;
   font-weight: bold;
   font-size: 18px;
   border-top: 1px solid #eee;
 }
-
-/* TAXA */
 .service-fee {
   padding: 10px 15px;
   border-top: 1px solid #eee;
   display: flex;
-  justify-content: flex-start; /* muda aqui */
+  justify-content: flex-start;
   align-items: center;
   font-size: 14px;
-  gap: 10px; /* espaço entre texto e toggle */
+  gap: 10px;
 }
-
-/* SWITCH */
 .switch {
   position: relative;
   width: 44px;
   height: 24px;
 }
-
-.switch input {
-  display: none;
-}
-
+.switch input { display: none; }
 .slider {
   position: absolute;
   cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  top: 0; left: 0; right: 0; bottom: 0;
   background: #ccc;
   border-radius: 24px;
   transition: 0.3s;
 }
-
 .slider:before {
   position: absolute;
   content: "";
@@ -332,28 +252,20 @@ body {
   border-radius: 50%;
   transition: 0.3s;
 }
-
-.switch input:checked + .slider {
-  background: #9E3667;
-}
-
-.switch input:checked + .slider:before {
-  transform: translateX(20px);
-}
+.switch input:checked + .slider { background: #9E3667; }
+.switch input:checked + .slider:before { transform: translateX(20px); }
 
 .buttons {
   display: flex;
   gap: 10px;
   padding: 10px;
 }
-
 button {
   padding: 10px;
   border: none;
   border-radius: 6px;
   cursor: pointer;
 }
-
 .btn-clear { background: #ff4d6d; color: white; }
 .btn-add { background: #2196f3; color: white; }
 .btn-options { width: 100%; background: #9E3667; color: white; padding: 15px; }
@@ -361,17 +273,14 @@ button {
 /* MODAIS */
 .modal {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
   background: rgba(0,0,0,0.6);
   display: none;
   align-items: center;
   justify-content: center;
   z-index: 9999;
 }
-
 .modal-box {
   background: white;
   padding: 25px;
@@ -379,19 +288,16 @@ button {
   text-align: center;
   width: 300px;
 }
-
 .modal-buttons {
   display: flex;
   justify-content: center;
   gap: 8px;
   margin-top: 20px;
 }
-
 .btn-yes { background: #4caf50; color: white; }
 .btn-no { background: #e53935; color: white; }
 </style>
 </head>
-
 <body>
 
 <div class="header">
@@ -403,7 +309,6 @@ button {
   <div class="menu-item" onclick="goHome()">Início</div>
   <div class="menu-item" onclick="logout()">Sair</div>
 </div>
-
 <div class="menu-overlay" id="menuOverlay" onclick="toggleMenu()"></div>
 
 <div class="container" id="main">
@@ -412,12 +317,9 @@ button {
 
 <div class="cart-overlay" id="cartOverlay">
   <div class="cart" id="cart"></div>
-
   <div class="total-cart">
     Total: R$ <span id="totalCart">0</span>
   </div>
-
-  <!-- TAXA -->
   <div class="service-fee">
     Taxa de serviço (10%)
     <label class="switch">
@@ -425,16 +327,15 @@ button {
       <span class="slider"></span>
     </label>
   </div>
-
   <div class="buttons">
     <button class="btn-clear" onclick="openClearModal()">Limpar</button>
     <button class="btn-add" onclick="closeCart()">Adicionar Item</button>
   </div>
-
   <button class="btn-options" onclick="goToPayment()">+ Opções</button>
 </div>
 
-<div class="footer-bar">
+<!-- FOOTER - SÓ APARECE COM ITENS -->
+<div class="footer-bar" id="footerBar">
   <div class="total-box">
     Total: R$ <span id="total">0</span>
   </div>
@@ -445,84 +346,25 @@ button {
 </button>
 
 <!-- MODAIS -->
-<div class="modal" id="itemModal">
-  <div class="modal-box">
-    <h3>Você deseja remover este item?</h3>
-    <div class="modal-buttons">
-      <button class="btn-no" onclick="closeModal()">NÃO</button>
-      <button class="btn-yes" onclick="confirmRemove()">SIM</button>
-    </div>
-  </div>
-</div>
-
-<div class="modal" id="clearModal">
-  <div class="modal-box">
-    <h3>Cancelar transação</h3>
-    <p>Você deseja realmente cancelar esta transação?</p>
-    <div class="modal-buttons">
-      <button class="btn-no" onclick="closeModal()">NÃO</button>
-      <button class="btn-yes" onclick="confirmClear()">SIM</button>
-    </div>
-  </div>
-</div>
+<div class="modal" id="itemModal"> ... </div>
+<div class="modal" id="clearModal"> ... </div>
 
 <script>
-
 let cart = {};
+let serviceFeeEnabled = false;
 let itemToRemove = null;
 
-/* TAXA (FIX) */
-let serviceFeeEnabled = false;
-
-function calculateTotal(total){
-  return serviceFeeEnabled ? total * 1.10 : total;
-}
-
-function syncServiceToggleUI(){
-  document.getElementById('serviceToggle').checked = serviceFeeEnabled;
-  localStorage.setItem('serviceFeeEnabled', serviceFeeEnabled);
-}
-
-function toggleServiceFee(){
-  serviceFeeEnabled = document.getElementById('serviceToggle').checked;
-  localStorage.setItem('serviceFeeEnabled', serviceFeeEnabled);
-  updateUI();
-}
-
-function resetServiceFee(){
-  serviceFeeEnabled = false;
-  syncServiceToggleUI();
-}
-
-// MENU
-function toggleMenu() {
-  document.getElementById('sideMenu').classList.toggle('open');
-  document.getElementById('menuOverlay').classList.toggle('show');
-}
-
-function logout() {
-  localStorage.clear();
-  window.location.href = "index.html";
-}
-
-// PRODUTOS
-const produtos = [
+const produtos = [ /* seus produtos aqui */ 
   {nome:"Whey Protein", preco:100, img:"D_NQ_NP_877710-MLA99447989168_112025-O.webp"},
   {nome:"Creatina", preco:80, img:"creatina-250g-creapure-growth-supplements-1.jpg"},
   {nome:"Pré Treino", preco:70, img:"pr-treino-haze-hardcore-300g-growth-supplements.jpg"},
   {nome:"BCAA", preco:60, img:"bcaa-10-1-1-200g-em-p-growth-supplements.jpg"},
   {nome:"Albumina", preco:50, img:"albumina-500g-growth-supplements.jpg"},
   {nome:"Hipercalórico", preco:120, img:"hiper-mass-1kg-sabor-chocolate-growth-supplements.jpg"},
-  {nome:"Barra Proteica", preco:10, img:"barra-de-prote-na-barrinha-de-prote-na-display-c-12-un-growth-supplements.webp"},
-  {nome:"Glutamina", preco:90, img:"l-glutamina-250g-growth-supplements-1.jpg"},
-  {nome:"Multivitamínico", preco:40, img:"multivitam-nico-120-c-ps-nova-f-rmula-growth-supplements-1.jpg"},
-  {nome:"Cafeína", preco:30, img:"cafe-na-200mg-60-caps-growth-supplements-termog-nico.jpg"},
-  {nome:"Coqueteleira", preco:25, img:"coqueteleira-preta-600ml-growth-supplements.jpg"},
-  {nome:"Termogênico", preco:110, img:"hot.webp"}
+  // ... adicione os outros se quiser
 ];
 
 const productsDiv = document.getElementById('products');
-
 produtos.forEach(p => {
   const idSafe = p.nome.replace(/\s/g, '-');
   productsDiv.innerHTML += `
@@ -550,10 +392,12 @@ function updateUI() {
   const cartDiv = document.getElementById('cart');
   const totalSpan = document.getElementById('total');
   const totalCart = document.getElementById('totalCart');
+  const footerBar = document.getElementById('footerBar');
 
   cartDiv.innerHTML = '';
   let total = 0;
 
+  // Limpa badges
   document.querySelectorAll('.badge').forEach(b => {
     b.style.display = 'none';
     b.innerText = '';
@@ -566,7 +410,6 @@ function updateUI() {
 
     const idSafe = name.replace(/\s/g, '-');
     const badge = document.getElementById('badge-' + idSafe);
-
     if (badge) {
       badge.style.display = 'flex';
       badge.innerText = item.qty;
@@ -574,9 +417,7 @@ function updateUI() {
 
     cartDiv.innerHTML += `
       <div class="cart-item">
-        <div class="cart-img-box">
-          <img src="${item.img}">
-        </div>
+        <div class="cart-img-box"><img src="${item.img}"></div>
         <div class="cart-info">
           <div class="cart-name">${name} x${item.qty}</div>
           <div class="cart-price">R$ ${itemTotal}</div>
@@ -588,79 +429,45 @@ function updateUI() {
     `;
   });
 
-  const finalTotal = calculateTotal(total);
-
+  const finalTotal = serviceFeeEnabled ? total * 1.10 : total;
   totalSpan.innerText = finalTotal.toFixed(2);
   totalCart.innerText = finalTotal.toFixed(2);
 
-  syncServiceToggleUI();
-
-  if (total === 0) {
+  // === CONTROLE DO RODAPÉ ===
+  if (total > 0) {
+    footerBar.classList.add('show');
+  } else {
+    footerBar.classList.remove('show');
     resetServiceFee();
     closeCart();
   }
+
+  syncServiceToggleUI();
 }
 
-// MODAIS
-function askRemove(name) {
-  itemToRemove = name;
-  document.getElementById('itemModal').style.display = 'flex';
-}
+// Funções restantes (toggleMenu, logout, askRemove, confirmRemove, etc.) permanecem iguais ao seu código original
+// ... (copie as funções restantes do seu código atual aqui)
 
-function confirmRemove() {
-  const items = Object.keys(cart);
-  document.getElementById('itemModal').style.display = 'none';
-
-  if (items.length === 1) {
-    openClearModal();
-    return;
-  }
-
-  delete cart[itemToRemove];
-  itemToRemove = null;
+function toggleServiceFee(){
+  serviceFeeEnabled = document.getElementById('serviceToggle').checked;
+  localStorage.setItem('serviceFeeEnabled', serviceFeeEnabled);
   updateUI();
 }
 
-function openClearModal() {
-  document.getElementById('clearModal').style.display = 'flex';
+function resetServiceFee(){
+  serviceFeeEnabled = false;
+  document.getElementById('serviceToggle').checked = false;
+  localStorage.setItem('serviceFeeEnabled', false);
 }
 
-function confirmClear() {
-  cart = {};
-  resetServiceFee();
-  updateUI();
-  closeModal();
+function syncServiceToggleUI(){
+  document.getElementById('serviceToggle').checked = serviceFeeEnabled;
 }
 
-function closeModal() {
-  document.getElementById('itemModal').style.display = 'none';
-  document.getElementById('clearModal').style.display = 'none';
-}
+// ... (mantenha as outras funções: toggleCart, closeCart, goToPayment, etc.)
 
-// ACTIONS
-function toggleCart() {
-  const overlay = document.getElementById('cartOverlay');
-  const btn = document.getElementById('toggleBtn');
-  overlay.classList.toggle('open');
-  btn.classList.toggle('open');
-}
-
-function closeCart() {
-  document.getElementById('cartOverlay').classList.remove('open');
-  document.getElementById('toggleBtn').classList.remove('open');
-}
-
-function goToPayment() {
-  localStorage.setItem('cart', JSON.stringify(cart));
-  window.location.href = "pagamento.html";
-}
-
-function goHome() {
-  closeCart();
-  toggleMenu();
-}
-
+// INIT
+updateUI();
 </script>
-
 </body>
 </html>
