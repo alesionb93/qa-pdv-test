@@ -178,7 +178,7 @@ body {
   </div>
 </div>
 
-<!-- Modal Tipo de Desconto (corrigido) -->
+<!-- Modal Tipo de Desconto -->
 <div class="modal" id="modalTipo">
   <div class="modal-box">
     <div class="modal-header">
@@ -190,10 +190,9 @@ body {
   </div>
 </div>
 
-<!-- Modal Teclado Numérico -->
+<!-- Modal Teclado Numérico (sem X no canto) -->
 <div class="modal" id="modalInput">
   <div class="modal-box">
-    <div class="modal-close" onclick="cancelarInput()">✕</div>
     <h2 id="display">0</h2>
     <p id="label"></p>
     <div class="keypad">
@@ -422,14 +421,14 @@ function validarEDescontar(){
   atualizarBotaoDesconto();
 }
 
-/* Modal Erro Simples (0 ou >= total) */
+/* Modal Erro Simples (0 ou >= total) - SEM botão Autorizar */
 function mostrarModalErro(mensagem) {
   document.getElementById('errorTitle').innerText = "EYE WEB";
   document.getElementById('errorMessage').innerHTML = mensagem;
   document.getElementById('errorModal').style.display = "flex";
 }
 
-/* Modal Limite 10% */
+/* Modal Limite 10% - COM botão Autorizar */
 function mostrarModalLimite(mensagem) {
   document.getElementById('errorTitle').innerText = "AUTORIZAR";
   document.getElementById('errorMessage').innerHTML = mensagem;
@@ -451,6 +450,7 @@ function tentarLogin() {
     desconto = descontoPendente;
     tipo = tipoPendente;
     document.getElementById('loginModal').style.display = "none";
+    fecharModal();                    // Fecha o teclado numérico
     atualizarTotais();
     atualizarBotaoDesconto();
     descontoPendente = null;
