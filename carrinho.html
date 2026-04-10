@@ -287,11 +287,12 @@ body {
   border-top: 1px solid #eee;
 }
 
-/* TAXA (AJUSTE DE LAYOUT) */
+/* TAXA */
 .service-fee {
   padding: 10px 15px;
   border-top: 1px solid #eee;
   display: flex;
+  justify-content: space-between;
   align-items: center;
   font-size: 14px;
 }
@@ -387,7 +388,6 @@ button {
 
 .btn-yes { background: #4caf50; color: white; }
 .btn-no { background: #e53935; color: white; }
-
 </style>
 </head>
 
@@ -416,11 +416,10 @@ button {
     Total: R$ <span id="totalCart">0</span>
   </div>
 
-  <!-- TAXA (AJUSTADO) -->
+  <!-- TAXA -->
   <div class="service-fee">
-    <span>Taxa de serviço (10%)</span>
-
-    <label class="switch" style="margin-left:10px;">
+    Taxa de serviço (10%)
+    <label class="switch">
       <input type="checkbox" id="serviceToggle" onchange="toggleServiceFee()">
       <span class="slider"></span>
     </label>
@@ -468,7 +467,197 @@ button {
 
 <script>
 
-/* JS 100% INTACTO (não alterei nada) */
+let cart = {};
+let itemToRemove = null;
+
+/* TAXA (FIX) */
+let serviceFeeEnabled = false;
+
+function calculateTotal(total){
+  return serviceFeeEnabled ? total * 1.10 : total;
+}
+
+function syncServiceToggleUI(){
+  document.getElementById('serviceToggle').checked = serviceFeeEnabled;
+  localStorage.setItem('serviceFeeEnabled', serviceFeeEnabled);
+}
+
+function toggleServiceFee(){
+  serviceFeeEnabled = document.getElementById('serviceToggle').checked;
+  localStorage.setItem('serviceFeeEnabled', serviceFeeEnabled);
+  updateUI();
+}
+
+function resetServiceFee(){
+  serviceFeeEnabled = false;
+  syncServiceToggleUI();
+}
+
+// MENU
+function toggleMenu() {
+  document.getElementById('sideMenu').classList.toggle('open');
+  document.getElementById('menuOverlay').classList.toggle('show');
+}
+
+function logout() {
+  localStorage.clear();
+  window.location.href = "index.html";
+}
+
+// PRODUTOS
+const produtos = [
+  {nome:"Whey Protein", preco:100, img:"D_NQ_NP_877710-MLA99447989168_112025-O.webp"},
+  {nome:"Creatina", preco:80, img:"creatina-250g-creapure-growth-supplements-1.jpg"},
+  {nome:"Pré Treino", preco:70, img:"pr-treino-haze-hardcore-300g-growth-supplements.jpg"},
+  {nome:"BCAA", preco:60, img:"bcaa-10-1-1-200g-em-p-growth-supplements.jpg"},
+  {nome:"Albumina", preco:50, img:"albumina-500g-growth-supplements.jpg"},
+  {nome:"Hipercalórico", preco:120, img:"hiper-mass-1kg-sabor-chocolate-growth-supplements.jpg"},
+  {nome:"Barra Proteica", preco:10, img:"barra-de-prote-na-barrinha-de-prote-na-display-c-12-un-growth-supplements.webp"},
+  {nome:"Glutamina", preco:90, img:"l-glutamina-250g-growth-supplements-1.jpg"},
+  {nome:"Multivitamínico", preco:40, img:"multivitam-nico-120-c-ps-nova-f-rmula-growth-supplements-1.jpg"},
+  {nome:"Cafeína", preco:30, img:"cafe-na-200mg-60-caps-growth-supplements-termog-nico.jpg"},
+  {nome:"Coqueteleira", preco:25, img:"coqueteleira-preta-600ml-growth-supplements.jpg"},
+  {nome:"Termogênico", preco:110, img:"hot.webp"}
+];
+
+const productsDiv = document.getElementById('products');
+
+produtos.forEach(p => {
+  const idSafe = p.nome.replace(/\s/g, '-');
+  productsDiv.innerHTML += `
+    <div class="product" onclick="addProduct('${p.nome}')">
+      <div class="product-image-box">
+        <img src="${p.img}" class="product-img">
+      </div>
+      <div class="product-info">
+        <div class="product-price">R$ ${p.preco}</div>
+        <div class="product-name">${p.nome}</div>
+      </div>
+      <div class="badge" id="badge-${idSafe}"></div>
+    </div>
+  `;
+});
+
+function addProduct(name) {
+  const produto = produtos.find(p => p.nome === name);
+  if (!cart[name]) cart[name] = { qty: 0, price: produto.preco, img: produto.img };
+  cart[name].qty++;
+  updateUI();
+}
+
+function updateUI() {
+  const cartDiv = document.getElementById('cart');
+  const totalSpan = document.getElementById('total');
+  const totalCart = document.getElementById('totalCart');
+
+  cartDiv.innerHTML = '';
+  let total = 0;
+
+  document.querySelectorAll('.badge').forEach(b => {
+    b.style.display = 'none';
+    b.innerText = '';
+  });
+
+  Object.keys(cart).forEach(name => {
+    const item = cart[name];
+    const itemTotal = item.qty * item.price;
+    total += itemTotal;
+
+    const idSafe = name.replace(/\s/g, '-');
+    const badge = document.getElementById('badge-' + idSafe);
+
+    if (badge) {
+      badge.style.display = 'flex';
+      badge.innerText = item.qty;
+    }
+
+    cartDiv.innerHTML += `
+      <div class="cart-item">
+        <div class="cart-img-box">
+          <img src="${item.img}">
+        </div>
+        <div class="cart-info">
+          <div class="cart-name">${name} x${item.qty}</div>
+          <div class="cart-price">R$ ${itemTotal}</div>
+        </div>
+        <button class="delete-btn" onclick="askRemove('${name}')">
+          <img src="lixeira.ico">
+        </button>
+      </div>
+    `;
+  });
+
+  const finalTotal = calculateTotal(total);
+
+  totalSpan.innerText = finalTotal.toFixed(2);
+  totalCart.innerText = finalTotal.toFixed(2);
+
+  syncServiceToggleUI();
+
+  if (total === 0) {
+    resetServiceFee();
+    closeCart();
+  }
+}
+
+// MODAIS
+function askRemove(name) {
+  itemToRemove = name;
+  document.getElementById('itemModal').style.display = 'flex';
+}
+
+function confirmRemove() {
+  const items = Object.keys(cart);
+  document.getElementById('itemModal').style.display = 'none';
+
+  if (items.length === 1) {
+    openClearModal();
+    return;
+  }
+
+  delete cart[itemToRemove];
+  itemToRemove = null;
+  updateUI();
+}
+
+function openClearModal() {
+  document.getElementById('clearModal').style.display = 'flex';
+}
+
+function confirmClear() {
+  cart = {};
+  resetServiceFee();
+  updateUI();
+  closeModal();
+}
+
+function closeModal() {
+  document.getElementById('itemModal').style.display = 'none';
+  document.getElementById('clearModal').style.display = 'none';
+}
+
+// ACTIONS
+function toggleCart() {
+  const overlay = document.getElementById('cartOverlay');
+  const btn = document.getElementById('toggleBtn');
+  overlay.classList.toggle('open');
+  btn.classList.toggle('open');
+}
+
+function closeCart() {
+  document.getElementById('cartOverlay').classList.remove('open');
+  document.getElementById('toggleBtn').classList.remove('open');
+}
+
+function goToPayment() {
+  localStorage.setItem('cart', JSON.stringify(cart));
+  window.location.href = "pagamento.html";
+}
+
+function goHome() {
+  closeCart();
+  toggleMenu();
+}
 
 </script>
 
