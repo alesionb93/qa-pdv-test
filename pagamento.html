@@ -12,7 +12,7 @@ body {
   height: 100vh;
 }
 
-/* Layout mantido igual ao original */
+/* Layout mantido igual */
 .left { flex: 2; background: white; padding: 20px; overflow-y: auto; }
 .item {
   display: flex; align-items: center; justify-content: space-between;
@@ -105,7 +105,7 @@ body {
 .btn-red { background: #e74c3c; }
 .btn-green { background: #2ecc71; }
 
-/* Modal de Erro - Botão retangular */
+/* Modal de Erro */
 #errorModal {
   position: fixed; inset: 0; background: rgba(0,0,0,0.6);
   display: none; align-items: center; justify-content: center;
@@ -115,26 +115,14 @@ body {
   background: white; width: 320px; border-radius: 16px;
   padding: 25px 20px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
 }
-#errorTitle {
-  font-size: 18px; font-weight: bold; color: #333; margin-bottom: 8px;
-}
-#errorMessage {
-  font-size: 15px; color: #666; margin-bottom: 25px;
-}
+#errorTitle { font-size: 18px; font-weight: bold; color: #333; margin-bottom: 8px; }
+#errorMessage { font-size: 15px; color: #666; margin-bottom: 25px; }
 #errorBtn {
-  background: #9E3667;
-  color: white;
-  border: none;
-  padding: 14px 40px;
-  border-radius: 12px;
-  font-size: 16px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: all 0.2s;
+  background: #9E3667; color: white; border: none;
+  padding: 14px 40px; border-radius: 12px;
+  font-size: 16px; font-weight: bold; cursor: pointer;
 }
-#errorBtn:hover {
-  background: #8a2e5a;
-}
+#errorBtn:hover { background: #8a2e5a; }
 </style>
 </head>
 <body>
@@ -267,8 +255,8 @@ Object.keys(cart).forEach(name => {
 });
 
 /* ======================= DESCONTO ======================= */
-let desconto = 0;
-let tipo = null;
+let desconto = 0;      // valor numérico
+let tipo = null;       // "percent" ou "valor"
 let input = "";
 
 function baseTotal(){
@@ -365,22 +353,34 @@ function validarEDescontar(){
       mostrarErro();
       return;
     }
-    desconto = valorDigitado;                    // percentual direto
+    desconto = valorDigitado;                    // ex: 10
   } 
   else { // Tipo Valor (R$)
-    const valorDesconto = valorDigitado / 100;   // converte centavos → reais
+    const valorDesconto = valorDigitado / 100;   // ex: 1000 → 10.00
     if (valorDesconto <= 0 || valorDesconto >= base) {
       mostrarErro();
       return;
     }
-    desconto = valorDesconto;                    // guarda em reais
+    desconto = valorDesconto;
   }
 
   fecharModal();
   atualizarTotais();
+  atualizarBotaoDesconto();   // ← Nova função para mostrar o texto correto
+}
 
-  document.getElementById('descontoArea').innerHTML = `
-    <button class="btn-desconto" disabled>DESCONTO APLICADO</button>
+function atualizarBotaoDesconto() {
+  const descontoArea = document.getElementById('descontoArea');
+  
+  let texto = "";
+  if (tipo === "percent") {
+    texto = `APLICADO DESCONTO DE ${desconto}%`;
+  } else {
+    texto = `APLICADO DESCONTO DE R$ ${desconto.toFixed(2)}`;
+  }
+
+  descontoArea.innerHTML = `
+    <button class="btn-desconto" disabled>${texto}</button>
     <button class="btn-remove" onclick="removerDesconto()">✕</button>
   `;
 }
@@ -391,7 +391,6 @@ function mostrarErro() {
 
 function fecharErroERetornar() {
   document.getElementById('errorModal').style.display = "none";
-  // Volta para o teclado numérico
 }
 
 /* ======================= KEYPAD ======================= */
