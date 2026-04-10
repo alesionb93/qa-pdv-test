@@ -65,6 +65,114 @@ body {
 .qr { width: 200px; max-width: 60vw; height: auto; margin-bottom: 20px; }
 .box { background: rgba(255,255,255,0.2); padding: 20px; border-radius: 12px; margin-top: 20px; max-width: 90vw; }
 
+/* Tela de Aprovação Verde */
+.overlay-aprovado {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: #4CAF50; color: white; display: none;
+  flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; padding: 20px; box-sizing: border-box;
+  z-index: 3000;
+  animation: fadeInAprovado 0.4s ease;
+}
+@keyframes fadeInAprovado {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+.check-circle {
+  width: 120px; height: 120px; background: white; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 30px;
+  animation: popIn 0.5s ease 0.2s both;
+}
+@keyframes popIn {
+  from { transform: scale(0); }
+  to { transform: scale(1); }
+}
+.check-circle svg {
+  width: 60px; height: 60px;
+}
+.aprovado-titulo {
+  font-size: 28px; font-weight: bold; margin-bottom: 10px;
+  text-transform: uppercase; letter-spacing: 1px;
+}
+.aprovado-subtitulo {
+  font-size: 16px; opacity: 0.9; margin-bottom: 40px;
+}
+.btn-comprovante {
+  background: white; color: #4CAF50; border: none;
+  padding: 16px 40px; border-radius: 12px; font-size: 16px;
+  font-weight: bold; cursor: pointer; text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.btn-comprovante:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+
+/* Comprovante */
+.overlay-comprovante {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.6); display: none;
+  align-items: center; justify-content: center;
+  z-index: 4000;
+}
+.comprovante {
+  background: #f5f0e8;
+  width: 340px; max-width: 92vw;
+  max-height: 85vh; overflow-y: auto;
+  border-radius: 4px;
+  padding: 25px 20px;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 13px;
+  color: #333;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+  position: relative;
+}
+.comprovante::before,
+.comprovante::after {
+  content: '';
+  display: block;
+  width: 100%;
+  height: 8px;
+  background: linear-gradient(135deg, transparent 33.33%, #f5f0e8 33.33%, #f5f0e8 66.66%, transparent 66.66%);
+  background-size: 12px 8px;
+  position: absolute;
+  left: 0;
+}
+.comprovante::before { top: -8px; }
+.comprovante::after { bottom: -8px; transform: rotate(180deg); }
+.comp-header { text-align: center; margin-bottom: 15px; }
+.comp-header .nome { font-size: 16px; font-weight: bold; }
+.comp-header .endereco { font-size: 11px; color: #666; }
+.comp-divider {
+  border: none; border-top: 1px dashed #999;
+  margin: 10px 0;
+}
+.comp-info { font-size: 12px; color: #555; margin-bottom: 4px; }
+.comp-item {
+  display: flex; justify-content: space-between;
+  padding: 3px 0; font-size: 12px;
+}
+.comp-item-detail { font-size: 11px; color: #777; padding-left: 10px; }
+.comp-total-row {
+  display: flex; justify-content: space-between;
+  padding: 4px 0; font-size: 13px;
+}
+.comp-total-row.destaque { font-weight: bold; font-size: 15px; }
+.comp-pagamento {
+  text-align: left; margin-top: 8px;
+  font-weight: bold; font-size: 14px;
+}
+.comp-footer { text-align: center; margin-top: 15px; font-size: 11px; color: #888; }
+.btn-fechar-comprovante {
+  display: block; margin: 20px auto 0; background: #e74c3c; color: white;
+  border: none; padding: 12px 40px; border-radius: 8px;
+  font-size: 14px; font-weight: bold; cursor: pointer;
+  text-transform: uppercase;
+}
+.btn-fechar-comprovante:hover { background: #c0392b; }
+
 /* Modais */
 .modal {
   position: fixed; inset: 0; background: rgba(0,0,0,0.55);
@@ -189,6 +297,15 @@ body {
     height: 48px;
     font-size: 16px;
   }
+  .aprovado-titulo {
+    font-size: 22px;
+  }
+  .check-circle {
+    width: 90px; height: 90px;
+  }
+  .check-circle svg {
+    width: 45px; height: 45px;
+  }
 }
 </style>
 </head>
@@ -241,6 +358,25 @@ body {
     <p>📲 PIX</p>
     <p>Valor: R$ <span id="pixTotal"></span></p>
     <small>Ambiente de teste</small>
+  </div>
+</div>
+
+<!-- Tela de Aprovação Verde -->
+<div class="overlay-aprovado" id="aprovadoScreen">
+  <div class="check-circle">
+    <svg viewBox="0 0 24 24" fill="none" stroke="#4CAF50" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="20 6 9 17 4 12"></polyline>
+    </svg>
+  </div>
+  <div class="aprovado-titulo">Pagamento Efetuado</div>
+  <div class="aprovado-subtitulo">Sua transação foi concluída com sucesso!</div>
+  <button class="btn-comprovante" onclick="abrirComprovante()">IMPRIMIR COMPROVANTE</button>
+</div>
+
+<!-- Comprovante de Venda -->
+<div class="overlay-comprovante" id="comprovanteScreen">
+  <div class="comprovante" id="comprovanteConteudo">
+    <!-- preenchido via JS -->
   </div>
 </div>
 
@@ -339,6 +475,7 @@ body {
   </div>
 </div>
 
+
 <script>
 /* ======================= DADOS ======================= */
 const cart = JSON.parse(localStorage.getItem('cart')) || {};
@@ -350,11 +487,28 @@ const valorFaltanteSpan = document.getElementById('valorFaltante');
 const cardTotal = document.getElementById('cardTotal');
 const pixTotal = document.getElementById('pixTotal');
 
-let total = 0;
+let somaProdutos = 0;
+let somaDescontosItens = 0;
+
 Object.keys(cart).forEach(name => {
   const item = cart[name];
   const itemTotal = item.qty * item.price;
-  total += itemTotal;
+  somaProdutos += itemTotal;
+
+  // Calcular desconto individual do item (vindo do carrinho)
+  let descontoItem = 0;
+  if (item.descontoTipo === 'percent') {
+    descontoItem = itemTotal * item.desconto / 100;
+  } else if (item.descontoTipo === 'valor') {
+    descontoItem = item.desconto;
+  }
+  somaDescontosItens += descontoItem;
+
+  let descontoLabel = '';
+  if (descontoItem > 0) {
+    descontoLabel = `<div style="font-size:12px; color:#e74c3c;">Desconto: -R$ ${descontoItem.toFixed(2)}</div>`;
+  }
+
   itemsDiv.innerHTML += `
     <div class="item">
       <div class="item-left">
@@ -362,6 +516,7 @@ Object.keys(cart).forEach(name => {
         <div>
           <div class="item-name">${name}</div>
           <div class="item-qty">x${item.qty}</div>
+          ${descontoLabel}
         </div>
       </div>
       <div>R$ ${itemTotal.toFixed(2)}</div>
@@ -369,7 +524,7 @@ Object.keys(cart).forEach(name => {
   `;
 });
 
-/* ======================= DESCONTO ======================= */
+/* ======================= DESCONTO DO PAGAMENTO ======================= */
 let desconto = 0;
 let tipo = null;
 let input = "";
@@ -378,20 +533,26 @@ const LIMITE_PERCENTUAL = 10;
 let descontoPendente = null;
 let tipoPendente = null;
 
-function baseTotal(){
-  return serviceFeeEnabled ? total * 1.10 : total;
-}
-
+// Subtotal = soma dos produtos (sem desconto, sem taxa)
+// Total = (soma dos produtos - descontos individuais - desconto pagamento) + taxa
 function calcFinal(){
-  let base = baseTotal();
-  if(tipo === "percent") return base - (base * desconto / 100);
-  if(tipo === "valor") return base - desconto;
-  return base;
+  let subtotalComDescontos = somaProdutos - somaDescontosItens;
+
+  // Desconto do pagamento
+  let descontoPagamento = 0;
+  if (tipo === "percent") descontoPagamento = subtotalComDescontos * desconto / 100;
+  else if (tipo === "valor") descontoPagamento = desconto;
+
+  let liquido = subtotalComDescontos - descontoPagamento;
+  if (liquido < 0) liquido = 0;
+
+  // Taxa de serviço
+  return serviceFeeEnabled ? liquido * 1.10 : liquido;
 }
 
 function atualizarTotais(){
   const final = calcFinal();
-  subtotalSpan.innerText = total.toFixed(2);
+  subtotalSpan.innerText = somaProdutos.toFixed(2);
   totalSpan.innerText = final.toFixed(2);
   valorFaltanteSpan.innerText = final.toFixed(2);
   cardTotal.innerText = final.toFixed(2);
@@ -412,7 +573,7 @@ function finalizar() {
   else if (paymentMethod === "PIX") simularPix();
   else {
     alert("Pagamento em dinheiro recebido");
-    finalizarVenda();
+    mostrarTelaAprovado();
   }
 }
 
@@ -423,8 +584,10 @@ function simularCartao() {
   msg.innerText = "APROXIME, INSIRA OU PASSE O CARTÃO";
   setTimeout(() => msg.innerText = "PROCESSANDO...", 2000);
   setTimeout(() => msg.innerText = "DÉBITO NUBANK", 4000);
-  setTimeout(() => msg.innerText = "TRANSAÇÃO APROVADA ✅", 8000);
-  setTimeout(finalizarVenda, 10000);
+  setTimeout(() => {
+    screen.style.display = "none";
+    mostrarTelaAprovado();
+  }, 8000);
 }
 
 function simularPix() {
@@ -432,11 +595,79 @@ function simularPix() {
   const msg = document.getElementById('pixMessage');
   screen.style.display = "flex";
   msg.innerText = "CONSULTANDO STATUS DA TRANSAÇÃO VIA PIX";
-  setTimeout(() => msg.innerText = "TRANSAÇÃO APROVADA ✅", 5000);
-  setTimeout(finalizarVenda, 7000);
+  setTimeout(() => {
+    screen.style.display = "none";
+    mostrarTelaAprovado();
+  }, 5000);
 }
 
-function finalizarVenda() {
+/* ======================= TELA APROVADO ======================= */
+function mostrarTelaAprovado() {
+  document.getElementById('aprovadoScreen').style.display = 'flex';
+}
+
+/* ======================= COMPROVANTE ======================= */
+function abrirComprovante() {
+  const container = document.getElementById('comprovanteConteudo');
+  const agora = new Date();
+  const dataStr = agora.toLocaleDateString('pt-BR') + ' ' + agora.toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit', second:'2-digit'});
+
+  const finalTotal = calcFinal();
+  const totalDescontos = somaDescontosItens + (tipo === "percent" ? (somaProdutos - somaDescontosItens) * desconto / 100 : (tipo === "valor" ? desconto : 0));
+
+  // Calcular líquido sem taxa e valor da taxa
+  let liquidoSemTaxa = somaProdutos - somaDescontosItens;
+  let descontoPagamento = 0;
+  if (tipo === "percent") descontoPagamento = liquidoSemTaxa * desconto / 100;
+  else if (tipo === "valor") descontoPagamento = desconto;
+  liquidoSemTaxa = Math.max(0, liquidoSemTaxa - descontoPagamento);
+  const valorTaxaServico = serviceFeeEnabled ? liquidoSemTaxa * 0.10 : 0;
+
+  let taxaServicoHTML = '';
+  if (serviceFeeEnabled) {
+    taxaServicoHTML = '<div class="comp-total-row"><span>Taxa Serviço (10%) R$ --></span><span>' + valorTaxaServico.toFixed(2) + '</span></div>';
+  }
+
+  let metodoLabel = paymentMethod === 'Cartao' ? 'CARTÃO' : paymentMethod === 'PIX' ? 'PIX' : 'DINHEIRO';
+
+  let itensHTML = '';
+  Object.keys(cart).forEach(function(name) {
+    const item = cart[name];
+    const itemTotal = item.qty * item.price;
+    itensHTML += '<div class="comp-item"><span>' + name + '</span><span>R$ ' + itemTotal.toFixed(2) + '</span></div>';
+    itensHTML += '<div class="comp-item-detail">' + item.qty.toFixed(3) + ' x R$ ' + item.price.toFixed(3) + ' => R$ ' + itemTotal.toFixed(2) + '</div>';
+  });
+
+  container.innerHTML =
+    '<div class="comp-header">' +
+      '<div class="nome">EMPRESA TESTE</div>' +
+      '<div class="endereco">RUA DAS OLIVEIRAS, 1234<br>CENTRO</div>' +
+      '<div class="endereco" style="margin-top:4px;">Fone(s)(99) 0000.9999</div>' +
+    '</div>' +
+    '<hr class="comp-divider">' +
+    '<div class="comp-info">CNPJ: I.E.</div>' +
+    '<hr class="comp-divider">' +
+    '<div class="comp-info">CLIENTE</div>' +
+    '<div class="comp-info">1 CONSUMIDOR</div>' +
+    '<hr class="comp-divider">' +
+    '<div class="comp-info" style="text-align:center; font-weight:bold;">COMPROVANTE ADICIONAL DE VENDA</div>' +
+    '<div class="comp-info">Data....:' + dataStr + '</div>' +
+    '<hr class="comp-divider">' +
+    itensHTML +
+    '<hr class="comp-divider">' +
+    '<div class="comp-total-row"><span>Total R$ --></span><span>' + somaProdutos.toFixed(2) + '</span></div>' +
+    '<div class="comp-total-row"><span>Descontos R$ --></span><span>' + totalDescontos.toFixed(2) + '</span></div>' +
+    taxaServicoHTML +
+    '<div class="comp-total-row destaque"><span>Líquido R$ --></span><span>' + finalTotal.toFixed(2) + '</span></div>' +
+    '<hr class="comp-divider">' +
+    '<div class="comp-pagamento">' + metodoLabel + '&nbsp;&nbsp;&nbsp;&nbsp;' + finalTotal.toFixed(2) + '</div>' +
+    '<div class="comp-footer">*** Obrigado, volte sempre! ***</div>' +
+    '<button class="btn-fechar-comprovante" onclick="fecharComprovante()">FECHAR</button>';
+
+  document.getElementById('comprovanteScreen').style.display = 'flex';
+}
+
+function fecharComprovante() {
   localStorage.removeItem('cart');
   window.location.href = "carrinho.html";
 }
@@ -468,37 +699,41 @@ function cancelarInput(){
 
 /* ======================= VALIDAÇÃO ======================= */
 function validarEDescontar(){
-  const base = baseTotal();
+  const base = somaProdutos - somaDescontosItens;
+  const limiteGlobal = somaProdutos * (LIMITE_PERCENTUAL / 100);
+  const disponivelParaPagamento = Math.max(0, limiteGlobal - somaDescontosItens);
   let valorDigitado = parseFloat(input) || 0;
+
+  let novoDescontoReais = 0;
 
   if (tipo === "percent") {
     if (valorDigitado <= 0 || valorDigitado >= 100) {
       mostrarModalErroInvalido();
       return;
     }
-    if (valorDigitado > LIMITE_PERCENTUAL) {
-      descontoPendente = valorDigitado;
-      tipoPendente = "percent";
-      mostrarModalLimiteSuperior(`Não é possivel adicionar o desconto.<br>O limite de desconto é de ${LIMITE_PERCENTUAL}%`);
-      return;
-    }
-    desconto = valorDigitado;
-  } 
-  else {
-    const valorDesconto = valorDigitado / 100;
-    const limiteEmReais = base * (LIMITE_PERCENTUAL / 100);
-
-    if (valorDesconto <= 0 || valorDesconto >= base) {
+    novoDescontoReais = base * valorDigitado / 100;
+  } else {
+    novoDescontoReais = valorDigitado / 100;
+    if (novoDescontoReais <= 0 || novoDescontoReais >= base) {
       mostrarModalErroInvalido();
       return;
     }
-    if (valorDesconto > limiteEmReais) {
-      descontoPendente = valorDesconto;
-      tipoPendente = "valor";
-      mostrarModalLimiteSuperior(`Não é possivel adicionar o desconto.<br>O limite de desconto é de R$ ${limiteEmReais.toFixed(2)}`);
-      return;
-    }
-    desconto = valorDesconto;
+  }
+
+  // Verifica se desconto do carrinho + desconto do pagamento ultrapassa 10% do total
+  if (somaDescontosItens + novoDescontoReais > limiteGlobal) {
+    descontoPendente = tipo === "percent" ? valorDigitado : novoDescontoReais;
+    tipoPendente = tipo;
+    mostrarModalLimiteSuperior(
+      `Não é possivel adicionar o desconto.<br>O limite total de desconto é de ${LIMITE_PERCENTUAL}% (R$ ${limiteGlobal.toFixed(2)}).<br>Já utilizado nos itens: R$ ${somaDescontosItens.toFixed(2)}.<br>Disponível: R$ ${disponivelParaPagamento.toFixed(2)}`
+    );
+    return;
+  }
+
+  if (tipo === "percent") {
+    desconto = valorDigitado;
+  } else {
+    desconto = novoDescontoReais;
   }
 
   fecharModal();
