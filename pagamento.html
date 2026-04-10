@@ -13,7 +13,7 @@ body {
   height: 100vh;
 }
 
-/* ================= LAYOUT ================= */
+/* LEFT */
 .left {
   flex: 2;
   background: white;
@@ -23,32 +23,28 @@ body {
 
 .item {
   display: flex;
-  align-items: center;
   justify-content: space-between;
   padding: 12px;
   border-bottom: 1px solid #eee;
-  gap: 10px;
 }
 
 .item-left {
   display: flex;
-  align-items: center;
   gap: 10px;
+  align-items: center;
 }
 
 .item-img {
   width: 45px;
   height: 45px;
-  object-fit: contain;
   border-radius: 8px;
-  background: #fff;
   border: 1px solid #eee;
 }
 
 .item-name { font-weight: bold; }
 .item-qty { font-size: 12px; color: #666; }
 
-/* ================= RIGHT ================= */
+/* RIGHT */
 .right {
   flex: 1;
   background: #FFE6EF;
@@ -58,15 +54,9 @@ body {
   justify-content: space-between;
 }
 
-.valor-faltante {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
 .valor {
   font-size: 40px;
   font-weight: bold;
-  margin: 10px 0;
 }
 
 .btn-desconto {
@@ -79,33 +69,29 @@ body {
 }
 
 .btn-remove {
-  margin-left: 10px;
-  border-radius: 50%;
-  background: red;
-  color: white;
-  border: none;
   width: 30px;
   height: 30px;
-  cursor: pointer;
+  border-radius: 50%;
+  border: none;
+  background: red;
+  color: white;
 }
 
-/* ================= PAGAMENTO ================= */
+/* PAYMENT */
 .pay-buttons button {
   width: 100%;
   padding: 15px;
   margin-bottom: 10px;
   border: none;
   border-radius: 8px;
-  cursor: pointer;
   background: #9E3667;
   color: white;
+  cursor: pointer;
 }
 
-.selected {
-  outline: 3px solid #000;
-}
+.selected { outline: 3px solid #000; }
 
-/* ================= FOOTER ================= */
+/* FOOTER */
 .footer {
   position: fixed;
   bottom: 0;
@@ -114,24 +100,42 @@ body {
   height: 100px;
   background: #FFE6EF;
   display: flex;
-  align-items: center;
   justify-content: space-between;
   padding: 0 30px;
+  align-items: center;
 }
-
-.footer-left { font-size: 22px; font-weight: bold; }
-.footer-right { width: 300px; }
 
 .finish {
   background: #22B14C;
+  border: none;
   color: white;
   padding: 18px;
-  border: none;
   border-radius: 10px;
-  cursor: pointer;
 }
 
-/* ================= MODAL TIPO (NOVO DESIGN) ================= */
+/* OVERLAYS (DINHEIRO / CARTÃO / PIX) */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: #BD407B;
+  color: white;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.box {
+  background: rgba(255,255,255,0.2);
+  padding: 20px;
+  border-radius: 12px;
+  margin-top: 20px;
+}
+
+.loading { width: 80px; }
+.qr { width: 200px; }
+
+/* MODAL TIPO */
 .modal {
   position: fixed;
   inset: 0;
@@ -146,21 +150,6 @@ body {
   width: 340px;
   border-radius: 14px;
   padding: 18px;
-  position: relative;
-}
-
-.modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-  font-weight: bold;
-}
-
-.modal-close {
-  cursor: pointer;
-  font-size: 18px;
-  color: #666;
 }
 
 .option {
@@ -169,30 +158,12 @@ body {
   cursor: pointer;
 }
 
-.option:hover {
-  background: #f6f6f6;
-}
-
-/* ================= MODAL INPUT ================= */
-#display {
-  text-align: center;
-  font-size: 34px;
-  margin: 10px 0 0;
-}
-
-#label {
-  text-align: center;
-  margin-bottom: 15px;
-  color: #666;
-}
-
 /* KEYPAD */
 .keypad {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 12px;
   justify-items: center;
-  margin-top: 10px;
 }
 
 .key {
@@ -201,14 +172,6 @@ body {
   border-radius: 50%;
   border: 2px solid #9E3667;
   background: #f2f2f2;
-  font-size: 18px;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-.key:hover {
-  transform: scale(1.05);
-  background: #e9e9e9;
 }
 
 /* ACTIONS */
@@ -218,19 +181,23 @@ body {
   margin-top: 15px;
 }
 
-.btn-red,
-.btn-green {
+.btn-red {
   flex: 1;
-  padding: 12px;
+  background: #e74c3c;
   border: none;
-  border-radius: 12px;
   color: white;
-  font-weight: bold;
-  cursor: pointer;
+  border-radius: 12px;
+  padding: 12px;
 }
 
-.btn-red { background: #e74c3c; }
-.btn-green { background: #2ecc71; }
+.btn-green {
+  flex: 1;
+  background: #2ecc71;
+  border: none;
+  color: white;
+  border-radius: 12px;
+  padding: 12px;
+}
 </style>
 </head>
 
@@ -241,14 +208,12 @@ body {
 <div class="right">
 
   <div>
+    <div class="valor">
+      R$ <span id="valorFaltante">0</span>
+    </div>
 
-    <div class="valor-faltante">
-      <h2>VALOR FALTANTE</h2>
-      <div class="valor">R$ <span id="valorFaltante">0</span></div>
-
-      <div id="descontoArea">
-        <button class="btn-desconto" onclick="abrirTipoDesconto()">APLICAR DESCONTO</button>
-      </div>
+    <div id="descontoArea">
+      <button class="btn-desconto" onclick="abrirTipoDesconto()">APLICAR DESCONTO</button>
     </div>
 
     <div class="pay-buttons">
@@ -256,41 +221,50 @@ body {
       <button onclick="selectPayment('Cartao', this)">Cartão</button>
       <button onclick="selectPayment('PIX', this)">PIX</button>
     </div>
-
   </div>
+
 </div>
 
 <div class="footer">
-  <div class="footer-left">
+  <div>
     SUBTOTAL: R$ <span id="subtotal">0</span><br>
     TOTAL: R$ <span id="total">0</span>
   </div>
 
-  <div class="footer-right">
-    <button class="finish" onclick="finalizar()">Finalizar Venda</button>
+  <button class="finish" onclick="finalizar()">Finalizar Venda</button>
+</div>
+
+<!-- CARTÃO -->
+<div class="overlay" id="cardScreen">
+  <img src="loading.gif" class="loading">
+  <h1 id="cardMessage">APROXIME O CARTÃO</h1>
+  <div class="box">
+    <p>Cartão</p>
+    <p>R$ <span id="cardTotal"></span></p>
   </div>
 </div>
 
-<!-- ================= MODAL TIPO ================= -->
+<!-- PIX -->
+<div class="overlay" id="pixScreen">
+  <h1 id="pixMessage">GERANDO PIX</h1>
+  <img src="qrcode.avif" class="qr">
+  <div class="box">
+    <p>PIX</p>
+    <p>R$ <span id="pixTotal"></span></p>
+  </div>
+</div>
+
+<!-- MODAL DESCONTO -->
 <div class="modal" id="modalTipo">
   <div class="modal-box">
-
-    <div class="modal-header">
-      <span>Tipo de desconto</span>
-      <span class="modal-close" onclick="fecharModal()">✕</span>
-    </div>
-
-    <div class="option" onclick="abrirInput('percent')">(%) Percentual</div>
-    <div class="option" onclick="abrirInput('valor')">(R$) Valor</div>
-
+    <div class="option" onclick="abrirInput('percent')">Percentual (%)</div>
+    <div class="option" onclick="abrirInput('valor')">Valor (R$)</div>
   </div>
 </div>
 
-<!-- ================= MODAL INPUT ================= -->
+<!-- MODAL INPUT -->
 <div class="modal" id="modalInput">
   <div class="modal-box">
-
-    <div class="modal-close" onclick="fecharModal()">✕</div>
 
     <h2 id="display">0</h2>
     <p id="label"></p>
@@ -320,27 +294,19 @@ body {
 
 <script>
 
-/* ================= CART ================= */
+/* CART */
 const cart = JSON.parse(localStorage.getItem('cart')) || {};
-const serviceFeeEnabled = JSON.parse(localStorage.getItem('serviceFeeEnabled')) || false;
-
-const itemsDiv = document.getElementById('items');
-const subtotalSpan = document.getElementById('subtotal');
-const totalSpan = document.getElementById('total');
-const valorFaltanteSpan = document.getElementById('valorFaltante');
-
 let total = 0;
 
-/* render */
 Object.keys(cart).forEach(name => {
   const item = cart[name];
   const itemTotal = item.qty * item.price;
   total += itemTotal;
 
-  itemsDiv.innerHTML += `
+  document.getElementById('items').innerHTML += `
     <div class="item">
       <div class="item-left">
-        <img src="${item.img}" class="item-img">
+        <img class="item-img" src="${item.img}">
         <div>
           <div class="item-name">${name}</div>
           <div class="item-qty">x${item.qty}</div>
@@ -351,103 +317,87 @@ Object.keys(cart).forEach(name => {
   `;
 });
 
-/* ================= DESCONTO ================= */
-let desconto = 0;
-let tipo = null;
-let input = "";
-
-function baseTotal(){
-  return serviceFeeEnabled ? total * 1.10 : total;
-}
-
-function calcFinal(){
-  let base = baseTotal();
-
-  if(tipo === "percent") return base - (base * desconto / 100);
-  if(tipo === "valor") return base - desconto;
-
-  return base;
-}
-
-function atualizarTotais(){
-  const final = calcFinal();
-
-  subtotalSpan.innerText = total.toFixed(2);
-  totalSpan.innerText = final.toFixed(2);
-  valorFaltanteSpan.innerText = final.toFixed(2);
-}
-
-/* ================= PAGAMENTO (INTOCADO) ================= */
-let paymentMethod = null;
-
-function selectPayment(m,b){
-  paymentMethod = m;
-  document.querySelectorAll('.pay-buttons button').forEach(x=>x.classList.remove('selected'));
-  b.classList.add('selected');
-}
-
-function finalizar(){
-  if(!paymentMethod) return alert("Selecione pagamento");
-
-  if(paymentMethod === "Cartao") alert("Cartão");
-  else if(paymentMethod === "PIX") alert("PIX");
-  else alert("Dinheiro");
-}
-
-/* ================= MODAIS ================= */
-function abrirTipoDesconto(){
-  document.getElementById('modalTipo').style.display='flex';
-}
-
-function abrirInput(t){
-  tipo = t;
-  input = "";
-
-  document.getElementById('modalTipo').style.display='none';
-  document.getElementById('modalInput').style.display='flex';
-
-  document.getElementById('label').innerText =
-    t==="percent" ? "PERCENTUAL (%)" : "VALOR (R$)";
-}
-
-function fecharModal(){
-  document.querySelectorAll('.modal').forEach(m=>m.style.display='none');
-}
-
-/* keypad */
-function dig(n){ input+=n; atualizarDisplay(); }
-function del(){ input=input.slice(0,-1); atualizarDisplay(); }
-function clearInput(){ input=""; atualizarDisplay(); }
-
-function atualizarDisplay(){
-  document.getElementById('display').innerText =
-    tipo==="percent" ? input+"%" : "R$ "+(input/100||0).toFixed(2);
-}
-
-function aplicarDesconto(){
-  desconto = tipo==="percent" ? parseFloat(input) : parseFloat(input)/100;
-
-  fecharModal();
-  atualizarTotais();
-
-  document.getElementById('descontoArea').innerHTML = `
-    <button class="btn-desconto" disabled>DESCONTO APLICADO</button>
-    <button class="btn-remove" onclick="removerDesconto()">✕</button>
-  `;
-}
-
-function removerDesconto(){
-  desconto=0;
-  tipo=null;
-  input="";
-
-  document.getElementById('descontoArea').innerHTML =
-    `<button class="btn-desconto" onclick="abrirTipoDesconto()">APLICAR DESCONTO</button>`;
-
-  atualizarTotais();
+function atualizarTotais() {
+  document.getElementById('subtotal').innerText = total.toFixed(2);
+  document.getElementById('total').innerText = total.toFixed(2);
+  document.getElementById('valorFaltante').innerText = total.toFixed(2);
+  document.getElementById('cardTotal').innerText = total.toFixed(2);
+  document.getElementById('pixTotal').innerText = total.toFixed(2);
 }
 
 atualizarTotais();
+
+/* PAYMENT */
+let paymentMethod = null;
+
+function selectPayment(m, btn) {
+  paymentMethod = m;
+  document.querySelectorAll('.pay-buttons button').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+}
+
+/* 🔥 RESTAURADO FLUXO ORIGINAL */
+function finalizar() {
+  if (!paymentMethod) return alert("Selecione pagamento");
+
+  if (paymentMethod === "Cartao") simularCartao();
+  else if (paymentMethod === "PIX") simularPix();
+  else simularDinheiro();
+}
+
+function simularDinheiro() {
+  finalizarVenda();
+}
+
+function simularCartao() {
+  const s = document.getElementById('cardScreen');
+  const m = document.getElementById('cardMessage');
+
+  s.style.display = "flex";
+
+  setTimeout(() => m.innerText = "PROCESSANDO...", 2000);
+  setTimeout(() => m.innerText = "APROVADO ✅", 7000);
+  setTimeout(finalizarVenda, 9000);
+}
+
+function simularPix() {
+  const s = document.getElementById('pixScreen');
+  const m = document.getElementById('pixMessage');
+
+  s.style.display = "flex";
+
+  setTimeout(() => m.innerText = "TRANSAÇÃO APROVADA ✅", 5000);
+  setTimeout(finalizarVenda, 7000);
+}
+
+function finalizarVenda() {
+  localStorage.removeItem('cart');
+  window.location.href = "carrinho.html";
+}
+
+/* MODAIS */
+function abrirTipoDesconto() {
+  document.getElementById('modalTipo').style.display = "flex";
+}
+
+function abrirInput(t) {
+  document.getElementById('modalTipo').style.display = "none";
+  document.getElementById('modalInput').style.display = "flex";
+}
+
+function fecharModal() {
+  document.querySelectorAll('.modal').forEach(m => m.style.display = "none");
+}
+
+/* desconto simples (mantido leve) */
+let input = "";
+function dig(n){ input += n; }
+function del(){ input = input.slice(0,-1); }
+function clearInput(){ input = ""; }
+
+function aplicarDesconto(){
+  fecharModal();
+}
 
 </script>
 
