@@ -9,7 +9,6 @@ body {
   margin: 0;
   background: #f5f5f5;
 }
-
 /* HEADER */
 .header {
   width: 100%;
@@ -30,7 +29,6 @@ body {
   color: white;
   cursor: pointer;
 }
-
 /* MENU LATERAL */
 .side-menu {
   position: fixed;
@@ -52,7 +50,6 @@ body {
   cursor: pointer;
 }
 .menu-item:hover { background: #f5f5f5; }
-
 /* OVERLAY */
 .menu-overlay {
   position: fixed;
@@ -63,7 +60,6 @@ body {
   z-index: 3000;
 }
 .menu-overlay.show { display: block; }
-
 /* CONTAINER */
 .container {
   max-width: 1200px;
@@ -77,7 +73,48 @@ body {
   gap: 16px;
   justify-content: center;
 }
-
+.product {
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+.product-image-box {
+  height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.product-img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+.product-info {
+  background: #FFEEF4;
+  padding: 12px;
+  text-align: center;
+  margin-top: auto;
+}
+.product-price { font-weight: bold; }
+.product-name { font-size: 13px; }
+.badge {
+  position: absolute;
+  top: 8px; right: 8px;
+  background: #ff4d6d;
+  color: white;
+  border-radius: 50%;
+  width: 28px; height: 28px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: bold;
+}
 /* FOOTER */
 .footer-bar {
   position: fixed;
@@ -99,7 +136,6 @@ body {
   font-weight: bold;
   font-size: 18px;
 }
-
 /* SETINHA */
 .toggle-btn {
   position: fixed;
@@ -127,7 +163,6 @@ body {
   transition: 0.3s;
 }
 .toggle-btn.open .arrow { transform: rotate(135deg); }
-
 /* CARRINHO */
 .cart-overlay {
   position: fixed;
@@ -147,8 +182,6 @@ body {
   padding: 20px;
   margin-top: 80px;
 }
-
-/* ESTILO DOS ITENS DO CARRINHO */
 .cart-item {
   display: flex;
   align-items: center;
@@ -170,8 +203,7 @@ body {
   cursor: pointer;
   padding: 5px;
 }
-
-/* TOTAL E TAXA */
+.delete-btn img { width: 22px; height: 22px; }
 .total-cart {
   padding: 15px;
   font-weight: bold;
@@ -220,7 +252,7 @@ body {
 
 .btn-clear {
   flex: 1;
-  padding: 13px 20px;     /* menor que antes */
+  padding: 12px 16px;        /* menor que o original */
   background: #ff4d6d;
   color: white;
   border: none;
@@ -232,7 +264,7 @@ body {
 
 .btn-add {
   flex: 1;
-  padding: 13px 20px;
+  padding: 12px 16px;        /* menor que o original */
   background: #2196f3;
   color: white;
   border: none;
@@ -292,11 +324,9 @@ body {
 
 <div class="cart-overlay" id="cartOverlay">
   <div class="cart" id="cart"></div>
-  
   <div class="total-cart">
     Total: R$ <span id="totalCart">0</span>
   </div>
-  
   <div class="service-fee">
     Taxa de serviço (10%)
     <label class="switch">
@@ -304,12 +334,10 @@ body {
       <span class="slider"></span>
     </label>
   </div>
-
   <div class="buttons">
     <button class="btn-clear" onclick="openClearModal()">Limpar</button>
     <button class="btn-add" onclick="closeCart()">Adicionar Item</button>
   </div>
-
   <button class="btn-options" onclick="goToPayment()">+ Opções</button>
 </div>
 
@@ -329,9 +357,9 @@ body {
 <div class="modal" id="itemModal">
   <div class="modal-box">
     <h3>Você deseja remover este item?</h3>
-    <div style="display:flex; justify-content:center; gap:10px; margin-top:20px;">
-      <button onclick="closeModal()" style="background:#e53935; color:white; padding:10px 20px; border:none; border-radius:8px;">NÃO</button>
-      <button onclick="confirmRemove()" style="background:#4caf50; color:white; padding:10px 20px; border:none; border-radius:8px;">SIM</button>
+    <div class="modal-buttons" style="display:flex; justify-content:center; gap:10px; margin-top:20px;">
+      <button class="btn-no" onclick="closeModal()" style="background:#e53935; color:white; padding:10px 20px; border:none; border-radius:8px;">NÃO</button>
+      <button class="btn-yes" onclick="confirmRemove()" style="background:#4caf50; color:white; padding:10px 20px; border:none; border-radius:8px;">SIM</button>
     </div>
   </div>
 </div>
@@ -340,9 +368,9 @@ body {
   <div class="modal-box">
     <h3>Cancelar transação</h3>
     <p>Você deseja realmente cancelar esta transação?</p>
-    <div style="display:flex; justify-content:center; gap:10px; margin-top:20px;">
-      <button onclick="closeModal()" style="background:#e53935; color:white; padding:10px 20px; border:none; border-radius:8px;">NÃO</button>
-      <button onclick="confirmClear()" style="background:#4caf50; color:white; padding:10px 20px; border:none; border-radius:8px;">SIM</button>
+    <div class="modal-buttons" style="display:flex; justify-content:center; gap:10px; margin-top:20px;">
+      <button class="btn-no" onclick="closeModal()" style="background:#e53935; color:white; padding:10px 20px; border:none; border-radius:8px;">NÃO</button>
+      <button class="btn-yes" onclick="confirmClear()" style="background:#4caf50; color:white; padding:10px 20px; border:none; border-radius:8px;">SIM</button>
     </div>
   </div>
 </div>
@@ -351,7 +379,6 @@ body {
 let cart = {};
 let serviceFeeEnabled = false;
 let itemToRemove = null;
-
 const produtos = [
   {nome:"Whey Protein", preco:100, img:"D_NQ_NP_877710-MLA99447989168_112025-O.webp"},
   {nome:"Creatina", preco:80, img:"creatina-250g-creapure-growth-supplements-1.jpg"},
@@ -397,24 +424,19 @@ function updateUI() {
   const totalCart = document.getElementById('totalCart');
   const footerBar = document.getElementById('footerBar');
   const toggleBtn = document.getElementById('toggleBtn');
-
   cartDiv.innerHTML = '';
   let total = 0;
-
   document.querySelectorAll('.badge').forEach(b => b.style.display = 'none');
-
   Object.keys(cart).forEach(name => {
     const item = cart[name];
     const itemTotal = item.qty * item.price;
     total += itemTotal;
-
     const idSafe = name.replace(/\s/g, '-');
     const badge = document.getElementById('badge-' + idSafe);
     if (badge) {
       badge.style.display = 'flex';
       badge.innerText = item.qty;
     }
-
     cartDiv.innerHTML += `
       <div class="cart-item">
         <div class="cart-img-box"><img src="${item.img}"></div>
@@ -426,7 +448,6 @@ function updateUI() {
       </div>
     `;
   });
-
   const finalTotal = serviceFeeEnabled ? total * 1.10 : total;
   totalSpan.innerText = finalTotal.toFixed(2);
   totalCart.innerText = finalTotal.toFixed(2);
@@ -440,84 +461,72 @@ function updateUI() {
     resetServiceFee();
     closeCart();
   }
-
   syncServiceToggleUI();
 }
 
+/* ==================== FUNÇÕES DE AÇÃO ==================== */
 function askRemove(name) {
   itemToRemove = name;
   document.getElementById('itemModal').style.display = 'flex';
 }
-
 function confirmRemove() {
   if (itemToRemove) delete cart[itemToRemove];
   itemToRemove = null;
   document.getElementById('itemModal').style.display = 'none';
   updateUI();
 }
-
 function openClearModal() {
   document.getElementById('clearModal').style.display = 'flex';
 }
-
 function confirmClear() {
   cart = {};
   resetServiceFee();
   updateUI();
   document.getElementById('clearModal').style.display = 'none';
 }
-
 function closeModal() {
   document.getElementById('itemModal').style.display = 'none';
   document.getElementById('clearModal').style.display = 'none';
 }
-
 function toggleServiceFee(){
   serviceFeeEnabled = document.getElementById('serviceToggle').checked;
+  localStorage.setItem('serviceFeeEnabled', serviceFeeEnabled);
   updateUI();
 }
-
 function resetServiceFee(){
   serviceFeeEnabled = false;
   document.getElementById('serviceToggle').checked = false;
 }
-
 function syncServiceToggleUI(){
   document.getElementById('serviceToggle').checked = serviceFeeEnabled;
 }
-
 function toggleCart() {
   const overlay = document.getElementById('cartOverlay');
   const btn = document.getElementById('toggleBtn');
   overlay.classList.toggle('open');
   btn.classList.toggle('open');
 }
-
 function closeCart() {
   document.getElementById('cartOverlay').classList.remove('open');
   document.getElementById('toggleBtn').classList.remove('open');
 }
-
 function goToPayment() {
   localStorage.setItem('cart', JSON.stringify(cart));
   window.location.href = "pagamento.html";
 }
-
 function toggleMenu() {
   document.getElementById('sideMenu').classList.toggle('open');
   document.getElementById('menuOverlay').classList.toggle('show');
 }
-
 function logout() {
   localStorage.clear();
   window.location.href = "index.html";
 }
-
 function goHome() {
   closeCart();
   toggleMenu();
 }
-
+/* INIT */
 updateUI();
 </script>
 </body>
