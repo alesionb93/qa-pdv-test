@@ -31,6 +31,7 @@ body {
   margin: 0;
 }
 
+/* 🍔 BOTÃO */
 .menu-btn {
   font-size: 26px;
   color: white;
@@ -97,6 +98,7 @@ body {
   gap: 16px;
 }
 
+/* CARD */
 .product {
   width: 160px;
   height: 240px;
@@ -285,21 +287,13 @@ body {
   border-top: 1px solid #eee;
 }
 
-/* TAXA */
+/* TAXA (AJUSTE DE LAYOUT) */
 .service-fee {
   padding: 10px 15px;
   border-top: 1px solid #eee;
   display: flex;
-  justify-content: space-between;
   align-items: center;
   font-size: 14px;
-}
-
-/* 🔥 FIX: alinhamento correto do toggle ao lado do texto */
-.fee-left {
-  display: flex;
-  align-items: center;
-  gap: 10px;
 }
 
 /* SWITCH */
@@ -393,6 +387,7 @@ button {
 
 .btn-yes { background: #4caf50; color: white; }
 .btn-no { background: #e53935; color: white; }
+
 </style>
 </head>
 
@@ -421,15 +416,14 @@ button {
     Total: R$ <span id="totalCart">0</span>
   </div>
 
-  <!-- TAXA (AJUSTE SÓ DE LAYOUT) -->
+  <!-- TAXA (AJUSTADO) -->
   <div class="service-fee">
-    <div class="fee-left">
-      <label class="switch">
-        <input type="checkbox" id="serviceToggle" onchange="toggleServiceFee()">
-        <span class="slider"></span>
-      </label>
-      <span>Taxa de serviço (10%)</span>
-    </div>
+    <span>Taxa de serviço (10%)</span>
+
+    <label class="switch" style="margin-left:10px;">
+      <input type="checkbox" id="serviceToggle" onchange="toggleServiceFee()">
+      <span class="slider"></span>
+    </label>
   </div>
 
   <div class="buttons">
@@ -450,7 +444,7 @@ button {
   <div class="arrow"></div>
 </button>
 
-<!-- MODAIS (IGUAL AO SEU) -->
+<!-- MODAIS -->
 <div class="modal" id="itemModal">
   <div class="modal-box">
     <h3>Você deseja remover este item?</h3>
@@ -474,7 +468,7 @@ button {
 
 <script>
 
-/* JS 100% IGUAL AO SEU (NÃO ALTEREI NADA) */
+/* JS 100% INTACTO (não alterei nada) */
 
 </script>
 
