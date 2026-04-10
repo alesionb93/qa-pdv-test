@@ -2,13 +2,14 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Eyemobile PDV</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
   <div class="container">
-    <img src="Eyemobile_Branco_Simples.png" class="logo">
+    <img src="Eyemobile_Branco_Simples.png" class="logo" id="logo">
 
     <div class="login-box">
       <input 
@@ -38,6 +39,10 @@
       </p>  
     </div>
   </div>
+
+  <!-- 🔥 INDICADOR QA MODE -->
+  <img id="bug-indicator" src="bug.gif" 
+       style="position: fixed; top: 10px; right: 10px; width: 80px; display: none; z-index: 999;">
 
   <script src="script.js"></script>
 
