@@ -18,7 +18,8 @@ body {
   background: #9E3667;
   display: flex;
   align-items: center;
-  padding-left: 60px;
+  padding: 0 30px;
+  gap: 15px;
   position: fixed;
   top: 0;
   left: 0;
@@ -27,17 +28,14 @@ body {
 
 .header h1 {
   color: white;
+  margin: 0;
 }
 
 /* 🍔 BOTÃO */
 .menu-btn {
-  position: fixed;
-  top: 20px;
-  left: 20px;
   font-size: 26px;
   color: white;
   cursor: pointer;
-  z-index: 5001;
 }
 
 /* MENU LATERAL */
@@ -323,20 +321,17 @@ button {
 
 <body>
 
-<!-- 🍔 BOTÃO -->
-<div class="menu-btn" onclick="toggleMenu()">☰</div>
+<div class="header">
+  <div class="menu-btn" onclick="toggleMenu()">☰</div>
+  <h1>Venda de Produtos</h1>
+</div>
 
-<!-- MENU -->
 <div class="side-menu" id="sideMenu">
   <div class="menu-item" onclick="goHome()">Início</div>
   <div class="menu-item" onclick="logout()">Sair</div>
 </div>
 
 <div class="menu-overlay" id="menuOverlay" onclick="toggleMenu()"></div>
-
-<div class="header">
-  <h1>Venda de Produtos</h1>
-</div>
 
 <div class="container" id="main">
   <div class="products" id="products"></div>
