@@ -1,20 +1,46 @@
+pagamento.html
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
 <title>Pagamento</title>
+
 <style>
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
+  font-family: Arial;
   background: #f4f4f4;
   display: flex;
   height: 100vh;
 }
 
-/* Layout Principal */
-.left { flex: 2; background: white; padding: 20px; overflow-y: auto; }
-.right { flex: 1; background: #FFE6EF; padding: 20px; display: flex; flex-direction: column; justify-content: space-between; }
+/* 🔥 ADICIONE ISSO AQUI (IMPORTANTE) */
+.overlay img {
+  display: block;
+  margin: 0 auto;
+}
+
+/* (OPCIONAL MAS ESSENCIAL PRA CORRIGIR TAMANHO DO LOADING E QR) */
+.loading {
+  width: 80px;   /* ajuste fino igual ao original */
+  height: auto;
+  margin-bottom: 20px;
+}
+
+.qr {
+  width: 200px;  /* mantém proporção correta */
+  height: auto;
+  margin-bottom: 20px;
+}
+
+/* LAYOUT ORIGINAL (MANTIDO) */
+.left {
+  flex: 2;
+  background: white;
+  padding: 20px;
+  overflow-y: auto;
+}
 
 .item {
   display: flex;
@@ -24,148 +50,247 @@ body {
   border-bottom: 1px solid #eee;
   gap: 10px;
 }
-.item-left { display: flex; align-items: center; gap: 10px; }
-.item-img {
-  width: 45px; height: 45px; object-fit: contain;
-  border-radius: 8px; background: #fff; border: 1px solid #eee;
+
+.item-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
+
+.item-img {
+  width: 45px;
+  height: 45px;
+  object-fit: contain;
+  border-radius: 8px;
+  background: #fff;
+  border: 1px solid #eee;
+}
+
 .item-name { font-weight: bold; }
 .item-qty { font-size: 12px; color: #666; }
 
-.valor-faltante { text-align: center; margin-bottom: 20px; }
-.valor { font-size: 40px; font-weight: bold; margin: 10px 0; }
+/* RIGHT ORIGINAL */
+.right {
+  flex: 1;
+  background: #FFE6EF;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.valor-faltante {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.valor {
+  font-size: 40px;
+  font-weight: bold;
+  margin: 10px 0;
+}
 
 .btn-desconto {
-  background: #2196f3; color: white; border: none;
-  padding: 10px 20px; border-radius: 8px; cursor: pointer;
+  background: #2196f3;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
 }
+
 .btn-remove {
-  margin-left: 10px; border-radius: 50%; background: red;
-  color: white; border: none; width: 30px; height: 30px; cursor: pointer;
+  margin-left: 10px;
+  border-radius: 50%;
+  background: red;
+  color: white;
+  border: none;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
 }
 
+/* PAGAMENTO (NÃO ALTERADO) */
 .pay-buttons button {
-  width: 100%; padding: 15px; margin-bottom: 10px;
-  border: none; border-radius: 8px; cursor: pointer;
-  background: #9E3667; color: white;
+  width: 100%;
+  padding: 15px;
+  margin-bottom: 10px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  background: #9E3667;
+  color: white;
 }
-.selected { outline: 3px solid #000; }
 
+.selected {
+  outline: 3px solid #000;
+}
+
+/* FOOTER (ORIGINAL) */
 .footer {
-  position: fixed; bottom: 0; left: 0; right: 0; height: 100px;
-  background: #FFE6EF; display: flex; align-items: center;
-  justify-content: space-between; padding: 0 30px;
-}
-.footer-left { font-size: 22px; font-weight: bold; }
-.finish {
-  background: #22B14C; color: white; padding: 18px;
-  border: none; border-radius: 10px; cursor: pointer;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100px;
+  background: #FFE6EF;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 30px;
 }
 
-/* Overlays */
+.footer-left { font-size: 22px; font-weight: bold; }
+
+.finish {
+  background: #22B14C;
+  color: white;
+  padding: 18px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+/* OVERLAYS (ORIGINAL 100%) */
 .overlay {
-  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-  background: #BD407B; color: white; display: none;
-  flex-direction: column; align-items: center; justify-content: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #BD407B;
+  color: white;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   text-align: center;
 }
-.loading { width: 80px; height: auto; margin-bottom: 20px; }
-.qr { width: 200px; height: auto; margin-bottom: 20px; }
-.box { background: rgba(255,255,255,0.2); padding: 20px; border-radius: 12px; margin-top: 20px; }
 
-/* Modais */
+.box {
+  background: rgba(255,255,255,0.2);
+  padding: 20px;
+  border-radius: 12px;
+  margin-top: 20px;
+}
+
+/* =========================
+   MODAIS (APENAS UI DO CÓDIGO 2)
+========================= */
+
 .modal {
-  position: fixed; inset: 0; background: rgba(0,0,0,0.55);
-  display: none; align-items: center; justify-content: center;
-  z-index: 1000;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  display: none;
+  align-items: center;
+  justify-content: center;
 }
+
+/* TIPO DESCONTO */
 .modal-box {
-  background: white; width: 340px; border-radius: 14px;
-  padding: 18px; position: relative;
+  background: white;
+  width: 340px;
+  border-radius: 14px;
+  padding: 18px;
+  position: relative;
 }
+
 .modal-header {
-  display: flex; justify-content: space-between; align-items: center;
-  margin-bottom: 10px; font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  font-weight: bold;
 }
-.modal-close { cursor: pointer; font-size: 18px; color: #666; }
+
+.modal-close {
+  cursor: pointer;
+  font-size: 18px;
+  color: #666;
+}
 
 .option {
-  padding: 14px 0; border-bottom: 1px solid #eee; cursor: pointer;
+  padding: 14px 0;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
 }
 
-/* Keypad */
-#display { text-align: center; font-size: 34px; margin: 10px 0 0; }
-#label { text-align: center; margin-bottom: 15px; color: #666; }
+/* INPUT / KEYPAD */
+#display {
+  text-align: center;
+  font-size: 34px;
+  margin: 10px 0 0;
+}
+
+#label {
+  text-align: center;
+  margin-bottom: 15px;
+  color: #666;
+}
+
 .keypad {
-  display: grid; grid-template-columns: repeat(3, 1fr);
-  gap: 12px; justify-items: center; margin-top: 10px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  justify-items: center;
+  margin-top: 10px;
 }
+
 .key {
-  width: 62px; height: 62px; border-radius: 50%;
-  border: 2px solid #9E3667; background: #f2f2f2;
-  font-size: 18px; cursor: pointer;
+  width: 62px;
+  height: 62px;
+  border-radius: 50%;
+  border: 2px solid #9E3667;
+  background: #f2f2f2;
+  font-size: 18px;
+  cursor: pointer;
 }
+
 .actions {
-  display: flex; gap: 10px; margin-top: 15px;
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
 }
+
 .btn-red, .btn-green {
-  flex: 1; padding: 12px; border: none; border-radius: 12px;
-  color: white; font-weight: bold; cursor: pointer;
+  flex: 1;
+  padding: 12px;
+  border: none;
+  border-radius: 12px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
 }
+
 .btn-red { background: #e74c3c; }
 .btn-green { background: #2ecc71; }
 
-/* MODAL DE ERRO - AJUSTADO */
-#errorModal {
-  position: fixed; inset: 0; background: rgba(0,0,0,0.6);
-  display: none; align-items: center; justify-content: center;
-  z-index: 2000;
-}
-#errorBox {
-  background: white; width: 320px; border-radius: 16px;
-  padding: 25px 20px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-}
-#errorTitle {
-  font-size: 18px; font-weight: bold; color: #333; margin-bottom: 8px;
-}
-#errorMessage {
-  font-size: 15px; color: #666; margin-bottom: 25px;
-}
-#errorBtn {
-  background: #9E3667;
-  color: white;
-  border: none;
-  padding: 14px 40px;
-  border-radius: 12px;
-  font-size: 16px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-#errorBtn:hover {
-  background: #8a2e5a;
-  transform: scale(1.03);
-}
 </style>
 </head>
+
 <body>
 
 <div class="left" id="items"></div>
 
 <div class="right">
   <div>
+
     <div class="valor-faltante">
       <h2>VALOR FALTANTE</h2>
       <div class="valor">R$ <span id="valorFaltante">0</span></div>
+
       <div id="descontoArea">
         <button class="btn-desconto" onclick="abrirTipoDesconto()">APLICAR DESCONTO</button>
       </div>
     </div>
+
     <div class="pay-buttons">
       <button onclick="selectPayment('Dinheiro', this)">Dinheiro</button>
       <button onclick="selectPayment('Cartao', this)">Cartão</button>
       <button onclick="selectPayment('PIX', this)">PIX</button>
     </div>
+
   </div>
 </div>
 
@@ -174,15 +299,17 @@ body {
     SUBTOTAL: R$ <span id="subtotal">0</span><br>
     TOTAL: R$ <span id="total">0</span>
   </div>
-  <div style="display:flex; justify-content:flex-end; align-items:center;">
-    <button class="finish" onclick="finalizar()">Finalizar Venda</button>
-  </div>
+
+<div class="footer-right" style="display:flex; justify-content:flex-end; align-items:center;">
+  <button class="finish" onclick="finalizar()">Finalizar Venda</button>
 </div>
 
-<!-- Overlays -->
+<!-- OVERLAYS ORIGINAIS -->
 <div class="overlay" id="cardScreen">
   <img src="loading.gif" class="loading">
+
   <h1 id="cardMessage">APROXIME, INSIRA OU PASSE O CARTÃO</h1>
+
   <div class="box">
     <p>💳 Cartão</p>
     <p>Valor: R$ <span id="cardTotal"></span></p>
@@ -192,7 +319,9 @@ body {
 
 <div class="overlay" id="pixScreen">
   <h1 id="pixMessage">CONSULTANDO STATUS DA TRANSAÇÃO VIA PIX</h1>
+
   <img src="qrcode.avif" class="qr">
+
   <div class="box">
     <p>📲 PIX</p>
     <p>Valor: R$ <span id="pixTotal"></span></p>
@@ -200,13 +329,14 @@ body {
   </div>
 </div>
 
-<!-- Modais -->
+<!-- MODAIS NOVOS (UI SOMENTE) -->
 <div class="modal" id="modalTipo">
   <div class="modal-box">
     <div class="modal-header">
       <span>Tipo de desconto</span>
       <span class="modal-close" onclick="fecharModal()">✕</span>
     </div>
+
     <div class="option" onclick="abrirInput('percent')">(%) Percentual</div>
     <div class="option" onclick="abrirInput('valor')">(R$) Valor</div>
   </div>
@@ -214,9 +344,12 @@ body {
 
 <div class="modal" id="modalInput">
   <div class="modal-box">
+
     <div class="modal-close" onclick="fecharModal()">✕</div>
+
     <h2 id="display">0</h2>
     <p id="label"></p>
+
     <div class="keypad">
       <button class="key" onclick="dig(1)">1</button>
       <button class="key" onclick="dig(2)">2</button>
@@ -231,26 +364,24 @@ body {
       <button class="key" onclick="dig(0)">0</button>
       <button class="key" onclick="del()">⌫</button>
     </div>
+
     <div class="actions">
       <button class="btn-red" onclick="fecharModal()">Cancelar</button>
-      <button class="btn-green" onclick="validarEDescontar()">Avançar</button>
+      <button class="btn-green" onclick="aplicarDesconto()">Avançar</button>
     </div>
-  </div>
-</div>
 
-<!-- Modal de Erro -->
-<div id="errorModal">
-  <div id="errorBox">
-    <div id="errorTitle">EYE WEB</div>
-    <div id="errorMessage">Valor inválido para o desconto</div>
-    <button id="errorBtn" onclick="fecharErroERetornar()">OK</button>
   </div>
 </div>
 
 <script>
-// ======================= DADOS =======================
+
+/* =======================
+   CÓDIGO 1 (INALTERADO)
+======================= */
+
 const cart = JSON.parse(localStorage.getItem('cart')) || {};
 const serviceFeeEnabled = JSON.parse(localStorage.getItem('serviceFeeEnabled')) || false;
+
 const itemsDiv = document.getElementById('items');
 const subtotalSpan = document.getElementById('subtotal');
 const totalSpan = document.getElementById('total');
@@ -259,10 +390,12 @@ const cardTotal = document.getElementById('cardTotal');
 const pixTotal = document.getElementById('pixTotal');
 
 let total = 0;
+
 Object.keys(cart).forEach(name => {
   const item = cart[name];
   const itemTotal = item.qty * item.price;
   total += itemTotal;
+
   itemsDiv.innerHTML += `
     <div class="item">
       <div class="item-left">
@@ -272,40 +405,50 @@ Object.keys(cart).forEach(name => {
           <div class="item-qty">x${item.qty}</div>
         </div>
       </div>
-      <div>R$ ${itemTotal.toFixed(2)}</div>
+      <div>R$ ${itemTotal}</div>
     </div>
   `;
 });
 
+/* DESCONTO */
 let desconto = 0;
 let tipo = null;
 let input = "";
 
-function baseTotal() {
+function baseTotal(){
   return serviceFeeEnabled ? total * 1.10 : total;
 }
 
-function calcFinal() {
+function calcFinal(){
   let base = baseTotal();
-  if (tipo === "percent") return base - (base * desconto / 100);
-  if (tipo === "valor") return base - desconto;
+
+  if(tipo === "percent") return base - (base * desconto / 100);
+  if(tipo === "valor") return base - desconto;
+
   return base;
 }
 
-function atualizarTotais() {
+function atualizarTotais(){
   const final = calcFinal();
+
   subtotalSpan.innerText = total.toFixed(2);
   totalSpan.innerText = final.toFixed(2);
   valorFaltanteSpan.innerText = final.toFixed(2);
+
   cardTotal.innerText = final.toFixed(2);
   pixTotal.innerText = final.toFixed(2);
 }
 
-// ======================= PAGAMENTO =======================
+/* PAGAMENTO ORIGINAL */
 let paymentMethod = null;
+
 function selectPayment(method, btn) {
   paymentMethod = method;
-  document.querySelectorAll('.pay-buttons button').forEach(b => b.classList.remove('selected'));
+
+  document.querySelectorAll('.pay-buttons button').forEach(b => {
+    b.classList.remove('selected');
+  });
+
   btn.classList.add('selected');
 }
 
@@ -314,77 +457,96 @@ function finalizar() {
     alert("Selecione uma forma de pagamento!");
     return;
   }
-  if (paymentMethod === "Cartao") simularCartao();
-  else if (paymentMethod === "PIX") simularPix();
+
+  if (paymentMethod === "Cartao") {
+    simularCartao();
+  } 
+  else if (paymentMethod === "PIX") {
+    simularPix();
+  } 
   else {
     alert("Pagamento em dinheiro recebido");
     finalizarVenda();
   }
 }
 
+/* CARTÃO */
 function simularCartao() {
   const screen = document.getElementById('cardScreen');
   const msg = document.getElementById('cardMessage');
+
   screen.style.display = "flex";
+
+  // reset correto ao abrir
   msg.innerText = "APROXIME, INSIRA OU PASSE O CARTÃO";
-  setTimeout(() => msg.innerText = "PROCESSANDO...", 2000);
-  setTimeout(() => msg.innerText = "DÉBITO NUBANK", 4000);
-  setTimeout(() => msg.innerText = "TRANSAÇÃO APROVADA ✅", 8000);
+
+  setTimeout(() => {
+    msg.innerText = "PROCESSANDO...";
+  }, 2000);
+
+  setTimeout(() => {
+    msg.innerText = "DÉBITO NUBANK";
+  }, 4000);
+
+  setTimeout(() => {
+    msg.innerText = "TRANSAÇÃO APROVADA ✅";
+  }, 8000);
+
   setTimeout(finalizarVenda, 10000);
 }
 
 function simularPix() {
   const screen = document.getElementById('pixScreen');
   const msg = document.getElementById('pixMessage');
+
   screen.style.display = "flex";
+
+  // reset correto
   msg.innerText = "CONSULTANDO STATUS DA TRANSAÇÃO VIA PIX";
-  setTimeout(() => msg.innerText = "TRANSAÇÃO APROVADA ✅", 5000);
+
+  setTimeout(() => {
+    msg.innerText = "TRANSAÇÃO APROVADA ✅";
+  }, 5000);
+
   setTimeout(finalizarVenda, 7000);
 }
-
 function finalizarVenda() {
   localStorage.removeItem('cart');
   window.location.href = "carrinho.html";
 }
 
-// ======================= DESCONTO COM VALIDAÇÃO =======================
-function abrirTipoDesconto() {
-  document.getElementById('modalTipo').style.display = "flex";
+/* MODAIS (SÓ UI NOVA) */
+function abrirTipoDesconto(){
+  document.getElementById('modalTipo').style.display="flex";
 }
 
-function abrirInput(t) {
+function abrirInput(t){
   tipo = t;
   input = "";
-  document.getElementById('modalTipo').style.display = "none";
-  document.getElementById('modalInput').style.display = "flex";
-  document.getElementById('label').innerText = t === "percent" ? "PERCENTUAL (%)" : "VALOR (R$)";
-  atualizarDisplay();
+
+  document.getElementById('modalTipo').style.display="none";
+  document.getElementById('modalInput').style.display="flex";
+
+  document.getElementById('label').innerText =
+    t==="percent" ? "PERCENTUAL (%)" : "VALOR (R$)";
 }
 
-function fecharModal() {
-  document.querySelectorAll('.modal').forEach(m => m.style.display = "none");
+function fecharModal(){
+  document.querySelectorAll('.modal').forEach(m => m.style.display="none");
 }
 
-function validarEDescontar() {
-  const base = baseTotal();
-  let valorDesconto = 0;
+function dig(n){ input+=n; atualizarDisplay(); }
+function del(){ input=input.slice(0,-1); atualizarDisplay(); }
+function clearInput(){ input=""; atualizarDisplay(); }
 
-  if (tipo === "percent") {
-    valorDesconto = parseFloat(input) || 0;
-    if (valorDesconto <= 0 || valorDesconto >= 100) {   // Alterado: >= 100
-      mostrarErro();
-      return;
-    }
-  } else { // Valor fixo
-    valorDesconto = parseFloat(input) || 0;
-    if (valorDesconto <= 0 || valorDesconto >= base) {  // Alterado: >= base
-      mostrarErro();
-      return;
-    }
-  }
+function atualizarDisplay(){
+  document.getElementById('display').innerText =
+    tipo==="percent" ? input+"%" : "R$ "+(input/100||0).toFixed(2);
+}
 
-  // Aplica o desconto
-  desconto = tipo === "percent" ? valorDesconto : valorDesconto;
+function aplicarDesconto(){
+  desconto = tipo==="percent" ? parseFloat(input) : parseFloat(input)/100;
+
   fecharModal();
   atualizarTotais();
 
@@ -394,51 +556,21 @@ function validarEDescontar() {
   `;
 }
 
-function mostrarErro() {
-  document.getElementById('errorModal').style.display = "flex";
-}
-
-function fecharErroERetornar() {
-  document.getElementById('errorModal').style.display = "none";
-  // Mantém o usuário no teclado para corrigir
-}
-
-// ======================= KEYPAD =======================
-function dig(n) {
-  input += n;
-  atualizarDisplay();
-}
-
-function del() {
-  input = input.slice(0, -1);
-  atualizarDisplay();
-}
-
-function clearInput() {
-  input = "";
-  atualizarDisplay();
-}
-
-function atualizarDisplay() {
-  if (tipo === "percent") {
-    document.getElementById('display').innerText = (input || "0") + "%";
-  } else {
-    const valor = (parseFloat(input) || 0) / 100;
-    document.getElementById('display').innerText = "R$ " + valor.toFixed(2);
-  }
-}
-
-function removerDesconto() {
+function removerDesconto(){
   desconto = 0;
   tipo = null;
   input = "";
+
   document.getElementById('descontoArea').innerHTML =
     `<button class="btn-desconto" onclick="abrirTipoDesconto()">APLICAR DESCONTO</button>`;
+
   atualizarTotais();
 }
 
-// ======================= INIT =======================
+/* INIT */
 atualizarTotais();
+
 </script>
+
 </body>
 </html>
