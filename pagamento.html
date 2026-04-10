@@ -60,7 +60,7 @@ body {
 .qr { width: 200px; height: auto; margin-bottom: 20px; }
 .box { background: rgba(255,255,255,0.2); padding: 20px; border-radius: 12px; margin-top: 20px; }
 
-/* Modais Gerais */
+/* Modais */
 .modal {
   position: fixed; inset: 0; background: rgba(0,0,0,0.55);
   display: none; align-items: center; justify-content: center; z-index: 1000;
@@ -97,7 +97,7 @@ body {
 .btn-red { background: #e74c3c; }
 .btn-green { background: #2ecc71; }
 
-/* Modal de Limite de Desconto (Autorizar) */
+/* Modais de Erro e Login */
 #errorModal, #loginModal, #erroLoginModal {
   position: fixed; inset: 0; background: rgba(0,0,0,0.6);
   display: none; align-items: center; justify-content: center;
@@ -105,26 +105,18 @@ body {
 }
 .modal-box {
   background: white; width: 340px; border-radius: 16px;
-  padding: 25px 20px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  padding: 25px 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
 }
 
-/* Modal Login */
-#loginModal .modal-box {
-  text-align: left;
-}
+/* Estilo do Modal de Login */
 #loginModal input {
-  width: 100%; padding: 12px; margin: 8px 0 15px;
+  width: 100%; padding: 12px; margin: 8px 0 15px 0;
   border: 1px solid #ddd; border-radius: 8px; font-size: 16px;
 }
 #loginModal button {
   width: 100%; padding: 14px; background: #9E3667;
   color: white; border: none; border-radius: 12px;
   font-size: 16px; font-weight: bold; cursor: pointer;
-}
-
-/* Modal Erro Login */
-#erroLoginModal .modal-box {
-  text-align: center;
 }
 </style>
 </head>
@@ -159,13 +151,64 @@ body {
   </div>
 </div>
 
-<!-- Overlays de pagamento -->
-<div class="overlay" id="cardScreen">...</div>
-<div class="overlay" id="pixScreen">...</div>
+<!-- Overlays Corrigidos -->
+<div class="overlay" id="cardScreen">
+  <img src="loading.gif" class="loading">
+  <h1 id="cardMessage">APROXIME, INSIRA OU PASSE O CARTÃO</h1>
+  <div class="box">
+    <p>💳 Cartão</p>
+    <p>Valor: R$ <span id="cardTotal"></span></p>
+    <small>Ambiente de teste</small>
+  </div>
+</div>
 
-<!-- Modais existentes -->
-<div class="modal" id="modalTipo"> ... </div>
-<div class="modal" id="modalInput"> ... </div>
+<div class="overlay" id="pixScreen">
+  <h1 id="pixMessage">CONSULTANDO STATUS DA TRANSAÇÃO VIA PIX</h1>
+  <img src="qrcode.avif" class="qr">
+  <div class="box">
+    <p>📲 PIX</p>
+    <p>Valor: R$ <span id="pixTotal"></span></p>
+    <small>Ambiente de teste</small>
+  </div>
+</div>
+
+<!-- Modais -->
+<div class="modal" id="modalTipo">
+  <div class="modal-box">
+    <div class="modal-header">
+      <span>Tipo de desconto</span>
+      <span class="modal-close" onclick="fecharModal()">✕</span>
+    </div>
+    <div class="option" onclick="abrirInput('percent')">(%) Percentual</div>
+    <div class="option" onclick="abrirInput('valor')">(R$) Valor</div>
+  </div>
+</div>
+
+<div class="modal" id="modalInput">
+  <div class="modal-box">
+    <div class="modal-close" onclick="fecharModal()">✕</div>
+    <h2 id="display">0</h2>
+    <p id="label"></p>
+    <div class="keypad">
+      <button class="key" onclick="dig(1)">1</button>
+      <button class="key" onclick="dig(2)">2</button>
+      <button class="key" onclick="dig(3)">3</button>
+      <button class="key" onclick="dig(4)">4</button>
+      <button class="key" onclick="dig(5)">5</button>
+      <button class="key" onclick="dig(6)">6</button>
+      <button class="key" onclick="dig(7)">7</button>
+      <button class="key" onclick="dig(8)">8</button>
+      <button class="key" onclick="dig(9)">9</button>
+      <button class="key" onclick="clearInput()">C</button>
+      <button class="key" onclick="dig(0)">0</button>
+      <button class="key" onclick="del()">⌫</button>
+    </div>
+    <div class="actions">
+      <button class="btn-red" onclick="cancelarInput()">Cancelar</button>
+      <button class="btn-green" onclick="validarEDescontar()">Avançar</button>
+    </div>
+  </div>
+</div>
 
 <!-- Modal de Limite 10% -->
 <div id="errorModal">
@@ -173,13 +216,13 @@ body {
     <div id="errorTitle" style="font-size:18px; font-weight:bold; margin-bottom:15px;">AUTORIZAR</div>
     <div id="errorMessage" style="font-size:15px; color:#666; margin-bottom:25px; line-height:1.5;"></div>
     <div style="display:flex; gap:12px; justify-content:center;">
-      <button onclick="abrirModalLogin()" style="background:#e74c3c; color:white; padding:12px 30px; border:none; border-radius:12px; font-weight:bold; cursor:pointer;">Autorizar</button>
-      <button onclick="fecharErroERetornar()" style="background:#9E3667; color:white; padding:12px 30px; border:none; border-radius:12px; font-weight:bold; cursor:pointer;">OK</button>
+      <button onclick="abrirModalLogin()" style="background:#e74c3c; color:white; padding:12px 30px; border:none; border-radius:12px; font-weight:bold;">Autorizar</button>
+      <button onclick="fecharErroERetornar()" style="background:#9E3667; color:white; padding:12px 30px; border:none; border-radius:12px; font-weight:bold;">OK</button>
     </div>
   </div>
 </div>
 
-<!-- NOVO: Modal de Login -->
+<!-- Modal Login -->
 <div id="loginModal">
   <div class="modal-box">
     <div class="modal-header">
@@ -187,21 +230,21 @@ body {
       <span class="modal-close" onclick="fecharTodosModais()">✕</span>
     </div>
     <p style="margin:15px 0 5px;">Usuário</p>
-    <input type="text" id="username" placeholder="Digite o usuário" autocomplete="off">
+    <input type="text" id="username" placeholder="Digite o usuário">
 
     <p style="margin:15px 0 5px;">Senha</p>
-    <input type="password" id="password" placeholder="Digite a senha" autocomplete="off">
+    <input type="password" id="password" placeholder="Digite a senha">
 
     <button onclick="tentarLogin()">Entrar</button>
   </div>
 </div>
 
-<!-- Modal Erro de Login -->
+<!-- Modal Erro Login -->
 <div id="erroLoginModal">
   <div class="modal-box">
     <div style="font-size:18px; font-weight:bold; color:#333; margin-bottom:10px;">EYE PRO</div>
     <div style="font-size:15px; color:#666; margin-bottom:25px;">Usuário/senha incorreto</div>
-    <button onclick="fecharErroLogin()" style="background:#9E3667; color:white; padding:12px 40px; border:none; border-radius:12px; font-weight:bold; cursor:pointer;">OK</button>
+    <button onclick="fecharErroLogin()" style="background:#9E3667; color:white; padding:12px 40px; border:none; border-radius:12px; font-weight:bold;">OK</button>
   </div>
 </div>
 
@@ -241,7 +284,6 @@ let tipo = null;
 let input = "";
 const LIMITE_PERCENTUAL = 10;
 
-/* Variáveis para armazenar o desconto pendente de autorização */
 let descontoPendente = null;
 let tipoPendente = null;
 
@@ -283,7 +325,7 @@ function finalizar() {
   }
 }
 
-function simularCartao() { /* mesmo código anterior */ 
+function simularCartao() {
   const screen = document.getElementById('cardScreen');
   const msg = document.getElementById('cardMessage');
   screen.style.display = "flex";
@@ -294,7 +336,7 @@ function simularCartao() { /* mesmo código anterior */
   setTimeout(finalizarVenda, 10000);
 }
 
-function simularPix() { /* mesmo código anterior */ 
+function simularPix() {
   const screen = document.getElementById('pixScreen');
   const msg = document.getElementById('pixMessage');
   screen.style.display = "flex";
@@ -373,7 +415,12 @@ function validarEDescontar(){
   atualizarBotaoDesconto();
 }
 
-/* Modal de Limite → Abre Login */
+function mostrarModalErro(mensagem) {
+  document.getElementById('errorTitle').innerText = "EYE WEB";
+  document.getElementById('errorMessage').innerHTML = mensagem;
+  document.getElementById('errorModal').style.display = "flex";
+}
+
 function mostrarModalLimite(mensagem) {
   document.getElementById('errorMessage').innerHTML = mensagem;
   document.getElementById('errorModal').style.display = "flex";
@@ -386,25 +433,19 @@ function abrirModalLogin() {
   document.getElementById('loginModal').style.display = "flex";
 }
 
-/* Tentativa de Login */
 function tentarLogin() {
   const user = document.getElementById('username').value.trim();
   const pass = document.getElementById('password').value.trim();
 
   if (user === "candidato" && pass === "Candidato.22") {
-    // Login correto → aplica o desconto pendente
     desconto = descontoPendente;
     tipo = tipoPendente;
-    
     document.getElementById('loginModal').style.display = "none";
     atualizarTotais();
     atualizarBotaoDesconto();
-    
-    // Limpa pendentes
     descontoPendente = null;
     tipoPendente = null;
   } else {
-    // Login incorreto
     document.getElementById('loginModal').style.display = "none";
     document.getElementById('erroLoginModal').style.display = "flex";
   }
@@ -412,7 +453,6 @@ function tentarLogin() {
 
 function fecharErroLogin() {
   document.getElementById('erroLoginModal').style.display = "none";
-  // Reabre o modal de login
   document.getElementById('loginModal').style.display = "flex";
 }
 
