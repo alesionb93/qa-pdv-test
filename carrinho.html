@@ -280,6 +280,14 @@ body {
   color: #555;
 }
 
+.cart-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
 .delete-btn {
   background: none;
   border: none;
@@ -290,6 +298,44 @@ body {
 .delete-btn img {
   width: 20px;
   height: 20px;
+}
+
+/* BOTÃO APLICAR DESCONTO INDIVIDUAL */
+.btn-desconto-item {
+  background: #2196f3;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+/* DESCONTO APLICADO */
+.desconto-aplicado {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #555;
+  white-space: nowrap;
+}
+
+.btn-remove-desconto {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: red;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  line-height: 1;
 }
 
 .total-cart {
@@ -394,11 +440,93 @@ button {
   max-width: 90vw;
 }
 
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  font-weight: bold;
+}
+
+.modal-close {
+  cursor: pointer;
+  font-size: 20px;
+  color: #666;
+}
+
 .modal-buttons {
   display: flex;
   justify-content: center;
   gap: 8px;
   margin-top: 20px;
+}
+
+.option {
+  padding: 14px 0;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+}
+.option:last-child { border-bottom: none; }
+
+/* Keypad */
+#discDisplay { text-align: center; font-size: 34px; margin: 10px 0; }
+#discLabel { text-align: center; margin-bottom: 15px; color: #666; }
+.keypad {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 12px; justify-items: center; margin-top: 10px;
+}
+.key {
+  width: 56px; height: 56px; border-radius: 50%;
+  border: 2px solid #9E3667; background: #f2f2f2;
+  font-size: 18px; cursor: pointer;
+}
+.actions {
+  display: flex; gap: 10px; margin-top: 15px;
+}
+.btn-red, .btn-green {
+  flex: 1; padding: 12px; border: none; border-radius: 12px;
+  color: white; font-weight: bold; cursor: pointer;
+}
+.btn-red { background: #e74c3c; }
+.btn-green { background: #2ecc71; }
+
+/* Modais de Erro e Login */
+#discErrorModal, #discErroInvalidoModal, #discLoginModal, #discErroLoginModal {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.6);
+  display: none; align-items: center; justify-content: center;
+  z-index: 10000;
+}
+
+/* Login */
+#discLoginModal .modal-box {
+  padding: 30px 25px;
+}
+#discLoginModal p {
+  margin: 15px 0 6px 0;
+  text-align: left;
+  font-weight: bold;
+  color: #333;
+}
+#discLoginModal input {
+  width: 100%;
+  padding: 13px;
+  margin-bottom: 18px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+#discLoginModal button {
+  width: 100%;
+  padding: 14px;
+  background: #9E3667;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 10px;
 }
 
 .btn-yes { background: #4caf50; color: white; }
@@ -447,6 +575,11 @@ button {
   .cart {
     margin-top: 60px;
     padding: 10px;
+  }
+  .key {
+    width: 48px;
+    height: 48px;
+    font-size: 16px;
   }
 }
 </style>
@@ -504,7 +637,7 @@ button {
   <div class="arrow"></div>
 </button>
 
-<!-- MODAIS -->
+<!-- MODAIS EXISTENTES -->
 <div class="modal" id="itemModal">
   <div class="modal-box">
     <h3>Você deseja remover este item?</h3>
@@ -526,16 +659,112 @@ button {
   </div>
 </div>
 
+<!-- MODAL TIPO DE DESCONTO INDIVIDUAL -->
+<div class="modal" id="discTipoModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <span>Tipo de desconto</span>
+      <span class="modal-close" onclick="discFecharModal()">✕</span>
+    </div>
+    <div class="option" onclick="discAbrirInput('percent')">(%) Percentual</div>
+    <div class="option" onclick="discAbrirInput('valor')">(R$) Valor</div>
+  </div>
+</div>
+
+<!-- MODAL TECLADO NUMÉRICO -->
+<div class="modal" id="discInputModal">
+  <div class="modal-box">
+    <h2 id="discDisplay">0</h2>
+    <p id="discLabel"></p>
+    <div class="keypad">
+      <button class="key" onclick="discDig(1)">1</button>
+      <button class="key" onclick="discDig(2)">2</button>
+      <button class="key" onclick="discDig(3)">3</button>
+      <button class="key" onclick="discDig(4)">4</button>
+      <button class="key" onclick="discDig(5)">5</button>
+      <button class="key" onclick="discDig(6)">6</button>
+      <button class="key" onclick="discDig(7)">7</button>
+      <button class="key" onclick="discDig(8)">8</button>
+      <button class="key" onclick="discDig(9)">9</button>
+      <button class="key" onclick="discClearInput()">C</button>
+      <button class="key" onclick="discDig(0)">0</button>
+      <button class="key" onclick="discDel()">⌫</button>
+    </div>
+    <div class="actions">
+      <button class="btn-red" onclick="discCancelarInput()">Cancelar</button>
+      <button class="btn-green" onclick="discValidarEDescontar()">Avançar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL ERRO INVÁLIDO -->
+<div id="discErroInvalidoModal">
+  <div class="modal-box">
+    <div style="font-size:18px; font-weight:bold; margin-bottom:12px;">EYE WEB</div>
+    <div style="font-size:15px; color:#666; margin-bottom:25px;">Valor inválido para o desconto</div>
+    <button onclick="discFecharErroInvalido()" 
+            style="background:#9E3667; color:white; padding:12px 40px; border:none; border-radius:12px; font-weight:bold;">
+      OK
+    </button>
+  </div>
+</div>
+
+<!-- MODAL LIMITE SUPERIOR -->
+<div id="discErrorModal">
+  <div class="modal-box">
+    <div id="discErrorTitle" style="font-size:18px; font-weight:bold; margin-bottom:15px;">AUTORIZAR</div>
+    <div id="discErrorMessage" style="font-size:15px; color:#666; margin-bottom:25px; line-height:1.5;"></div>
+    <div style="display:flex; gap:12px; justify-content:center;">
+      <button onclick="discAbrirModalLogin()" 
+              style="background:#e74c3c; color:white; padding:12px 30px; border:none; border-radius:12px; font-weight:bold;">
+        Autorizar
+      </button>
+      <button onclick="discFecharErroERetornar()" 
+              style="background:#9E3667; color:white; padding:12px 30px; border:none; border-radius:12px; font-weight:bold;">
+        OK
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL LOGIN -->
+<div id="discLoginModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <span>LOGIN COM SEUS DADOS</span>
+      <span class="modal-close" onclick="discFecharTodosModais()">✕</span>
+    </div>
+    <p>Usuário</p>
+    <input type="text" id="discUsername" placeholder="Digite o usuário">
+    <p>Senha</p>
+    <input type="password" id="discPassword" placeholder="Digite a senha">
+    <button onclick="discTentarLogin()">Entrar</button>
+  </div>
+</div>
+
+<!-- MODAL ERRO LOGIN -->
+<div id="discErroLoginModal">
+  <div class="modal-box">
+    <div style="font-size:18px; font-weight:bold; color:#333; margin-bottom:10px;">EYE PRO</div>
+    <div style="font-size:15px; color:#666; margin-bottom:25px;">Usuário/senha incorreto</div>
+    <button onclick="discFecharErroLogin()" 
+            style="background:#9E3667; color:white; padding:12px 40px; border:none; border-radius:12px; font-weight:bold;">
+      OK
+    </button>
+  </div>
+</div>
+
 <script>
 
 let cart = {};
 let itemToRemove = null;
 
-/* TAXA (FIX) */
+/* TAXA */
 let serviceFeeEnabled = false;
 
-function calculateTotal(total){
-  return serviceFeeEnabled ? total * 1.10 : total;
+function calculateTotal(subtotal){
+  // subtotal já vem com descontos aplicados
+  return serviceFeeEnabled ? subtotal * 1.10 : subtotal;
 }
 
 function syncServiceToggleUI(){
@@ -601,7 +830,7 @@ produtos.forEach(p => {
 
 function addProduct(name) {
   const produto = produtos.find(p => p.nome === name);
-  if (!cart[name]) cart[name] = { qty: 0, price: produto.preco, img: produto.img };
+  if (!cart[name]) cart[name] = { qty: 0, price: produto.preco, img: produto.img, desconto: 0, descontoTipo: null };
   cart[name].qty++;
   updateUI();
 }
@@ -612,7 +841,8 @@ function updateUI() {
   const totalCart = document.getElementById('totalCart');
 
   cartDiv.innerHTML = '';
-  let total = 0;
+  let somaProdutos = 0;
+  let somaDescontos = 0;
 
   document.querySelectorAll('.badge').forEach(b => {
     b.style.display = 'none';
@@ -622,7 +852,16 @@ function updateUI() {
   Object.keys(cart).forEach(name => {
     const item = cart[name];
     const itemTotal = item.qty * item.price;
-    total += itemTotal;
+    somaProdutos += itemTotal;
+
+    // Calcular desconto do item
+    let descontoValor = 0;
+    if (item.descontoTipo === 'percent') {
+      descontoValor = itemTotal * item.desconto / 100;
+    } else if (item.descontoTipo === 'valor') {
+      descontoValor = item.desconto;
+    }
+    somaDescontos += descontoValor;
 
     const idSafe = name.replace(/\s/g, '-');
     const badge = document.getElementById('badge-' + idSafe);
@@ -630,6 +869,21 @@ function updateUI() {
     if (badge) {
       badge.style.display = 'flex';
       badge.innerText = item.qty;
+    }
+
+    // Botão de desconto ou desconto aplicado
+    let descontoHTML = '';
+    if (item.descontoTipo) {
+      descontoHTML = `
+        <div class="desconto-aplicado">
+          <button class="btn-remove-desconto" onclick="event.stopPropagation(); removerDescontoItem('${name}')">✕</button>
+          <span>desconto de R$ ${descontoValor.toFixed(2)}</span>
+        </div>
+      `;
+    } else {
+      descontoHTML = `
+        <button class="btn-desconto-item" onclick="event.stopPropagation(); abrirDescontoItem('${name}')">APLICAR DESCONTO</button>
+      `;
     }
 
     cartDiv.innerHTML += `
@@ -641,14 +895,19 @@ function updateUI() {
           <div class="cart-name">${name} x${item.qty}</div>
           <div class="cart-price">R$ ${itemTotal}</div>
         </div>
-        <button class="delete-btn" onclick="askRemove('${name}')">
-          <img src="lixeira.ico">
-        </button>
+        <div class="cart-actions">
+          <button class="delete-btn" onclick="askRemove('${name}')">
+            <img src="lixeira.ico">
+          </button>
+          ${descontoHTML}
+        </div>
       </div>
     `;
   });
 
-  const finalTotal = calculateTotal(total);
+  // (Soma dos produtos - desconto) e depois + taxa se habilitada
+  const subtotalComDesconto = somaProdutos - somaDescontos;
+  const finalTotal = calculateTotal(subtotalComDesconto);
 
   totalSpan.innerText = finalTotal.toFixed(2);
   totalCart.innerText = finalTotal.toFixed(2);
@@ -658,7 +917,7 @@ function updateUI() {
   const footerBar = document.querySelector('.footer-bar');
   const toggleBtn = document.getElementById('toggleBtn');
 
-  if (total === 0) {
+  if (somaProdutos === 0) {
     footerBar.style.display = 'none';
     toggleBtn.style.display = 'none';
     resetServiceFee();
@@ -669,7 +928,203 @@ function updateUI() {
   }
 }
 
-// MODAIS
+// ======================= DESCONTO INDIVIDUAL =======================
+const DISC_LIMITE_PERCENTUAL = 10;
+let discItemName = null;
+let discTipo = null;
+let discInput = "";
+let discDescontoPendente = null;
+let discTipoPendente = null;
+
+// Calcula a soma de todos os descontos individuais (excluindo um item opcional)
+function calcTotalDescontos(excluirItem) {
+  let soma = 0;
+  Object.keys(cart).forEach(name => {
+    if (name === excluirItem) return;
+    const item = cart[name];
+    if (item.descontoTipo === 'percent') {
+      soma += (item.qty * item.price) * item.desconto / 100;
+    } else if (item.descontoTipo === 'valor') {
+      soma += item.desconto;
+    }
+  });
+  return soma;
+}
+
+function calcSomaProdutos() {
+  let soma = 0;
+  Object.keys(cart).forEach(name => { soma += cart[name].qty * cart[name].price; });
+  return soma;
+}
+
+function abrirDescontoItem(name) {
+  discItemName = name;
+  discTipo = null;
+  discInput = "";
+  document.getElementById('discTipoModal').style.display = 'flex';
+}
+
+function discAbrirInput(t) {
+  discTipo = t;
+  discInput = "";
+  document.getElementById('discTipoModal').style.display = 'none';
+  document.getElementById('discInputModal').style.display = 'flex';
+  document.getElementById('discLabel').innerText = t === "percent" ? "PERCENTUAL (%)" : "VALOR (R$)";
+  discAtualizarDisplay();
+}
+
+function discFecharModal() {
+  document.getElementById('discTipoModal').style.display = 'none';
+  document.getElementById('discInputModal').style.display = 'none';
+  discItemName = null;
+  discTipo = null;
+  discInput = "";
+}
+
+function discCancelarInput() {
+  discTipo = null;
+  discInput = "";
+  discFecharModal();
+}
+
+function discValidarEDescontar() {
+  const item = cart[discItemName];
+  const itemTotal = item.qty * item.price;
+  const somaProdutos = calcSomaProdutos();
+  const descontosExistentes = calcTotalDescontos(discItemName);
+  const limiteGlobal = somaProdutos * (DISC_LIMITE_PERCENTUAL / 100);
+  let valorDigitado = parseFloat(discInput) || 0;
+
+  let novoDescontoReais = 0;
+
+  if (discTipo === "percent") {
+    if (valorDigitado <= 0 || valorDigitado >= 100) {
+      discMostrarErroInvalido();
+      return;
+    }
+    novoDescontoReais = itemTotal * valorDigitado / 100;
+  } else {
+    novoDescontoReais = valorDigitado / 100;
+    if (novoDescontoReais <= 0 || novoDescontoReais >= itemTotal) {
+      discMostrarErroInvalido();
+      return;
+    }
+  }
+
+  // Verifica se a soma de todos os descontos ultrapassa 10% do total do carrinho
+  if (descontosExistentes + novoDescontoReais > limiteGlobal) {
+    discDescontoPendente = discTipo === "percent" ? valorDigitado : novoDescontoReais;
+    discTipoPendente = discTipo;
+    const disponivel = Math.max(0, limiteGlobal - descontosExistentes);
+    discMostrarLimiteSuperior(
+      `Não é possivel adicionar o desconto.<br>O limite total de desconto é de ${DISC_LIMITE_PERCENTUAL}% (R$ ${limiteGlobal.toFixed(2)}).<br>Disponível: R$ ${disponivel.toFixed(2)}`
+    );
+    return;
+  }
+
+  // Aplicar desconto
+  if (discTipo === "percent") {
+    item.desconto = valorDigitado;
+    item.descontoTipo = "percent";
+  } else {
+    item.desconto = novoDescontoReais;
+    item.descontoTipo = "valor";
+  }
+
+  document.getElementById('discInputModal').style.display = 'none';
+  discItemName = null;
+  discTipo = null;
+  discInput = "";
+  updateUI();
+}
+
+function removerDescontoItem(name) {
+  cart[name].desconto = 0;
+  cart[name].descontoTipo = null;
+  updateUI();
+}
+
+// Keypad
+function discDig(n) { discInput += n; discAtualizarDisplay(); }
+function discDel() { discInput = discInput.slice(0, -1); discAtualizarDisplay(); }
+function discClearInput() { discInput = ""; discAtualizarDisplay(); }
+
+function discAtualizarDisplay() {
+  document.getElementById('discDisplay').innerText =
+    discTipo === "percent"
+      ? (discInput || "0") + "%"
+      : "R$ " + ((parseFloat(discInput) || 0) / 100).toFixed(2);
+}
+
+// Modais de erro/login
+function discMostrarErroInvalido() {
+  document.getElementById('discErroInvalidoModal').style.display = "flex";
+}
+
+function discFecharErroInvalido() {
+  document.getElementById('discErroInvalidoModal').style.display = "none";
+}
+
+function discMostrarLimiteSuperior(msg) {
+  document.getElementById('discErrorMessage').innerHTML = msg;
+  document.getElementById('discErrorModal').style.display = "flex";
+}
+
+function discAbrirModalLogin() {
+  document.getElementById('discErrorModal').style.display = "none";
+  document.getElementById('discUsername').value = "";
+  document.getElementById('discPassword').value = "";
+  document.getElementById('discLoginModal').style.display = "flex";
+}
+
+function discTentarLogin() {
+  const user = document.getElementById('discUsername').value.trim();
+  const pass = document.getElementById('discPassword').value.trim();
+
+  if (user === "candidato" && pass === "Candidato.22") {
+    const item = cart[discItemName];
+    if (discTipoPendente === "percent") {
+      item.desconto = discDescontoPendente;
+      item.descontoTipo = "percent";
+    } else {
+      item.desconto = discDescontoPendente;
+      item.descontoTipo = "valor";
+    }
+    document.getElementById('discLoginModal').style.display = "none";
+    document.getElementById('discInputModal').style.display = "none";
+    discDescontoPendente = null;
+    discTipoPendente = null;
+    discItemName = null;
+    discTipo = null;
+    discInput = "";
+    updateUI();
+  } else {
+    document.getElementById('discLoginModal').style.display = "none";
+    document.getElementById('discErroLoginModal').style.display = "flex";
+  }
+}
+
+function discFecharErroLogin() {
+  document.getElementById('discErroLoginModal').style.display = "none";
+  document.getElementById('discLoginModal').style.display = "flex";
+}
+
+function discFecharErroERetornar() {
+  document.getElementById('discErrorModal').style.display = "none";
+}
+
+function discFecharTodosModais() {
+  document.getElementById('discLoginModal').style.display = "none";
+  document.getElementById('discErroLoginModal').style.display = "none";
+  document.getElementById('discErrorModal').style.display = "none";
+  document.getElementById('discInputModal').style.display = "none";
+  document.getElementById('discTipoModal').style.display = "none";
+  discItemName = null;
+  discTipo = null;
+  discInput = "";
+}
+
+// ======================= MODAIS ORIGINAIS =======================
 function askRemove(name) {
   itemToRemove = name;
   document.getElementById('itemModal').style.display = 'flex';
