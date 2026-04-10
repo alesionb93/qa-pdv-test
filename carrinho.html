@@ -287,14 +287,21 @@ body {
   border-top: 1px solid #eee;
 }
 
-/* 🆕 TAXA DE SERVIÇO */
+/* 🆕 TAXA DE SERVIÇO (AJUSTE LAYOUT) */
 .service-fee {
   padding: 10px 15px;
   border-top: 1px solid #eee;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: flex-start;
   font-size: 14px;
+}
+
+/* LABEL + TOGGLE LADO A LADO */
+.fee-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 /* SWITCH */
@@ -436,13 +443,15 @@ button {
     Total: R$ <span id="totalCart">0</span>
   </div>
 
-  <!-- 🆕 TAXA -->
+  <!-- 🆕 TAXA (AJUSTE) -->
   <div class="service-fee">
-    Taxa de serviço (10%)
-    <label class="switch">
-      <input type="checkbox" id="serviceToggle" onchange="toggleServiceFee()">
-      <span class="slider"></span>
-    </label>
+    <div class="fee-label">
+      Taxa de serviço (10%)
+      <label class="switch">
+        <input type="checkbox" id="serviceToggle" onchange="toggleServiceFee()">
+        <span class="slider"></span>
+      </label>
+    </div>
   </div>
 
   <div class="buttons">
@@ -462,28 +471,6 @@ button {
 <button class="toggle-btn" id="toggleBtn" onclick="toggleCart()">
   <div class="arrow"></div>
 </button>
-
-<!-- MODAIS -->
-<div class="modal" id="itemModal">
-  <div class="modal-box">
-    <h3>Você deseja remover este item?</h3>
-    <div class="modal-buttons">
-      <button class="btn-no" onclick="closeModal()">NÃO</button>
-      <button class="btn-yes" onclick="confirmRemove()">SIM</button>
-    </div>
-  </div>
-</div>
-
-<div class="modal" id="clearModal">
-  <div class="modal-box">
-    <h3>Cancelar transação</h3>
-    <p>Você deseja realmente cancelar esta transação?</p>
-    <div class="modal-buttons">
-      <button class="btn-no" onclick="closeModal()">NÃO</button>
-      <button class="btn-yes" onclick="confirmClear()">SIM</button>
-    </div>
-  </div>
-</div>
 
 <script>
 
@@ -618,7 +605,12 @@ function confirmRemove() {
   document.getElementById('itemModal').style.display = 'none';
 
   if (items.length === 1) {
-    openClearModal();
+
+    cart = {};
+    serviceFeeEnabled = false;
+    localStorage.setItem('serviceFeeEnabled', false);
+    updateUI();
+    closeModal();
     return;
   }
 
@@ -633,6 +625,8 @@ function openClearModal() {
 
 function confirmClear() {
   cart = {};
+  serviceFeeEnabled = false;
+  localStorage.setItem('serviceFeeEnabled', false);
   updateUI();
   closeModal();
 }
