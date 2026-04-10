@@ -74,6 +74,12 @@ body {
   margin-bottom: 15px; font-weight: bold;
 }
 .modal-close { cursor: pointer; font-size: 20px; color: #666; }
+.option {
+  padding: 14px 0;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+}
+.option:last-child { border-bottom: none; }
 
 /* Keypad */
 #display { text-align: center; font-size: 34px; margin: 10px 0; }
@@ -108,7 +114,7 @@ body {
   padding: 25px 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
 }
 
-/* Estilo do Modal de Login */
+/* Login */
 #loginModal input {
   width: 100%; padding: 12px; margin: 8px 0 15px 0;
   border: 1px solid #ddd; border-radius: 8px; font-size: 16px;
@@ -151,7 +157,7 @@ body {
   </div>
 </div>
 
-<!-- Overlays Corrigidos -->
+<!-- Overlays -->
 <div class="overlay" id="cardScreen">
   <img src="loading.gif" class="loading">
   <h1 id="cardMessage">APROXIME, INSIRA OU PASSE O CARTÃO</h1>
@@ -172,7 +178,7 @@ body {
   </div>
 </div>
 
-<!-- Modais -->
+<!-- Modal Tipo de Desconto (corrigido) -->
 <div class="modal" id="modalTipo">
   <div class="modal-box">
     <div class="modal-header">
@@ -184,9 +190,10 @@ body {
   </div>
 </div>
 
+<!-- Modal Teclado Numérico -->
 <div class="modal" id="modalInput">
   <div class="modal-box">
-    <div class="modal-close" onclick="fecharModal()">✕</div>
+    <div class="modal-close" onclick="cancelarInput()">✕</div>
     <h2 id="display">0</h2>
     <p id="label"></p>
     <div class="keypad">
@@ -210,7 +217,7 @@ body {
   </div>
 </div>
 
-<!-- Modal de Limite 10% -->
+<!-- Modal Limite 10% -->
 <div id="errorModal">
   <div class="modal-box">
     <div id="errorTitle" style="font-size:18px; font-weight:bold; margin-bottom:15px;">AUTORIZAR</div>
@@ -415,13 +422,16 @@ function validarEDescontar(){
   atualizarBotaoDesconto();
 }
 
+/* Modal Erro Simples (0 ou >= total) */
 function mostrarModalErro(mensagem) {
   document.getElementById('errorTitle').innerText = "EYE WEB";
   document.getElementById('errorMessage').innerHTML = mensagem;
   document.getElementById('errorModal').style.display = "flex";
 }
 
+/* Modal Limite 10% */
 function mostrarModalLimite(mensagem) {
+  document.getElementById('errorTitle').innerText = "AUTORIZAR";
   document.getElementById('errorMessage').innerHTML = mensagem;
   document.getElementById('errorModal').style.display = "flex";
 }
