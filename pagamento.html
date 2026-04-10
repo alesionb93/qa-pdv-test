@@ -64,9 +64,10 @@ body {
 }
 
 .total {
-  font-size: 28px;
+  font-size: 26px;
   font-weight: bold;
   margin-bottom: 20px;
+  line-height: 1.4;
 }
 
 .pay-buttons button {
@@ -137,7 +138,8 @@ body {
 <div class="right">
   <div>
     <div class="total">
-      Total: R$ <span id="total">0</span>
+      <div>SUBTOTAL: R$ <span id="subtotal">0</span></div>
+      <div>TOTAL: R$ <span id="total">0</span></div>
     </div>
 
     <div class="pay-buttons">
@@ -181,6 +183,7 @@ const cart = JSON.parse(localStorage.getItem('cart')) || {};
 const serviceFeeEnabled = JSON.parse(localStorage.getItem('serviceFeeEnabled')) || false;
 
 const itemsDiv = document.getElementById('items');
+const subtotalSpan = document.getElementById('subtotal');
 const totalSpan = document.getElementById('total');
 const cardTotal = document.getElementById('cardTotal');
 const pixTotal = document.getElementById('pixTotal');
@@ -206,7 +209,10 @@ Object.keys(cart).forEach(name => {
   `;
 });
 
-// 🆕 TAXA 10%
+// SUBTOTAL = sem taxa
+subtotalSpan.innerText = total.toFixed(2);
+
+// TOTAL = com taxa (se ativada)
 const finalTotal = serviceFeeEnabled ? total * 1.10 : total;
 
 totalSpan.innerText = finalTotal.toFixed(2);
