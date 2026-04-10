@@ -12,7 +12,7 @@ body {
   height: 100vh;
 }
 
-/* Layout mantido igual */
+/* Layout mantido */
 .left { flex: 2; background: white; padding: 20px; overflow-y: auto; }
 .item {
   display: flex; align-items: center; justify-content: space-between;
@@ -57,6 +57,7 @@ body {
   border: none; border-radius: 10px; cursor: pointer;
 }
 
+/* Overlays */
 .overlay {
   position: fixed; top: 0; left: 0; width: 100%; height: 100%;
   background: #BD407B; color: white; display: none;
@@ -105,24 +106,44 @@ body {
 .btn-red { background: #e74c3c; }
 .btn-green { background: #2ecc71; }
 
-/* Modal de Erro */
+/* Modal de Erro - Limite de Desconto */
 #errorModal {
   position: fixed; inset: 0; background: rgba(0,0,0,0.6);
   display: none; align-items: center; justify-content: center;
   z-index: 2000;
 }
 #errorBox {
-  background: white; width: 320px; border-radius: 16px;
+  background: white; width: 340px; border-radius: 16px;
   padding: 25px 20px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
 }
-#errorTitle { font-size: 18px; font-weight: bold; color: #333; margin-bottom: 8px; }
-#errorMessage { font-size: 15px; color: #666; margin-bottom: 25px; }
-#errorBtn {
-  background: #9E3667; color: white; border: none;
-  padding: 14px 40px; border-radius: 12px;
-  font-size: 16px; font-weight: bold; cursor: pointer;
+#errorTitle {
+  font-size: 18px; font-weight: bold; color: #333; margin-bottom: 15px;
 }
-#errorBtn:hover { background: #8a2e5a; }
+#errorMessage {
+  font-size: 15px; color: #666; margin-bottom: 25px; line-height: 1.5;
+}
+.error-actions {
+  display: flex; gap: 12px; justify-content: center;
+}
+.error-btn {
+  padding: 12px 30px;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+#errorAutorizar {
+  background: #e74c3c;   /* Vermelho */
+  color: white;
+}
+#errorOK {
+  background: #9E3667;   /* Cor principal */
+  color: white;
+}
+#errorAutorizar:hover { background: #c0392b; }
+#errorOK:hover { background: #8a2e5a; }
 </style>
 </head>
 <body>
@@ -157,27 +178,10 @@ body {
 </div>
 
 <!-- Overlays -->
-<div class="overlay" id="cardScreen">
-  <img src="loading.gif" class="loading">
-  <h1 id="cardMessage">APROXIME, INSIRA OU PASSE O CARTÃO</h1>
-  <div class="box">
-    <p>💳 Cartão</p>
-    <p>Valor: R$ <span id="cardTotal"></span></p>
-    <small>Ambiente de teste</small>
-  </div>
-</div>
+<div class="overlay" id="cardScreen"> ... </div>
+<div class="overlay" id="pixScreen"> ... </div>
 
-<div class="overlay" id="pixScreen">
-  <h1 id="pixMessage">CONSULTANDO STATUS DA TRANSAÇÃO VIA PIX</h1>
-  <img src="qrcode.avif" class="qr">
-  <div class="box">
-    <p>📲 PIX</p>
-    <p>Valor: R$ <span id="pixTotal"></span></p>
-    <small>Ambiente de teste</small>
-  </div>
-</div>
-
-<!-- Modais -->
+<!-- Modais existentes -->
 <div class="modal" id="modalTipo">
   <div class="modal-box">
     <div class="modal-header">
@@ -215,12 +219,15 @@ body {
   </div>
 </div>
 
-<!-- Modal de Erro -->
+<!-- NOVO MODAL - LIMITE DE DESCONTO -->
 <div id="errorModal">
   <div id="errorBox">
-    <div id="errorTitle">EYE WEB</div>
-    <div id="errorMessage">Valor inválido para o desconto</div>
-    <button id="errorBtn" onclick="fecharErroERetornar()">OK</button>
+    <div id="errorTitle">AUTORIZAR</div>
+    <div id="errorMessage"></div>
+    <div class="error-actions">
+      <button id="errorAutorizar" class="error-btn">Autorizar</button>
+      <button id="errorOK" class="error-btn" onclick="fecharErroERetornar()">OK</button>
+    </div>
   </div>
 </div>
 
@@ -255,9 +262,11 @@ Object.keys(cart).forEach(name => {
 });
 
 /* ======================= DESCONTO ======================= */
-let desconto = 0;      // valor numérico
-let tipo = null;       // "percent" ou "valor"
+let desconto = 0;
+let tipo = null;
 let input = "";
+
+const LIMITE_PERCENTUAL = 10;   // 10%
 
 function baseTotal(){
   return serviceFeeEnabled ? total * 1.10 : total;
@@ -300,7 +309,7 @@ function finalizar() {
   }
 }
 
-function simularCartao() {
+function simularCartao() { /* ... mesmo código anterior */ 
   const screen = document.getElementById('cardScreen');
   const msg = document.getElementById('cardMessage');
   screen.style.display = "flex";
@@ -311,7 +320,7 @@ function simularCartao() {
   setTimeout(finalizarVenda, 10000);
 }
 
-function simularPix() {
+function simularPix() { /* ... mesmo código anterior */ 
   const screen = document.getElementById('pixScreen');
   const msg = document.getElementById('pixMessage');
   screen.style.display = "flex";
@@ -343,32 +352,46 @@ function fecharModal(){
   document.querySelectorAll('.modal').forEach(m => m.style.display="none");
 }
 
-/* ======================= VALIDAÇÃO + APLICAR ======================= */
+/* ======================= VALIDAÇÃO COM LIMITE 10% ======================= */
 function validarEDescontar(){
   const base = baseTotal();
   let valorDigitado = parseFloat(input) || 0;
 
   if (tipo === "percent") {
-    if (valorDigitado <= 0 || valorDigitado >= 100) {
-      mostrarErro();
+    if (valorDigitado <= 0 || valorDigitado > LIMITE_PERCENTUAL) {
+      mostrarModalLimite(`Não é possivel adicionar o desconto.<br>O limite de desconto é de ${LIMITE_PERCENTUAL}%`);
       return;
     }
-    desconto = valorDigitado;                    // ex: 10
+    desconto = valorDigitado;
   } 
   else { // Tipo Valor (R$)
-    const valorDesconto = valorDigitado / 100;   // ex: 1000 → 10.00
-    if (valorDesconto <= 0 || valorDesconto >= base) {
-      mostrarErro();
+    const valorDesconto = valorDigitado / 100;
+    const limiteEmReais = base * (LIMITE_PERCENTUAL / 100);
+
+    if (valorDesconto <= 0 || valorDesconto > limiteEmReais) {
+      mostrarModalLimite(`Não é possivel adicionar o desconto.<br>O limite de desconto é de R$ ${limiteEmReais.toFixed(2)}`);
       return;
     }
     desconto = valorDesconto;
   }
 
+  // Se passou na validação
   fecharModal();
   atualizarTotais();
-  atualizarBotaoDesconto();   // ← Nova função para mostrar o texto correto
+  atualizarBotaoDesconto();
 }
 
+function mostrarModalLimite(mensagem) {
+  document.getElementById('errorMessage').innerHTML = mensagem;
+  document.getElementById('errorModal').style.display = "flex";
+}
+
+function fecharErroERetornar() {
+  document.getElementById('errorModal').style.display = "none";
+  // Retorna ao teclado numérico
+}
+
+/* ======================= ATUALIZAR BOTÃO DE DESCONTO ======================= */
 function atualizarBotaoDesconto() {
   const descontoArea = document.getElementById('descontoArea');
   
@@ -383,14 +406,6 @@ function atualizarBotaoDesconto() {
     <button class="btn-desconto" disabled>${texto}</button>
     <button class="btn-remove" onclick="removerDesconto()">✕</button>
   `;
-}
-
-function mostrarErro() {
-  document.getElementById('errorModal').style.display = "flex";
-}
-
-function fecharErroERetornar() {
-  document.getElementById('errorModal').style.display = "none";
 }
 
 /* ======================= KEYPAD ======================= */
