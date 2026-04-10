@@ -243,7 +243,7 @@ body {
 .switch input:checked + .slider { background: #9E3667; }
 .switch input:checked + .slider:before { transform: translateX(20px); }
 
-/* ====================== BOTÕES AJUSTADOS ====================== */
+/* ====================== BOTÕES AJUSTADOS (APENAS AQUI) ====================== */
 .buttons {
   display: flex;
   gap: 12px;
@@ -252,7 +252,7 @@ body {
 
 .btn-clear {
   flex: 1;
-  padding: 12px 16px;        /* menor que o original */
+  padding: 11px 16px;     /* menor */
   background: #ff4d6d;
   color: white;
   border: none;
@@ -264,7 +264,7 @@ body {
 
 .btn-add {
   flex: 1;
-  padding: 12px 16px;        /* menor que o original */
+  padding: 11px 16px;     /* menor */
   background: #2196f3;
   color: white;
   border: none;
@@ -393,7 +393,6 @@ const produtos = [
   {nome:"Coqueteleira", preco:25, img:"coqueteleira-preta-600ml-growth-supplements.jpg"},
   {nome:"Termogênico", preco:110, img:"hot.webp"}
 ];
-
 const productsDiv = document.getElementById('products');
 produtos.forEach(p => {
   const idSafe = p.nome.replace(/\s/g, '-');
@@ -410,14 +409,12 @@ produtos.forEach(p => {
     </div>
   `;
 });
-
 function addProduct(name) {
   const produto = produtos.find(p => p.nome === name);
   if (!cart[name]) cart[name] = { qty: 0, price: produto.preco, img: produto.img };
   cart[name].qty++;
   updateUI();
 }
-
 function updateUI() {
   const cartDiv = document.getElementById('cart');
   const totalSpan = document.getElementById('total');
@@ -451,7 +448,6 @@ function updateUI() {
   const finalTotal = serviceFeeEnabled ? total * 1.10 : total;
   totalSpan.innerText = finalTotal.toFixed(2);
   totalCart.innerText = finalTotal.toFixed(2);
-
   if (total > 0) {
     footerBar.classList.add('show');
     toggleBtn.classList.add('show');
@@ -463,7 +459,6 @@ function updateUI() {
   }
   syncServiceToggleUI();
 }
-
 /* ==================== FUNÇÕES DE AÇÃO ==================== */
 function askRemove(name) {
   itemToRemove = name;
