@@ -21,7 +21,7 @@ body {
   overflow-y: auto;
 }
 
-/* ITEM (AGORA COM IMAGEM) */
+/* ITEM */
 .item {
   display: flex;
   align-items: center;
@@ -185,7 +185,7 @@ const pixTotal = document.getElementById('pixTotal');
 
 let total = 0;
 
-// 🛒 RENDER ITENS COM IMAGEM
+// render itens
 Object.keys(cart).forEach(name => {
   const item = cart[name];
   const itemTotal = item.qty * item.price;
@@ -200,7 +200,6 @@ Object.keys(cart).forEach(name => {
           <div class="item-qty">x${item.qty}</div>
         </div>
       </div>
-
       <div>R$ ${itemTotal}</div>
     </div>
   `;
@@ -210,7 +209,6 @@ totalSpan.innerText = total;
 cardTotal.innerText = total;
 pixTotal.innerText = total;
 
-// seleção
 let paymentMethod = null;
 
 function selectPayment(method, btn) {
@@ -223,7 +221,6 @@ function selectPayment(method, btn) {
   btn.classList.add('selected');
 }
 
-// finalizar
 function finalizar() {
   if (!paymentMethod) {
     alert("Selecione uma forma de pagamento!");
@@ -240,7 +237,7 @@ function finalizar() {
   }
 }
 
-// 💳 CARTÃO
+// 💳
 function simularCartao() {
   const screen = document.getElementById('cardScreen');
   const msg = document.getElementById('cardMessage');
@@ -254,7 +251,7 @@ function simularCartao() {
   setTimeout(finalizarVenda, 10000);
 }
 
-// 📲 PIX
+// 📲
 function simularPix() {
   const screen = document.getElementById('pixScreen');
   const msg = document.getElementById('pixMessage');
@@ -268,10 +265,10 @@ function simularPix() {
   setTimeout(finalizarVenda, 7000);
 }
 
-// FINAL
+// ✅ FINAL
 function finalizarVenda() {
   localStorage.removeItem('cart');
-  window.location.href = "index.html";
+  window.location.href = "carrinho.html";
 }
 </script>
 
