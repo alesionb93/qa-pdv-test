@@ -279,9 +279,8 @@ body {
     TOTAL: R$ <span id="total">0</span>
   </div>
 
-  <div class="footer-right">
-    <button class="finish" onclick="finalizar()">Finalizar Venda</button>
-  </div>
+<div class="footer-right" style="display:flex; justify-content:flex-end; align-items:center;">
+  <button class="finish" onclick="finalizar()">Finalizar Venda</button>
 </div>
 
 <!-- OVERLAYS ORIGINAIS -->
@@ -425,11 +424,21 @@ function selectPayment(method, btn) {
 }
 
 function finalizar() {
-  if (!paymentMethod) return alert("Selecione pagamento");
+  if (!paymentMethod) {
+    alert("Selecione uma forma de pagamento!");
+    return;
+  }
 
-  if (paymentMethod === "Cartao") simularCartao();
-  else if (paymentMethod === "PIX") simularPix();
-  else alert("Dinheiro recebido");
+  if (paymentMethod === "Cartao") {
+    simularCartao();
+  } 
+  else if (paymentMethod === "PIX") {
+    simularPix();
+  } 
+  else {
+    alert("Pagamento em dinheiro recebido");
+    finalizarVenda();
+  }
 }
 
 /* CARTÃO */
@@ -438,20 +447,25 @@ function simularCartao() {
   const msg = document.getElementById('cardMessage');
 
   screen.style.display = "flex";
+  msg.innerText = "APROXIME, INSIRA OU PASSE O CARTÃO";
 
   setTimeout(() => msg.innerText = "PROCESSANDO...", 2000);
-  setTimeout(() => msg.innerText = "APROVADO", 5000);
-  setTimeout(finalizarVenda, 7000);
+  setTimeout(() => msg.innerText = "DÉBITO NUBANK", 4000);
+  setTimeout(() => msg.innerText = "TRANSAÇÃO APROVADA ✅", 8000);
+  setTimeout(finalizarVenda, 10000);
 }
 
-/* PIX */
 function simularPix() {
   const screen = document.getElementById('pixScreen');
   const msg = document.getElementById('pixMessage');
 
   screen.style.display = "flex";
+  msg.innerText = "CONSULTANDO STATUS DA TRANSAÇÃO VIA PIX";
 
-  setTimeout(() => msg.innerText = "APROVADO", 5000);
+  setTimeout(() => {
+    msg.innerText = "TRANSAÇÃO APROVADA ✅";
+  }, 5000);
+
   setTimeout(finalizarVenda, 7000);
 }
 
