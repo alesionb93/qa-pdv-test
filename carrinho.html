@@ -67,7 +67,7 @@ body {
   background: #f5f5f5;
 }
 
-/* OVERLAY MENU */
+/* OVERLAY */
 .menu-overlay {
   position: fixed;
   top: 0;
@@ -343,7 +343,7 @@ button {
 .modal-buttons {
   display: flex;
   justify-content: center;
-  gap: 10px;
+  gap: 8px; /* 🔥 mais próximos */
   margin-top: 20px;
 }
 
@@ -441,7 +441,7 @@ function logout() {
   window.location.href = "index.html";
 }
 
-// PRODUTOS (mantido igual)
+// PRODUTOS
 const produtos = [
   {nome:"Whey Protein", preco:100, img:"D_NQ_NP_877710-MLA99447989168_112025-O.webp"},
   {nome:"Creatina", preco:80, img:"creatina-250g-creapure-growth-supplements-1.jpg"},
@@ -457,7 +457,6 @@ const produtos = [
   {nome:"Termogênico", preco:110, img:"hot.webp"}
 ];
 
-// render
 const productsDiv = document.getElementById('products');
 
 produtos.forEach(p => {
@@ -491,6 +490,12 @@ function updateUI() {
   cartDiv.innerHTML = '';
   let total = 0;
 
+  // 🔥 FIX: RESET VISUAL DOS BADGES
+  document.querySelectorAll('.badge').forEach(b => {
+    b.style.display = 'none';
+    b.innerText = '';
+  });
+
   Object.keys(cart).forEach(name => {
     const item = cart[name];
     const itemTotal = item.qty * item.price;
@@ -498,6 +503,7 @@ function updateUI() {
 
     const idSafe = name.replace(/\s/g, '-');
     const badge = document.getElementById('badge-' + idSafe);
+
     if (badge) {
       badge.style.display = 'flex';
       badge.innerText = item.qty;
@@ -561,7 +567,7 @@ function closeModal() {
   document.getElementById('clearModal').style.display = 'none';
 }
 
-// resto normal
+// ACTIONS
 function clearCart() {
   openClearModal();
 }
