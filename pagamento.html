@@ -13,7 +13,7 @@ body {
   height: 100vh;
 }
 
-/* LAYOUT */
+/* LEFT */
 .left {
   flex: 2;
   background: white;
@@ -23,7 +23,6 @@ body {
 
 .item {
   display: flex;
-  align-items: center;
   justify-content: space-between;
   padding: 12px;
   border-bottom: 1px solid #eee;
@@ -31,7 +30,6 @@ body {
 
 .item-left {
   display: flex;
-  align-items: center;
   gap: 10px;
 }
 
@@ -50,38 +48,26 @@ body {
   justify-content: space-between;
 }
 
-/* VALOR */
-.valor-faltante {
-  text-align: center;
-}
-
 .valor {
   font-size: 40px;
   font-weight: bold;
 }
 
-/* BOTÃO DESCONTO */
+/* BOTÕES */
 .btn-desconto {
   background: #2196f3;
   color: white;
-  border: none;
   padding: 10px;
-  border-radius: 6px;
-  cursor: pointer;
+  border: none;
 }
 
 .btn-remove {
-  margin-left: 10px;
-  border-radius: 50%;
   background: red;
   color: white;
-  border: none;
+  border-radius: 50%;
   width: 30px;
-  height: 30px;
-  cursor: pointer;
 }
 
-/* PAGAMENTOS */
 .pay-buttons button {
   width: 100%;
   padding: 15px;
@@ -89,19 +75,6 @@ body {
   background: #9E3667;
   color: white;
   border: none;
-  border-radius: 8px;
-}
-
-/* FOOTER */
-.footer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: #FFE6EF;
-  display: flex;
-  justify-content: space-between;
-  padding: 20px;
 }
 
 .finish {
@@ -109,7 +82,17 @@ body {
   color: white;
   padding: 15px;
   border: none;
-  border-radius: 10px;
+}
+
+/* FOOTER */
+.footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background: #FFE6EF;
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
 }
 
 /* MODAL */
@@ -126,9 +109,6 @@ body {
 .modal-box {
   background:white;
   padding:20px;
-  border-radius:10px;
-  width:300px;
-  text-align:center;
 }
 
 .keypad button {
@@ -136,10 +116,6 @@ body {
   height:50px;
   margin:5px;
 }
-
-.red {background:red;color:white;}
-.green {background:green;color:white;}
-
 </style>
 </head>
 
@@ -150,13 +126,11 @@ body {
 <div class="right">
   <div>
 
-    <div class="valor-faltante">
-      <h2>VALOR FALTANTE</h2>
-      <div class="valor">R$ <span id="valorFaltante">0</span></div>
+    <h2>VALOR FALTANTE</h2>
+    <div class="valor">R$ <span id="valorFaltante">0</span></div>
 
-      <div id="descontoArea">
-        <button class="btn-desconto" onclick="abrirTipoDesconto()">APLICAR DESCONTO</button>
-      </div>
+    <div id="descontoArea">
+      <button class="btn-desconto" onclick="abrirTipoDesconto()">APLICAR DESCONTO</button>
     </div>
 
     <div class="pay-buttons">
@@ -176,22 +150,19 @@ body {
   <button class="finish" onclick="finalizar()">Finalizar Venda</button>
 </div>
 
-<!-- MODAL TIPO -->
+<!-- MODAIS -->
 <div class="modal" id="modalTipo">
   <div class="modal-box">
     <h3>Tipo de desconto</h3>
     <button onclick="abrirInput('percent')">(%) Percentual</button>
-    <button onclick="abrirInput('valor')">(R$) Valor</button>
-    <br><br>
+    <button onclick="abrirInput('valor')">(R$) Valor</button><br><br>
     <button onclick="fecharModal()">X</button>
   </div>
 </div>
 
-<!-- MODAL INPUT -->
 <div class="modal" id="modalInput">
   <div class="modal-box">
     <h2 id="display">0</h2>
-    <p id="label"></p>
 
     <div class="keypad">
       <button onclick="dig(1)">1</button>
@@ -209,8 +180,8 @@ body {
     </div>
 
     <br>
-    <button class="red" onclick="fecharModal()">Cancelar</button>
-    <button class="green" onclick="aplicarDesconto()">Avançar</button>
+    <button onclick="fecharModal()">Cancelar</button>
+    <button onclick="aplicarDesconto()">Avançar</button>
   </div>
 </div>
 
@@ -219,126 +190,113 @@ body {
 const cart = JSON.parse(localStorage.getItem('cart')) || {};
 const serviceFeeEnabled = JSON.parse(localStorage.getItem('serviceFeeEnabled')) || false;
 
+const itemsDiv = document.getElementById('items');
 const subtotalSpan = document.getElementById('subtotal');
 const totalSpan = document.getElementById('total');
 const valorFaltanteSpan = document.getElementById('valorFaltante');
 
 let total = 0;
 
+/* ✅ RESTAURADO */
 Object.keys(cart).forEach(name => {
   const item = cart[name];
-  total += item.qty * item.price;
+  const itemTotal = item.qty * item.price;
+  total += itemTotal;
+
+  itemsDiv.innerHTML += `
+    <div class="item">
+      <div class="item-left">
+        <img src="${item.img}" class="item-img">
+        <div>
+          <div>${name}</div>
+          <div>x${item.qty}</div>
+        </div>
+      </div>
+      <div>R$ ${itemTotal}</div>
+    </div>
+  `;
 });
 
-// BASE
+/* DESCONTO */
 let desconto = 0;
 let tipo = null;
 let input = "";
 
-// TOTAL COM TAXA
-function calcularTotalBase(){
+function calcularBase(){
   return serviceFeeEnabled ? total * 1.10 : total;
 }
 
 function atualizarTotais(){
-  let base = calcularTotalBase();
-
+  let base = calcularBase();
   let final = base;
 
-  if(tipo === "percent"){
-    final = base - (base * desconto / 100);
-  } else if(tipo === "valor"){
-    final = base - desconto;
-  }
+  if(tipo==="percent") final -= base*(desconto/100);
+  if(tipo==="valor") final -= desconto;
 
   subtotalSpan.innerText = total.toFixed(2);
   totalSpan.innerText = final.toFixed(2);
   valorFaltanteSpan.innerText = final.toFixed(2);
 }
 
-// MODAIS
 function abrirTipoDesconto(){
   document.getElementById('modalTipo').style.display="flex";
 }
 
 function abrirInput(t){
-  tipo = t;
-  input = "";
-  document.getElementById('modalTipo').style.display="none";
+  tipo=t;
+  input="";
+  fecharModal();
   document.getElementById('modalInput').style.display="flex";
-
-  document.getElementById('label').innerText =
-    t==="percent" ? "PERCENTUAL (%)" : "VALOR (R$)";
 }
 
 function fecharModal(){
   document.querySelectorAll('.modal').forEach(m=>m.style.display="none");
 }
 
-// INPUT
-function dig(n){
-  input += n;
-  atualizarDisplay();
+function dig(n){ input+=n; updateDisplay(); }
+function del(){ input=input.slice(0,-1); updateDisplay(); }
+function clearInput(){ input=""; updateDisplay(); }
+
+function updateDisplay(){
+  document.getElementById('display').innerText = input || "0";
 }
 
-function del(){
-  input = input.slice(0,-1);
-  atualizarDisplay();
-}
-
-function clearInput(){
-  input="";
-  atualizarDisplay();
-}
-
-function atualizarDisplay(){
-  let val = input || "0";
-
-  if(tipo==="percent"){
-    document.getElementById('display').innerText = val + "%";
-  }else{
-    document.getElementById('display').innerText = "R$ " + (parseFloat(val)/100).toFixed(2);
-  }
-}
-
-// APLICAR
 function aplicarDesconto(){
   if(!input) return;
 
-  if(tipo==="percent"){
-    desconto = parseFloat(input);
-  }else{
-    desconto = parseFloat(input)/100;
-  }
+  if(tipo==="percent") desconto=parseFloat(input);
+  else desconto=parseFloat(input)/100;
 
   fecharModal();
   atualizarTotais();
-  renderDescontoUI();
-}
 
-// UI DESCONTO
-function renderDescontoUI(){
-  const area = document.getElementById('descontoArea');
-
-  let txt = tipo==="percent"
-    ? `DESCONTO ${desconto}%`
-    : `DESCONTO R$ ${desconto.toFixed(2)}`;
-
-  area.innerHTML = `
-    <button class="btn-desconto" disabled>${txt}</button>
-    <button class="btn-remove" onclick="removerDesconto()">X</button>
-  `;
+  document.getElementById('descontoArea').innerHTML =
+    `<button disabled>Desconto aplicado</button>
+     <button onclick="removerDesconto()">X</button>`;
 }
 
 function removerDesconto(){
-  desconto=0;
-  tipo=null;
+  desconto=0; tipo=null;
   document.getElementById('descontoArea').innerHTML =
     `<button class="btn-desconto" onclick="abrirTipoDesconto()">APLICAR DESCONTO</button>`;
   atualizarTotais();
 }
 
-// INIT
+/* PAGAMENTO (RESTAURADO) */
+let paymentMethod=null;
+
+function selectPayment(method, btn){
+  paymentMethod=method;
+}
+
+function finalizar(){
+  if(!paymentMethod){
+    alert("Selecione uma forma de pagamento!");
+    return;
+  }
+  alert("Venda finalizada!");
+}
+
 atualizarTotais();
 
 </script>
