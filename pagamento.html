@@ -172,6 +172,39 @@ body {
 
 .red {background:red;color:white;}
 .green {background:green;color:white;}
+
+/* OVERLAY (RESTORED) */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #BD407B;
+  color: white;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.box {
+  background: rgba(255,255,255,0.2);
+  padding: 20px;
+  border-radius: 12px;
+  margin-top: 20px;
+}
+
+.loading {
+  width: 80px;
+  margin-bottom: 20px;
+}
+
+.qr {
+  width: 200px;
+  margin-bottom: 20px;
+}
 </style>
 </head>
 
@@ -199,7 +232,6 @@ body {
   </div>
 </div>
 
-<!-- FOOTER -->
 <div class="footer">
   <div class="footer-left">
     SUBTOTAL: R$ <span id="subtotal">0</span><br>
@@ -208,6 +240,31 @@ body {
 
   <div class="footer-right">
     <button class="finish" onclick="finalizar()">Finalizar Venda</button>
+  </div>
+</div>
+
+<!-- CARTÃO -->
+<div class="overlay" id="cardScreen">
+  <img src="loading.gif" class="loading">
+  <h1 id="cardMessage">APROXIME, INSIRA OU PASSE O CARTÃO</h1>
+
+  <div class="box">
+    <p>💳 Cartão</p>
+    <p>Valor: R$ <span id="cardTotal"></span></p>
+    <small>Ambiente de teste</small>
+  </div>
+</div>
+
+<!-- PIX -->
+<div class="overlay" id="pixScreen">
+  <h1 id="pixMessage">CONSULTANDO STATUS DA TRANSAÇÃO VIA PIX</h1>
+
+  <img src="qrcode.avif" class="qr">
+
+  <div class="box">
+    <p>📲 PIX</p>
+    <p>Valor: R$ <span id="pixTotal"></span></p>
+    <small>Ambiente de teste</small>
   </div>
 </div>
 
@@ -257,10 +314,12 @@ const itemsDiv = document.getElementById('items');
 const subtotalSpan = document.getElementById('subtotal');
 const totalSpan = document.getElementById('total');
 const valorFaltanteSpan = document.getElementById('valorFaltante');
+const cardTotal = document.getElementById('cardTotal');
+const pixTotal = document.getElementById('pixTotal');
 
 let total = 0;
 
-/* 🔥 MANTIDO ORIGINAL (render dos itens) */
+/* RENDER */
 Object.keys(cart).forEach(name => {
   const item = cart[name];
   const itemTotal = item.qty * item.price;
@@ -285,32 +344,40 @@ let desconto = 0;
 let tipo = null;
 let input = "";
 
-/* BASE */
-function calcularBase(){
+function baseTotal(){
   return serviceFeeEnabled ? total * 1.10 : total;
 }
 
-function atualizarTotais(){
-  let base = calcularBase();
-  let final = base;
+function calcFinal(){
+  let base = baseTotal();
 
-  if(tipo === "percent"){
-    final -= base * (desconto/100);
-  } else if(tipo === "valor"){
-    final -= desconto;
-  }
+  if(tipo === "percent") return base - (base * desconto / 100);
+  if(tipo === "valor") return base - desconto;
+
+  return base;
+}
+
+function atualizarTotais(){
+  const final = calcFinal();
 
   subtotalSpan.innerText = total.toFixed(2);
   totalSpan.innerText = final.toFixed(2);
   valorFaltanteSpan.innerText = final.toFixed(2);
+
+  cardTotal.innerText = final.toFixed(2);
+  pixTotal.innerText = final.toFixed(2);
 }
 
-/* PAGAMENTO (INALTERADO) */
+/* PAGAMENTO (FIX PRINCIPAL) */
 let paymentMethod = null;
 
 function selectPayment(method, btn) {
   paymentMethod = method;
-  document.querySelectorAll('.pay-buttons button').forEach(b => b.classList.remove('selected'));
+
+  document.querySelectorAll('.pay-buttons button').forEach(b => {
+    b.classList.remove('selected');
+  });
+
   btn.classList.add('selected');
 }
 
@@ -319,10 +386,50 @@ function finalizar() {
     alert("Selecione uma forma de pagamento!");
     return;
   }
-  alert("Pagamento finalizado!");
+
+  if (paymentMethod === "Cartao") {
+    simularCartao();
+  } else if (paymentMethod === "PIX") {
+    simularPix();
+  } else {
+    alert("Pagamento em dinheiro recebido");
+    finalizarVenda();
+  }
 }
 
-/* MODAIS */
+/* CARTÃO */
+function simularCartao() {
+  const screen = document.getElementById('cardScreen');
+  const msg = document.getElementById('cardMessage');
+
+  screen.style.display = "flex";
+
+  setTimeout(() => msg.innerText = "PROCESSANDO...", 2000);
+  setTimeout(() => msg.innerText = "DÉBITO NUBANK", 4000);
+  setTimeout(() => msg.innerText = "TRANSAÇÃO APROVADA ✅", 8000);
+  setTimeout(finalizarVenda, 10000);
+}
+
+/* PIX */
+function simularPix() {
+  const screen = document.getElementById('pixScreen');
+  const msg = document.getElementById('pixMessage');
+
+  screen.style.display = "flex";
+
+  setTimeout(() => {
+    msg.innerText = "TRANSAÇÃO APROVADA ✅";
+  }, 5000);
+
+  setTimeout(finalizarVenda, 7000);
+}
+
+function finalizarVenda() {
+  localStorage.removeItem('cart');
+  window.location.href = "carrinho.html";
+}
+
+/* DESCONTO */
 function abrirTipoDesconto(){
   document.getElementById('modalTipo').style.display="flex";
 }
@@ -330,6 +437,7 @@ function abrirTipoDesconto(){
 function abrirInput(t){
   tipo = t;
   input = "";
+
   document.getElementById('modalTipo').style.display="none";
   document.getElementById('modalInput').style.display="flex";
 
@@ -341,21 +449,16 @@ function fecharModal(){
   document.querySelectorAll('.modal').forEach(m=>m.style.display="none");
 }
 
-/* INPUT */
 function dig(n){ input+=n; atualizarDisplay(); }
 function del(){ input=input.slice(0,-1); atualizarDisplay(); }
 function clearInput(){ input=""; atualizarDisplay(); }
 
 function atualizarDisplay(){
-  let val = input || "0";
   document.getElementById('display').innerText =
-    tipo==="percent" ? val+"%" : "R$ "+(val/100).toFixed(2);
+    tipo==="percent" ? input+"%" : "R$ "+(input/100 || 0).toFixed(2);
 }
 
-/* APLICAR */
 function aplicarDesconto(){
-  if(!input) return;
-
   desconto = tipo==="percent" ? parseFloat(input) : parseFloat(input)/100;
 
   fecharModal();
@@ -363,15 +466,16 @@ function aplicarDesconto(){
 
   document.getElementById('descontoArea').innerHTML = `
     <button class="btn-desconto" disabled>
-      DESCONTO ${tipo==="percent" ? desconto+"%" : "R$ "+desconto.toFixed(2)}
+      DESCONTO APLICADO
     </button>
     <button class="btn-remove" onclick="removerDesconto()">X</button>
   `;
 }
 
 function removerDesconto(){
-  desconto=0;
-  tipo=null;
+  desconto = 0;
+  tipo = null;
+  input = "";
 
   document.getElementById('descontoArea').innerHTML =
     `<button class="btn-desconto" onclick="abrirTipoDesconto()">APLICAR DESCONTO</button>`;
