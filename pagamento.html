@@ -114,15 +114,30 @@ body {
   padding: 25px 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
 }
 
-/* Login */
+/* Login - Layout corrigido */
+#loginModal .modal-box {
+  padding: 25px 20px;
+}
 #loginModal input {
-  width: 100%; padding: 12px; margin: 8px 0 15px 0;
-  border: 1px solid #ddd; border-radius: 8px; font-size: 16px;
+  width: 100%; 
+  padding: 12px; 
+  margin: 8px 0 15px 0;
+  border: 1px solid #ddd; 
+  border-radius: 8px; 
+  font-size: 16px;
+  box-sizing: border-box;
 }
 #loginModal button {
-  width: 100%; padding: 14px; background: #9E3667;
-  color: white; border: none; border-radius: 12px;
-  font-size: 16px; font-weight: bold; cursor: pointer;
+  width: 100%; 
+  padding: 14px; 
+  background: #9E3667;
+  color: white; 
+  border: none; 
+  border-radius: 12px;
+  font-size: 16px; 
+  font-weight: bold; 
+  cursor: pointer;
+  margin-top: 10px;
 }
 </style>
 </head>
@@ -190,7 +205,7 @@ body {
   </div>
 </div>
 
-<!-- Modal Teclado Numérico (sem X no canto) -->
+<!-- Modal Teclado Numérico -->
 <div class="modal" id="modalInput">
   <div class="modal-box">
     <h2 id="display">0</h2>
@@ -421,14 +436,14 @@ function validarEDescontar(){
   atualizarBotaoDesconto();
 }
 
-/* Modal Erro Simples (0 ou >= total) - SEM botão Autorizar */
+/* Modal Erro Simples (0 ou >= total) - Apenas EYE WEB + OK */
 function mostrarModalErro(mensagem) {
   document.getElementById('errorTitle').innerText = "EYE WEB";
   document.getElementById('errorMessage').innerHTML = mensagem;
   document.getElementById('errorModal').style.display = "flex";
 }
 
-/* Modal Limite 10% - COM botão Autorizar */
+/* Modal Limite 10% - Com botão Autorizar */
 function mostrarModalLimite(mensagem) {
   document.getElementById('errorTitle').innerText = "AUTORIZAR";
   document.getElementById('errorMessage').innerHTML = mensagem;
