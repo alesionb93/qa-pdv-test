@@ -30,7 +30,6 @@ body {
   margin-bottom: 20px;
 }
 
-/* LAYOUT */
 .left {
   flex: 2;
   background: white;
@@ -40,15 +39,17 @@ body {
 
 .item {
   display: flex;
+  align-items: center;
   justify-content: space-between;
   padding: 12px;
   border-bottom: 1px solid #eee;
+  gap: 10px;
 }
 
 .item-left {
   display: flex;
-  gap: 10px;
   align-items: center;
+  gap: 10px;
 }
 
 .item-img {
@@ -60,6 +61,9 @@ body {
   border: 1px solid #eee;
 }
 
+.item-name { font-weight: bold; }
+.item-qty { font-size: 12px; color: #666; }
+
 .right {
   flex: 1;
   background: #FFE6EF;
@@ -69,9 +73,15 @@ body {
   justify-content: space-between;
 }
 
+.valor-faltante {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
 .valor {
   font-size: 40px;
   font-weight: bold;
+  margin: 10px 0;
 }
 
 .btn-desconto {
@@ -83,15 +93,26 @@ body {
   cursor: pointer;
 }
 
+.btn-remove {
+  margin-left: 10px;
+  border-radius: 50%;
+  background: red;
+  color: white;
+  border: none;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+}
+
 .pay-buttons button {
   width: 100%;
   padding: 15px;
   margin-bottom: 10px;
   border: none;
   border-radius: 8px;
+  cursor: pointer;
   background: #9E3667;
   color: white;
-  cursor: pointer;
 }
 
 .selected {
@@ -106,10 +127,12 @@ body {
   height: 100px;
   background: #FFE6EF;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
   padding: 0 30px;
 }
+
+.footer-left { font-size: 22px; font-weight: bold; }
 
 .finish {
   background: #22B14C;
@@ -120,7 +143,28 @@ body {
   cursor: pointer;
 }
 
-/* MODAIS */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #BD407B;
+  color: white;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.box {
+  background: rgba(255,255,255,0.2);
+  padding: 20px;
+  border-radius: 12px;
+  margin-top: 20px;
+}
+
 .modal {
   position: fixed;
   inset: 0;
@@ -132,28 +176,62 @@ body {
 
 .modal-box {
   background: white;
-  width: 360px;
+  width: 340px;
   border-radius: 14px;
   padding: 18px;
-  text-align: center;
+  position: relative;
 }
 
-.btn-red, .btn-green {
-  padding: 12px;
-  border: none;
-  border-radius: 10px;
-  color: white;
+.modal-header {
+  display: flex;
+  justify-content: space-between;
   font-weight: bold;
+}
+
+.option {
+  padding: 14px 0;
+  border-bottom: 1px solid #eee;
   cursor: pointer;
 }
 
-.btn-red { background: #e74c3c; }
-.btn-green { background: #2ecc71; }
+.keypad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  justify-items: center;
+}
 
-input {
-  width: 90%;
+.key {
+  width: 62px;
+  height: 62px;
+  border-radius: 50%;
+  border: 2px solid #9E3667;
+  background: #f2f2f2;
+  cursor: pointer;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.btn-red { background:#e74c3c; flex:1; padding:12px; border:0; color:#fff; }
+.btn-green { background:#2ecc71; flex:1; padding:12px; border:0; color:#fff; }
+
+.auth-input {
+  width: 100%;
   padding: 10px;
   margin: 5px 0;
+}
+
+.btn-auth {
+  width: 100%;
+  background: #9E3667;
+  color: white;
+  padding: 10px;
+  border: none;
+  margin-top: 10px;
 }
 </style>
 </head>
@@ -163,13 +241,14 @@ input {
 <div class="left" id="items"></div>
 
 <div class="right">
-
   <div>
-    <h2>VALOR FALTANTE</h2>
-    <div class="valor">R$ <span id="valorFaltante">0</span></div>
+    <div class="valor-faltante">
+      <h2>VALOR FALTANTE</h2>
+      <div class="valor">R$ <span id="valorFaltante">0</span></div>
 
-    <div id="descontoArea">
-      <button class="btn-desconto" onclick="abrirTipoDesconto()">APLICAR DESCONTO</button>
+      <div id="descontoArea">
+        <button class="btn-desconto" onclick="abrirTipoDesconto()">APLICAR DESCONTO</button>
+      </div>
     </div>
 
     <div class="pay-buttons">
@@ -178,167 +257,132 @@ input {
       <button onclick="selectPayment('PIX', this)">PIX</button>
     </div>
   </div>
-
 </div>
 
 <div class="footer">
-  <div>
+  <div class="footer-left">
     SUBTOTAL: R$ <span id="subtotal">0</span><br>
     TOTAL: R$ <span id="total">0</span>
   </div>
   <button class="finish" onclick="finalizar()">Finalizar Venda</button>
 </div>
 
-<!-- CARTÃO -->
+<!-- overlays originais -->
 <div class="overlay" id="cardScreen">
   <img src="loading.gif" class="loading">
-  <h1 id="cardMessage">PROCESSANDO...</h1>
-  <div class="box">
-    <p>💳 Cartão</p>
-    <p>Valor: R$ <span id="cardTotal"></span></p>
-    <small>Ambiente de teste</small>
-  </div>
+  <h1 id="cardMessage">APROXIME, INSIRA OU PASSE O CARTÃO</h1>
 </div>
 
-<!-- PIX -->
 <div class="overlay" id="pixScreen">
   <h1 id="pixMessage">CONSULTANDO PIX</h1>
   <img src="qrcode.avif" class="qr">
-  <div class="box">
-    <p>PIX</p>
-    <p>Valor: R$ <span id="pixTotal"></span></p>
-    <small>Ambiente de teste</small>
-  </div>
 </div>
 
-<!-- ERRO -->
-<div class="modal" id="modalErro">
+<!-- MODAL DESCONTO -->
+<div class="modal" id="modalInput">
   <div class="modal-box">
-    <h2>👁️ EYE PRO</h2>
-    <p id="erroMsg"></p>
-    <button class="btn-green" onclick="fecharModal()">OK</button>
+    <h2 id="display">0</h2>
+    <div class="actions">
+      <button class="btn-red" onclick="fecharModal()">Cancelar</button>
+      <button class="btn-green" onclick="aplicarDesconto()">OK</button>
+    </div>
   </div>
 </div>
 
-<!-- AUTH -->
+<!-- MODAL AUTORIZAÇÃO -->
 <div class="modal" id="modalAuth">
   <div class="modal-box">
-    <h3>Autorizar</h3>
-    <p id="authMsg"></p>
-    <button class="btn-red" onclick="abrirLogin()">Autorizar</button>
-    <button class="btn-green" onclick="fecharModal()">OK</button>
+    <h3>Autorizar desconto</h3>
+    <input class="auth-input" placeholder="Usuário">
+    <input class="auth-input" placeholder="Senha" type="password">
+    <button class="btn-auth" onclick="autorizar()">Entrar</button>
   </div>
 </div>
 
-<!-- LOGIN -->
-<div class="modal" id="modalLogin">
+<!-- MODAL ERRO -->
+<div class="modal" id="modalError">
   <div class="modal-box">
-    <h3>Login</h3>
-    <input id="user" placeholder="Usuário">
-    <input id="pass" type="password" placeholder="Senha">
-    <button class="btn-green" onclick="login()">Entrar</button>
+    <h3>EYE PRO</h3>
+    <p>Valor inválido para desconto</p>
+    <button class="btn-auth" onclick="fecharErro()">OK</button>
   </div>
 </div>
 
 <script>
 
 const cart = JSON.parse(localStorage.getItem('cart')) || {};
-const serviceFeeEnabled = JSON.parse(localStorage.getItem('serviceFeeEnabled')) || false;
-
 let total = 0;
 
-Object.keys(cart).forEach(i => {
-  const item = cart[i];
-  total += item.qty * item.price;
-
-  document.getElementById('items').innerHTML += `
-    <div class="item">
-      <div class="item-left">
-        <img src="${item.img}">
-        <div>
-          <div>${i}</div>
-          <div>x${item.qty}</div>
-        </div>
-      </div>
-      <div>R$ ${item.qty * item.price}</div>
-    </div>
-  `;
+Object.keys(cart).forEach(n=>{
+  total += cart[n].qty * cart[n].price;
+  document.getElementById('items').innerHTML += `<div>${n}</div>`;
 });
 
-let desconto = 0;
-let tipo = null;
-let input = "";
+let tipo=null;
+let input="";
+let desconto=0;
+let pending=null;
 
-function baseTotal(){
-  return serviceFeeEnabled ? total * 1.10 : total;
-}
+function baseTotal(){ return total; }
 
 function calcFinal(){
-  let base = baseTotal();
-  if(tipo === "percent") return base - (base * desconto / 100);
-  if(tipo === "valor") return base - desconto;
-  return base;
+  if(tipo==="percent") return total - (total*desconto/100);
+  if(tipo==="valor") return total - desconto;
+  return total;
 }
 
-function atualizarTotais(){
+function atualizar(){
   const f = calcFinal();
-  document.getElementById('subtotal').innerText = total.toFixed(2);
-  document.getElementById('total').innerText = f.toFixed(2);
-  document.getElementById('valorFaltante').innerText = f.toFixed(2);
-  document.getElementById('cardTotal').innerText = f.toFixed(2);
-  document.getElementById('pixTotal').innerText = f.toFixed(2);
+  document.getElementById('subtotal').innerText=total.toFixed(2);
+  document.getElementById('total').innerText=f.toFixed(2);
+  document.getElementById('valorFaltante').innerText=f.toFixed(2);
 }
 
-/* ===== VALIDAÇÕES ===== */
+function abrirTipoDesconto(){
+  tipo="percent";
+  input="";
+  document.getElementById('modalInput').style.display="flex";
+}
+
+function fecharModal(){
+  document.querySelectorAll('.modal').forEach(m=>m.style.display="none");
+}
 
 function aplicarDesconto(){
 
-  let base = baseTotal();
-  let val = tipo === "percent" ? parseFloat(input) : parseFloat(input)/100;
+  let val = parseFloat(input||0);
 
-  if(!val || val <= 0){
-    return showError("Valor de desconto inválido");
+  if(val<=0){
+    document.getElementById('modalError').style.display="flex";
+    return;
   }
 
-  if(tipo === "percent" && val > 10){
-    return showAuth("Limite de 10% atingido");
+  if(tipo==="percent" && val>10){
+    pending=val;
+    document.getElementById('modalAuth').style.display="flex";
+    return;
   }
 
-  if(tipo === "valor" && val > base * 0.10){
-    return showAuth("Limite de R$ " + (base * 0.10).toFixed(2));
-  }
-
-  if(val > base){
-    return showError("Valor inválido para desconto");
+  if(tipo==="valor" && val>10){
+    pending=val;
+    document.getElementById('modalAuth').style.display="flex";
+    return;
   }
 
   desconto = val;
   fecharModal();
-  atualizarTotais();
+  atualizar();
 }
 
-function showError(msg){
-  document.getElementById('erroMsg').innerText = msg;
-  document.getElementById('modalErro').style.display="flex";
-}
-
-function showAuth(msg){
-  document.getElementById('authMsg').innerText = msg;
-  document.getElementById('modalAuth').style.display="flex";
-}
-
-function abrirLogin(){
-  document.getElementById('modalAuth').style.display="none";
-  document.getElementById('modalLogin').style.display="flex";
-}
-
-function login(){
-  document.getElementById('modalLogin').style.display="none";
+function autorizar(){
+  desconto = pending;
+  pending=null;
   fecharModal();
+  atualizar();
 }
 
-function fecharModal(){
-  document.querySelectorAll('.modal').forEach(m => m.style.display="none");
+function fecharErro(){
+  fecharModal();
 }
 
 function selectPayment(m,b){
@@ -346,11 +390,9 @@ function selectPayment(m,b){
   b.classList.add('selected');
 }
 
-function finalizar(){
-  alert("OK");
-}
+function finalizar(){ alert("OK"); }
 
-atualizarTotais();
+atualizar();
 
 </script>
 
