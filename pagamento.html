@@ -669,6 +669,32 @@ atualizarTotais();
 </div>
 
 
+function abrirLogin(){
+  document.getElementById('modalAuth').style.display="none";
+  document.getElementById('modalLogin').style.display="flex";
+}
+
+function validarLogin(){
+
+  const u = document.getElementById('user').value;
+  const p = document.getElementById('pass').value;
+
+  if(u === "admin" && p === "1234"){
+    desconto = pendingDiscount || 0;
+
+    fecharModal();
+    atualizarTotais();
+
+    document.getElementById('descontoArea').innerHTML = `
+      <button class="btn-desconto" disabled>DESCONTO AUTORIZADO</button>
+      <button class="btn-remove" onclick="removerDesconto()">✕</button>
+    `;
+
+    pendingDiscount = null;
+  } else {
+    alert("Credenciais inválidas");
+  }
+}
   
 </script>
 
