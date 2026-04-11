@@ -15,7 +15,6 @@ body {
 /* HEADER */
 .header {
   width: 100%;
-  height: 80px;
   background: #9E3667;
   display: flex;
   align-items: center;
@@ -26,12 +25,66 @@ body {
   left: 0;
   z-index: 1000;
   box-sizing: border-box;
+  flex-direction: column;
+  padding-bottom: 0;
+}
+
+.header-top {
+  width: 100%;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
 }
 
 .header h1 {
   color: white;
   margin: 0;
   font-size: 20px;
+}
+
+/* ABAS DE GRUPO */
+.group-tabs {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 0;
+  padding: 0;
+}
+
+.group-tab {
+  flex: 1;
+  text-align: center;
+  padding: 14px 10px 12px;
+  color: rgba(255,255,255,0.5);
+  font-weight: bold;
+  font-size: 14px;
+  letter-spacing: 1px;
+  cursor: pointer;
+  position: relative;
+  transition: color 0.3s;
+  user-select: none;
+}
+
+.group-tab.active {
+  color: #fff;
+}
+
+.group-tab::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 3px;
+  background: #fff;
+  border-radius: 3px 3px 0 0;
+  transition: width 0.3s;
+}
+
+.group-tab.active::after {
+  width: 60%;
 }
 
 /* 🍔 BOTÃO */
@@ -44,10 +97,10 @@ body {
 /* MENU LATERAL */
 .side-menu {
   position: fixed;
-  top: 80px;
+  top: 110px;
   left: -260px;
   width: 250px;
-  height: calc(100vh - 80px);
+  height: calc(100vh - 110px);
   background: white;
   box-shadow: 2px 0 10px rgba(0,0,0,0.2);
   transition: left 0.3s ease;
@@ -91,7 +144,7 @@ body {
   max-width: 1200px;
   margin: auto;
   padding: 20px;
-  margin-top: 100px;
+  margin-top: 130px;
   padding-bottom: 130px;
 }
 
@@ -553,19 +606,26 @@ button {
 @media (max-width: 480px) {
   .header {
     padding: 0 12px;
-    height: 60px;
+    padding-bottom: 0;
+  }
+  .header-top {
+    height: 50px;
   }
   .header h1 {
     font-size: 14px;
   }
+  .group-tab {
+    font-size: 11px;
+    padding: 10px 5px 8px;
+  }
   .side-menu {
-    top: 60px;
-    height: calc(100vh - 60px);
+    top: 95px;
+    height: calc(100vh - 95px);
     width: 200px;
     left: -210px;
   }
   .container {
-    margin-top: 75px;
+    margin-top: 115px;
     padding: 10px;
   }
   .products {
@@ -588,8 +648,15 @@ button {
 <body>
 
 <div class="header">
-  <div class="menu-btn" onclick="toggleMenu()">☰</div>
-  <h1>Venda de Produtos</h1>
+  <div class="header-top">
+    <div class="menu-btn" onclick="toggleMenu()">☰</div>
+    <h1>Venda de Produtos</h1>
+  </div>
+  <div class="group-tabs">
+    <div class="group-tab active" onclick="selectGroup('PROTEINAS')" id="tab-PROTEINAS">PROTEÍNAS</div>
+    <div class="group-tab" onclick="selectGroup('AMINOACIDOS')" id="tab-AMINOACIDOS">AMINOÁCIDOS</div>
+    <div class="group-tab" onclick="selectGroup('VITAMINAS')" id="tab-VITAMINAS">VITAMINAS</div>
+  </div>
 </div>
 
 <div class="side-menu" id="sideMenu">
@@ -763,7 +830,6 @@ let itemToRemove = null;
 let serviceFeeEnabled = false;
 
 function calculateTotal(subtotal){
-  // subtotal já vem com descontos aplicados
   return serviceFeeEnabled ? subtotal * 1.10 : subtotal;
 }
 
@@ -794,42 +860,87 @@ function logout() {
   window.location.href = "index.html";
 }
 
-// PRODUTOS
-const produtos = [
-  {nome:"Whey Protein", preco:100, img:"D_NQ_NP_877710-MLA99447989168_112025-O.webp"},
-  {nome:"Creatina", preco:80, img:"creatina-250g-creapure-growth-supplements-1.jpg"},
-  {nome:"Pré Treino", preco:70, img:"pr-treino-haze-hardcore-300g-growth-supplements.jpg"},
-  {nome:"BCAA", preco:60, img:"bcaa-10-1-1-200g-em-p-growth-supplements.jpg"},
-  {nome:"Albumina", preco:50, img:"albumina-500g-growth-supplements.jpg"},
-  {nome:"Hipercalórico", preco:120, img:"hiper-mass-1kg-sabor-chocolate-growth-supplements.jpg"},
-  {nome:"Barra Proteica", preco:10, img:"barra-de-prote-na-barrinha-de-prote-na-display-c-12-un-growth-supplements.webp"},
-  {nome:"Glutamina", preco:90, img:"l-glutamina-250g-growth-supplements-1.jpg"},
-  {nome:"Multivitamínico", preco:40, img:"multivitam-nico-120-c-ps-nova-f-rmula-growth-supplements-1.jpg"},
-  {nome:"Cafeína", preco:30, img:"cafe-na-200mg-60-caps-growth-supplements-termog-nico.jpg"},
-  {nome:"Coqueteleira", preco:25, img:"coqueteleira-preta-600ml-growth-supplements.jpg"},
-  {nome:"Termogênico", preco:110, img:"hot.webp"}
-];
+// ======================= PRODUTOS POR GRUPO =======================
+const produtosPorGrupo = {
+  PROTEINAS: [
+    // ⬇️ COLOQUE A IMAGEM DE CADA PRODUTO NO CAMPO "img" ABAIXO
+    { nome: "Whey Concentrado",    preco: 155, img: "top-whey-protein-concentrado-1kg-growth-supplements-3.jpg" /* ex: "D_NQ_NP_877710-MLA99447989168_112025-O.webp" */ },
+    { nome: "Dose Whey Concentrado", preco: 6,  img: "dose-whey-protein-concentrado-30gr-growth-supplements-6.png" /* ex: "dose-whey.jpg" */ },
+    { nome: "Bebida Láctea",       preco: 9,   img: "bebida-l-ctea-uht-de-prote-nas-growth-supplements.jpg" /* ex: "bebida-lactea.jpg" */ },
+    { nome: "Barra de Proteína",   preco: 40,  img: "barra-de-prote-na-barrinha-de-prote-na-display-c-12-un-growth-supplements-2.jpg" /* ex: "barra-proteina.jpg" */ },
+    { nome: "Whey Isolado",        preco: 310, img: "top-whey-protein-isolado-1kg-growth-supplements-3.jpg" /* ex: "whey-isolado.jpg" */ },
+    { nome: "Medium Whey",         preco: 100, img: "medium-whey-protein-1kg-growth-supplements.jpg" /* ex: "medium-whey.jpg" */ },
+    { nome: "Basic Whey",          preco: 55,  img: "basic-whey-protein-1kg-growth-supplements.jpg" /* ex: "basic-whey.jpg" */ },
+  ],
+  AMINOACIDOS: [
+    { nome: "Creatina",            preco: 50,  img: "creatina-monohidratada-250g-growth-supplements.jpg" /* ex: "creatina.jpg" */ },
+    { nome: "Creatina Creapure",   preco: 110, img: "creatina-250g-creapure-growth-supplements-1.jpg" /* ex: "creatina-creapure.jpg" */ },
+    { nome: "Glutamina",           preco: 50,  img: "l-glutamina-250g-growth-supplements-1.jpg" /* ex: "glutamina.jpg" */ },
+    { nome: "Beta-Alanina",        preco: 70,  img: "beta-alanina-em-p-growth-supplements.jpg" /* ex: "beta-alanina.jpg" */ },
+    { nome: "BCAA",                preco: 55,  img: "bcaa-10-1-1-200g-em-p-growth-supplements.jpg" /* ex: "bcaa.jpg" */ },
+    { nome: "Arginina",            preco: 30,  img: "arginina-powder-250g-growth-supplements.jpg" /* ex: "arginina.jpg" */ },
+    { nome: "Leucina",             preco: 43,  img: "l-leucine-200gr-growth-supplements-2.jpg" /* ex: "leucina.jpg" */ },
+  ],
+  VITAMINAS: [
+    { nome: "Multivitamínico",     preco: 48,  img: "multivitam-nico-120-c-ps-nova-f-rmula-growth-supplements-1.jpg" /* ex: "multivitaminico.jpg" */ },
+    { nome: "Vitamina D",          preco: 32,  img: "vitamina-d-ultra-2000ui-120-caps-growth-supplements-1.jpg" /* ex: "vitamina-d.jpg" */ },
+    { nome: "Vitamina B12",        preco: 22,  img: "vitamina-b12-com-120-c-psulas-growth-supplements.jpg" /* ex: "vitamina-b12.jpg" */ },
+    { nome: "ZMA",                 preco: 25,  img: "zma-120-caps-growth-supplements.jpg" /* ex: "zma.jpg" */ },
+    { nome: "Vitamina C",          preco: 17,  img: "vitamina-c-120-caps-growth-supplements-1.jpg" /* ex: "vitamina-c.jpg" */ },
+    { nome: "Complexo B",          preco: 22,  img: "complexo-b-120-caps-growth-supplements.jpg" /* ex: "complexo-b.jpg" */ },
+    { nome: "Vitamina E",          preco: 14,  img: "vitamina-e-75caps-growth-supplements.jpg" /* ex: "vitamina-e.jpg" */ },
+  ]
+};
 
-const productsDiv = document.getElementById('products');
+// Gera lista plana para busca no carrinho
+function getAllProducts() {
+  let all = [];
+  Object.values(produtosPorGrupo).forEach(arr => { all = all.concat(arr); });
+  return all;
+}
 
-produtos.forEach(p => {
-  const idSafe = p.nome.replace(/\s/g, '-');
-  productsDiv.innerHTML += `
-    <div class="product" onclick="addProduct('${p.nome}')">
-      <div class="product-image-box">
-        <img src="${p.img}" class="product-img">
+let grupoAtual = 'PROTEINAS';
+
+function selectGroup(grupo) {
+  grupoAtual = grupo;
+  document.querySelectorAll('.group-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + grupo).classList.add('active');
+  renderProducts();
+}
+
+function renderProducts() {
+  const productsDiv = document.getElementById('products');
+  productsDiv.innerHTML = '';
+  const lista = produtosPorGrupo[grupoAtual] || [];
+
+  lista.forEach(p => {
+    const idSafe = p.nome.replace(/\s/g, '-');
+    const qty = cart[p.nome] ? cart[p.nome].qty : 0;
+    const imgHTML = p.img
+      ? `<img src="${p.img}" class="product-img">`
+      : `<div style="color:#ccc;font-size:40px;">📦</div>`;
+
+    productsDiv.innerHTML += `
+      <div class="product" onclick="addProduct('${p.nome}')">
+        <div class="product-image-box">
+          ${imgHTML}
+        </div>
+        <div class="product-info">
+          <div class="product-price">R$ ${p.preco}</div>
+          <div class="product-name">${p.nome}</div>
+        </div>
+        <div class="badge" id="badge-${idSafe}" style="${qty > 0 ? 'display:flex' : 'display:none'}">${qty > 0 ? qty : ''}</div>
       </div>
-      <div class="product-info">
-        <div class="product-price">R$ ${p.preco}</div>
-        <div class="product-name">${p.nome}</div>
-      </div>
-      <div class="badge" id="badge-${idSafe}"></div>
-    </div>
-  `;
-});
+    `;
+  });
+}
+
+// Render inicial
+renderProducts();
 
 function addProduct(name) {
-  const produto = produtos.find(p => p.nome === name);
+  const allProducts = getAllProducts();
+  const produto = allProducts.find(p => p.nome === name);
   if (!cart[name]) cart[name] = { qty: 0, price: produto.preco, img: produto.img, desconto: 0, descontoTipo: null };
   cart[name].qty++;
   updateUI();
@@ -844,17 +955,14 @@ function updateUI() {
   let somaProdutos = 0;
   let somaDescontos = 0;
 
-  document.querySelectorAll('.badge').forEach(b => {
-    b.style.display = 'none';
-    b.innerText = '';
-  });
+  // Atualiza badges na tela atual
+  renderProducts();
 
   Object.keys(cart).forEach(name => {
     const item = cart[name];
     const itemTotal = item.qty * item.price;
     somaProdutos += itemTotal;
 
-    // Calcular desconto do item
     let descontoValor = 0;
     if (item.descontoTipo === 'percent') {
       descontoValor = itemTotal * item.desconto / 100;
@@ -863,15 +971,10 @@ function updateUI() {
     }
     somaDescontos += descontoValor;
 
-    const idSafe = name.replace(/\s/g, '-');
-    const badge = document.getElementById('badge-' + idSafe);
+    const imgHTML = item.img
+      ? `<img src="${item.img}">`
+      : `<div style="font-size:30px;">📦</div>`;
 
-    if (badge) {
-      badge.style.display = 'flex';
-      badge.innerText = item.qty;
-    }
-
-    // Botão de desconto ou desconto aplicado
     let descontoHTML = '';
     if (item.descontoTipo) {
       descontoHTML = `
@@ -889,7 +992,7 @@ function updateUI() {
     cartDiv.innerHTML += `
       <div class="cart-item">
         <div class="cart-img-box">
-          <img src="${item.img}">
+          ${imgHTML}
         </div>
         <div class="cart-info">
           <div class="cart-name">${name} x${item.qty}</div>
@@ -905,7 +1008,6 @@ function updateUI() {
     `;
   });
 
-  // (Soma dos produtos - desconto) e depois + taxa se habilitada
   const subtotalComDesconto = somaProdutos - somaDescontos;
   const finalTotal = calculateTotal(subtotalComDesconto);
 
@@ -936,7 +1038,6 @@ let discInput = "";
 let discDescontoPendente = null;
 let discTipoPendente = null;
 
-// Calcula a soma de todos os descontos individuais (excluindo um item opcional)
 function calcTotalDescontos(excluirItem) {
   let soma = 0;
   Object.keys(cart).forEach(name => {
@@ -1011,7 +1112,6 @@ function discValidarEDescontar() {
     }
   }
 
-  // Verifica se a soma de todos os descontos ultrapassa 10% do total do carrinho
   if (descontosExistentes + novoDescontoReais > limiteGlobal) {
     discDescontoPendente = discTipo === "percent" ? valorDigitado : novoDescontoReais;
     discTipoPendente = discTipo;
@@ -1022,7 +1122,6 @@ function discValidarEDescontar() {
     return;
   }
 
-  // Aplicar desconto
   if (discTipo === "percent") {
     item.desconto = valorDigitado;
     item.descontoTipo = "percent";
