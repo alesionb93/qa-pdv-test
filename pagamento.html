@@ -43,6 +43,47 @@ body {
   background: #9E3667; color: white;
 }
 .selected { outline: 3px solid #000; }
+
+/* Consumidor identificado */
+.consumer-identified-bar {
+  background: #E8F5E9;
+  border: 1px solid #A5D6A7;
+  border-radius: 10px;
+  padding: 10px 14px;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+}
+.consumer-identified-bar .consumer-avatar {
+  width: 36px;
+  height: 36px;
+  background: #4CAF50;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.consumer-identified-bar .consumer-avatar svg {
+  width: 18px;
+  height: 18px;
+  fill: white;
+}
+.consumer-identified-bar .consumer-details {
+  flex: 1;
+}
+.consumer-identified-bar .consumer-details .consumer-label {
+  font-size: 11px;
+  color: #666;
+  text-transform: uppercase;
+}
+.consumer-identified-bar .consumer-details .consumer-name-val {
+  font-weight: bold;
+  color: #2E7D32;
+}
+
 .footer {
   position: fixed; bottom: 0; left: 0; right: 0; height: 100px;
   background: #FFE6EF; display: flex; align-items: center;
@@ -311,7 +352,19 @@ body {
 </head>
 <body>
 
-<div class="left" id="items"></div>
+<div class="left">
+  <!-- Consumidor identificado -->
+  <div class="consumer-identified-bar" id="consumerBar" style="display:none;">
+    <div class="consumer-avatar">
+      <svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
+    </div>
+    <div class="consumer-details">
+      <div class="consumer-label">Cliente identificado</div>
+      <div class="consumer-name-val" id="consumerBarName"></div>
+    </div>
+  </div>
+  <div id="items"></div>
+</div>
 
 <div class="right">
   <div>
@@ -376,7 +429,6 @@ body {
 <!-- Comprovante de Venda -->
 <div class="overlay-comprovante" id="comprovanteScreen">
   <div class="comprovante" id="comprovanteConteudo">
-    <!-- preenchido via JS -->
   </div>
 </div>
 
@@ -480,12 +532,20 @@ body {
 /* ======================= DADOS ======================= */
 const cart = JSON.parse(localStorage.getItem('cart')) || {};
 const serviceFeeEnabled = JSON.parse(localStorage.getItem('serviceFeeEnabled')) || false;
+const consumidor = JSON.parse(localStorage.getItem('consumidor')) || null;
+
 const itemsDiv = document.getElementById('items');
 const subtotalSpan = document.getElementById('subtotal');
 const totalSpan = document.getElementById('total');
 const valorFaltanteSpan = document.getElementById('valorFaltante');
 const cardTotal = document.getElementById('cardTotal');
 const pixTotal = document.getElementById('pixTotal');
+
+/* Mostrar consumidor identificado */
+if (consumidor && consumidor.nome) {
+  document.getElementById('consumerBar').style.display = 'flex';
+  document.getElementById('consumerBarName').textContent = consumidor.nome;
+}
 
 let somaProdutos = 0;
 let somaDescontosItens = 0;
@@ -495,7 +555,6 @@ Object.keys(cart).forEach(name => {
   const itemTotal = item.qty * item.price;
   somaProdutos += itemTotal;
 
-  // Calcular desconto individual do item (vindo do carrinho)
   let descontoItem = 0;
   if (item.descontoTipo === 'percent') {
     descontoItem = itemTotal * item.desconto / 100;
@@ -506,22 +565,21 @@ Object.keys(cart).forEach(name => {
 
   let descontoLabel = '';
   if (descontoItem > 0) {
-    descontoLabel = `<div style="font-size:12px; color:#e74c3c;">Desconto: -R$ ${descontoItem.toFixed(2)}</div>`;
+    descontoLabel = '<div style="font-size:12px; color:#e74c3c;">Desconto: -R$ ' + descontoItem.toFixed(2) + '</div>';
   }
 
-  itemsDiv.innerHTML += `
-    <div class="item">
-      <div class="item-left">
-        <img src="${item.img}" class="item-img">
-        <div>
-          <div class="item-name">${name}</div>
-          <div class="item-qty">x${item.qty}</div>
-          ${descontoLabel}
-        </div>
-      </div>
-      <div>R$ ${itemTotal.toFixed(2)}</div>
-    </div>
-  `;
+  itemsDiv.innerHTML +=
+    '<div class="item">' +
+      '<div class="item-left">' +
+        '<img src="' + item.img + '" class="item-img">' +
+        '<div>' +
+          '<div class="item-name">' + name + '</div>' +
+          '<div class="item-qty">x' + item.qty + '</div>' +
+          descontoLabel +
+        '</div>' +
+      '</div>' +
+      '<div>R$ ' + itemTotal.toFixed(2) + '</div>' +
+    '</div>';
 });
 
 /* ======================= DESCONTO DO PAGAMENTO ======================= */
@@ -533,12 +591,9 @@ const LIMITE_PERCENTUAL = 10;
 let descontoPendente = null;
 let tipoPendente = null;
 
-// Subtotal = soma dos produtos (sem desconto, sem taxa)
-// Total = (soma dos produtos - descontos individuais - desconto pagamento) + taxa
 function calcFinal(){
   let subtotalComDescontos = somaProdutos - somaDescontosItens;
 
-  // Desconto do pagamento
   let descontoPagamento = 0;
   if (tipo === "percent") descontoPagamento = subtotalComDescontos * desconto / 100;
   else if (tipo === "valor") descontoPagamento = desconto;
@@ -546,7 +601,6 @@ function calcFinal(){
   let liquido = subtotalComDescontos - descontoPagamento;
   if (liquido < 0) liquido = 0;
 
-  // Taxa de serviço
   return serviceFeeEnabled ? liquido * 1.10 : liquido;
 }
 
@@ -582,9 +636,9 @@ function simularCartao() {
   const msg = document.getElementById('cardMessage');
   screen.style.display = "flex";
   msg.innerText = "APROXIME, INSIRA OU PASSE O CARTÃO";
-  setTimeout(() => msg.innerText = "PROCESSANDO...", 2000);
-  setTimeout(() => msg.innerText = "DÉBITO NUBANK", 4000);
-  setTimeout(() => {
+  setTimeout(function(){ msg.innerText = "PROCESSANDO..."; }, 2000);
+  setTimeout(function(){ msg.innerText = "DÉBITO NUBANK"; }, 4000);
+  setTimeout(function(){
     screen.style.display = "none";
     mostrarTelaAprovado();
   }, 8000);
@@ -595,7 +649,7 @@ function simularPix() {
   const msg = document.getElementById('pixMessage');
   screen.style.display = "flex";
   msg.innerText = "CONSULTANDO STATUS DA TRANSAÇÃO VIA PIX";
-  setTimeout(() => {
+  setTimeout(function(){
     screen.style.display = "none";
     mostrarTelaAprovado();
   }, 5000);
@@ -615,7 +669,6 @@ function abrirComprovante() {
   const finalTotal = calcFinal();
   const totalDescontos = somaDescontosItens + (tipo === "percent" ? (somaProdutos - somaDescontosItens) * desconto / 100 : (tipo === "valor" ? desconto : 0));
 
-  // Calcular líquido sem taxa e valor da taxa
   let liquidoSemTaxa = somaProdutos - somaDescontosItens;
   let descontoPagamento = 0;
   if (tipo === "percent") descontoPagamento = liquidoSemTaxa * desconto / 100;
@@ -629,6 +682,20 @@ function abrirComprovante() {
   }
 
   let metodoLabel = paymentMethod === 'Cartao' ? 'CARTÃO' : paymentMethod === 'PIX' ? 'PIX' : 'DINHEIRO';
+
+  /* Consumidor no comprovante */
+  let consumidorHTML = '<div class="comp-info">1 CONSUMIDOR</div>';
+  if (consumidor && consumidor.nome) {
+    consumidorHTML =
+      '<div class="comp-info" style="font-weight:bold;">' + consumidor.nome + '</div>' +
+      (consumidor.cpf ? '<div class="comp-info">CPF/CNPJ: ' + consumidor.cpf + '</div>' : '');
+  }
+  if (consumidor && consumidor.mesa) {
+    consumidorHTML += '<div class="comp-info">Mesa: ' + consumidor.mesa + '</div>';
+  }
+  if (consumidor && consumidor.obs) {
+    consumidorHTML += '<div class="comp-info">Obs: ' + consumidor.obs + '</div>';
+  }
 
   let itensHTML = '';
   Object.keys(cart).forEach(function(name) {
@@ -648,7 +715,7 @@ function abrirComprovante() {
     '<div class="comp-info">CNPJ: I.E.</div>' +
     '<hr class="comp-divider">' +
     '<div class="comp-info">CLIENTE</div>' +
-    '<div class="comp-info">1 CONSUMIDOR</div>' +
+    consumidorHTML +
     '<hr class="comp-divider">' +
     '<div class="comp-info" style="text-align:center; font-weight:bold;">COMPROVANTE ADICIONAL DE VENDA</div>' +
     '<div class="comp-info">Data....:' + dataStr + '</div>' +
@@ -669,6 +736,7 @@ function abrirComprovante() {
 
 function fecharComprovante() {
   localStorage.removeItem('cart');
+  localStorage.removeItem('consumidor');
   window.location.href = "carrinho.html";
 }
 
@@ -720,12 +788,11 @@ function validarEDescontar(){
     }
   }
 
-  // Verifica se desconto do carrinho + desconto do pagamento ultrapassa 10% do total
   if (somaDescontosItens + novoDescontoReais > limiteGlobal) {
     descontoPendente = tipo === "percent" ? valorDigitado : novoDescontoReais;
     tipoPendente = tipo;
     mostrarModalLimiteSuperior(
-      `Não é possivel adicionar o desconto.<br>O limite total de desconto é de ${LIMITE_PERCENTUAL}% (R$ ${limiteGlobal.toFixed(2)}).<br>Já utilizado nos itens: R$ ${somaDescontosItens.toFixed(2)}.<br>Disponível: R$ ${disponivelParaPagamento.toFixed(2)}`
+      'Não é possivel adicionar o desconto.<br>O limite total de desconto é de ' + LIMITE_PERCENTUAL + '% (R$ ' + limiteGlobal.toFixed(2) + ').<br>Já utilizado nos itens: R$ ' + somaDescontosItens.toFixed(2) + '.<br>Disponível: R$ ' + disponivelParaPagamento.toFixed(2)
     );
     return;
   }
@@ -798,13 +865,12 @@ function fecharTodosModais() {
 function atualizarBotaoDesconto() {
   const area = document.getElementById('descontoArea');
   let texto = tipo === "percent" 
-    ? `APLICADO DESCONTO DE ${desconto}%` 
-    : `APLICADO DESCONTO DE R$ ${desconto.toFixed(2)}`;
+    ? 'APLICADO DESCONTO DE ' + desconto + '%' 
+    : 'APLICADO DESCONTO DE R$ ' + desconto.toFixed(2);
 
-  area.innerHTML = `
-    <button class="btn-desconto" disabled>${texto}</button>
-    <button class="btn-remove" onclick="removerDesconto()">✕</button>
-  `;
+  area.innerHTML =
+    '<button class="btn-desconto" disabled>' + texto + '</button>' +
+    '<button class="btn-remove" onclick="removerDesconto()">✕</button>';
 }
 
 function removerDesconto(){
@@ -812,7 +878,7 @@ function removerDesconto(){
   tipo = null;
   input = "";
   document.getElementById('descontoArea').innerHTML =
-    `<button class="btn-desconto" onclick="abrirTipoDesconto()">APLICAR DESCONTO</button>`;
+    '<button class="btn-desconto" onclick="abrirTipoDesconto()">APLICAR DESCONTO</button>';
   atualizarTotais();
 }
 
