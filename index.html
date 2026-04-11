@@ -4,47 +4,314 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Eyemobile PDV</title>
-  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #9E3667;
+      --primary-dark: #7A2A50;
+      --primary-darker: #5E1F3D;
+      --primary-light: #C44D83;
+      --surface: #FFFFFF;
+      --text-primary: #1E293B;
+      --text-secondary: #64748B;
+      --text-muted: #94A3B8;
+      --border: #E2E8F0;
+      --danger: #EF4444;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-xl: 20px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #5E1F3D 0%, #7A2A50 30%, #9E3667 60%, #C44D83 100%);
+      -webkit-font-smoothing: antialiased;
+      overflow: hidden;
+    }
+
+    /* Animated background orbs */
+    .bg-orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.15;
+      animation: floatOrb 20s ease-in-out infinite;
+    }
+    .bg-orb-1 {
+      width: 400px; height: 400px;
+      background: #F0D0E0;
+      top: -100px; left: -100px;
+      animation-delay: 0s;
+    }
+    .bg-orb-2 {
+      width: 300px; height: 300px;
+      background: #D4A0C0;
+      bottom: -80px; right: -80px;
+      animation-delay: -7s;
+      animation-duration: 25s;
+    }
+    .bg-orb-3 {
+      width: 200px; height: 200px;
+      background: #FFB6C1;
+      top: 50%; left: 60%;
+      animation-delay: -14s;
+      animation-duration: 30s;
+    }
+    @keyframes floatOrb {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      25% { transform: translate(30px, -50px) scale(1.1); }
+      50% { transform: translate(-20px, 30px) scale(0.95); }
+      75% { transform: translate(40px, 20px) scale(1.05); }
+    }
+
+    .login-container {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      max-width: 420px;
+      padding: 20px;
+    }
+
+    .login-card {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius-xl);
+      padding: 48px 36px 40px;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
+      animation: cardIn 0.6s ease;
+    }
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .login-logo {
+      text-align: center;
+      margin-bottom: 12px;
+    }
+    .login-logo img {
+      height: 48px;
+      opacity: 0.95;
+    }
+    .login-logo-fallback {
+      font-size: 28px;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--primary-light), #E91E8C);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -1px;
+    }
+
+    .login-subtitle {
+      text-align: center;
+      color: rgba(255, 255, 255, 0.45);
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 36px;
+      letter-spacing: 0.5px;
+    }
+
+    .input-group {
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .input-group label {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.5);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 14px 16px;
+      background: rgba(255, 255, 255, 0.07);
+      border: 1.5px solid rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius-md);
+      color: white;
+      font-size: 15px;
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      outline: none;
+      transition: all 0.25s ease;
+    }
+    .input-group input::placeholder {
+      color: rgba(255, 255, 255, 0.25);
+      font-weight: 400;
+    }
+    .input-group input:focus {
+      border-color: var(--primary-light);
+      background: rgba(255, 255, 255, 0.1);
+      box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.15);
+    }
+
+    .input-icon {
+      position: absolute;
+      right: 14px;
+      top: 38px;
+      color: rgba(255, 255, 255, 0.25);
+    }
+    .input-icon svg { width: 20px; height: 20px; fill: currentColor; }
+
+    .login-btn {
+      width: 100%;
+      padding: 16px;
+      margin-top: 8px;
+      background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
+      color: white;
+      border: none;
+      border-radius: var(--radius-md);
+      font-size: 14px;
+      font-weight: 700;
+      font-family: 'Inter', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .login-btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(245, 158, 11, 0.4);
+    }
+    .login-btn:active:not(:disabled) {
+      transform: translateY(0);
+    }
+    .login-btn:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+    .login-btn::after {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+      transition: left 0.5s ease;
+    }
+    .login-btn:hover:not(:disabled)::after {
+      left: 100%;
+    }
+
+    .error-msg {
+      text-align: center;
+      color: var(--danger);
+      font-size: 13px;
+      font-weight: 600;
+      margin-top: 16px;
+      display: none;
+      animation: shakeError 0.4s ease;
+    }
+    @keyframes shakeError {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-6px); }
+      75% { transform: translateX(6px); }
+    }
+
+    .login-footer {
+      text-align: center;
+      margin-top: 32px;
+      color: rgba(255, 255, 255, 0.2);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+    }
+
+    /* QA indicator */
+    #bug-indicator {
+      position: fixed; top: 10px; right: 10px;
+      width: 80px; display: none; z-index: 999;
+    }
+
+    @media (max-width: 480px) {
+      .login-card { padding: 36px 24px 32px; }
+      .login-container { padding: 16px; }
+    }
+  </style>
 </head>
 <body>
 
-  <div class="container">
-    <img src="Eyemobile_Branco_Simples.png" class="logo" id="logo">
+  <div class="bg-orb bg-orb-1"></div>
+  <div class="bg-orb bg-orb-2"></div>
+  <div class="bg-orb bg-orb-3"></div>
 
-    <div class="login-box">
-      <input 
-        type="text" 
-        id="username" 
-        placeholder="nome do usuário"
-        oninput="validateForm()"
-      >
+  <div class="login-container">
+    <div class="login-card">
+      <div class="login-logo">
+        <img src="Eyemobile_Branco_Simples.png" alt="Eyemobile" id="logo"
+             onerror="this.style.display='none'; document.getElementById('logoFallback').style.display='block';">
+        <div class="login-logo-fallback" id="logoFallback" style="display:none;">EYE PDV</div>
+      </div>
+      <div class="login-subtitle">Ponto de Venda Inteligente</div>
 
-      <input 
-        type="password" 
-        id="password" 
-        placeholder="Senha"
-        oninput="validateForm()"
-      >
+      <div class="input-group">
+        <label>Usuário</label>
+        <input type="text" id="username" placeholder="Digite seu usuário" oninput="validateForm()" autocomplete="username">
+        <div class="input-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
+        </div>
+      </div>
 
-      <button 
-        id="login-btn" 
-        onclick="login()" 
-        disabled
-      >
+      <div class="input-group">
+        <label>Senha</label>
+        <input type="password" id="password" placeholder="Digite sua senha" oninput="validateForm()" autocomplete="current-password"
+               onkeydown="if(event.key==='Enter' && !document.getElementById('login-btn').disabled) login();">
+        <div class="input-icon">
+          <svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1s3.1 1.39 3.1 3.1v2z"/></svg>
+        </div>
+      </div>
+
+      <button id="login-btn" onclick="login()" disabled class="login-btn">
         ACESSAR
       </button>
-      
-      <p id="error-msg" style="color:red; display:none;">
-        Senha inválida
-      </p>  
+
+      <p id="error-msg" class="error-msg">
+        ⚠ Credenciais inválidas
+      </p>
+
+      <div class="login-footer">
+        EYEMOBILE PDV &bull; v2.0
+      </div>
     </div>
   </div>
 
-  <!-- 🔥 INDICADOR QA MODE -->
-  <img id="bug-indicator" src="bug.gif" 
-       style="position: fixed; top: 10px; right: 10px; width: 80px; display: none; z-index: 999;">
+  <img id="bug-indicator" src="bug.gif" alt="">
 
-  <script src="script.js"></script>
+  <script>
+    function validateForm() {
+      var user = document.getElementById('username').value.trim();
+      var pass = document.getElementById('password').value.trim();
+      document.getElementById('login-btn').disabled = !(user.length > 0 && pass.length > 0);
+      document.getElementById('error-msg').style.display = 'none';
+    }
 
+    function login() {
+      var user = document.getElementById('username').value.trim();
+      var pass = document.getElementById('password').value.trim();
+
+      if (pass === 'Candidato.22' || pass === '1234') {
+        localStorage.setItem('usuario', user);
+        window.location.href = 'carrinho.html';
+      } else {
+        document.getElementById('error-msg').style.display = 'block';
+        document.getElementById('password').value = '';
+        validateForm();
+      }
+    }
+  </script>
 </body>
 </html>
