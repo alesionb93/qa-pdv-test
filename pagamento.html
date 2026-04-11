@@ -4,150 +4,272 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Pagamento</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
+:root {
+  --primary: #9E3667;
+  --primary-dark: #7A2A50;
+  --primary-darker: #5E1F3D;
+  --primary-light: #C44D83;
+  --primary-subtle: #FFF0F6;
+  --primary-bg: #FDF2F8;
+  --accent: #E91E8C;
+  --success: #10B981;
+  --danger: #EF4444;
+  --warning: #F59E0B;
+  --info: #3B82F6;
+  --surface: #FFFFFF;
+  --surface-secondary: #F8FAFC;
+  --surface-tertiary: #F1F5F9;
+  --text-primary: #1E293B;
+  --text-secondary: #64748B;
+  --text-muted: #94A3B8;
+  --border: #E2E8F0;
+  --border-light: #F1F5F9;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -2px rgba(0,0,0,0.05);
+  --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -4px rgba(0,0,0,0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.05);
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
 body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   margin: 0;
-  font-family: Arial, sans-serif;
-  background: #f4f4f4;
+  background: var(--surface-secondary);
   display: flex;
   flex-direction: row;
   min-height: 100vh;
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
 }
-.left { flex: 2; background: white; padding: 20px; overflow-y: auto; padding-bottom: 120px; }
+
+.left {
+  flex: 2;
+  background: var(--surface);
+  padding: 24px;
+  overflow-y: auto;
+  padding-bottom: 130px;
+  border-right: 1px solid var(--border);
+}
+
 .item {
   display: flex; align-items: center; justify-content: space-between;
-  padding: 12px; border-bottom: 1px solid #eee; gap: 10px;
+  padding: 14px 16px; border-bottom: 1px solid var(--border-light); gap: 12px;
+  transition: var(--transition);
+  border-radius: var(--radius-sm);
+  margin-bottom: 2px;
 }
-.item-left { display: flex; align-items: center; gap: 10px; }
+.item:hover {
+  background: var(--surface-secondary);
+}
+.item-left { display: flex; align-items: center; gap: 12px; }
 .item-img {
-  width: 45px; height: 45px; object-fit: contain;
-  border-radius: 8px; background: #fff; border: 1px solid #eee;
-  flex-shrink: 0;
+  width: 48px; height: 48px; object-fit: contain;
+  border-radius: var(--radius-sm); background: var(--surface); border: 1px solid var(--border-light);
+  flex-shrink: 0; padding: 4px;
 }
-.item-name { font-weight: bold; }
-.item-qty { font-size: 12px; color: #666; }
-.right { flex: 1; background: #FFE6EF; padding: 20px; display: flex; flex-direction: column; min-width: 280px; overflow-y: auto; padding-bottom: 120px; }
-.valor-faltante { text-align: center; margin-bottom: 20px; }
-.valor { font-size: 36px; font-weight: bold; margin: 10px 0; word-break: break-all; }
+.item-name { font-weight: 600; font-size: 14px; color: var(--text-primary); }
+.item-qty { font-size: 12px; color: var(--text-secondary); font-weight: 500; }
+
+.right {
+  flex: 1;
+  background: linear-gradient(180deg, var(--primary-bg) 0%, #FDE8F0 100%);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  min-width: 300px;
+  overflow-y: auto;
+  padding-bottom: 130px;
+}
+
+.valor-faltante { text-align: center; margin-bottom: 24px; }
+.valor-faltante h2 {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--text-secondary);
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.valor {
+  font-size: 36px; font-weight: 800; margin: 8px 0;
+  word-break: break-all; color: var(--primary);
+  letter-spacing: -1px;
+}
+
 .btn-desconto {
-  background: #2196f3; color: white; border: none;
-  padding: 10px 20px; border-radius: 8px; cursor: pointer;
+  background: linear-gradient(135deg, var(--info) 0%, #2563EB 100%);
+  color: white; border: none;
+  padding: 10px 24px; border-radius: var(--radius-md); cursor: pointer;
+  font-weight: 700; font-size: 12px; letter-spacing: 0.5px;
+  font-family: 'Inter', sans-serif;
+  transition: var(--transition);
+  box-shadow: 0 2px 8px rgba(59,130,246,0.25);
 }
+.btn-desconto:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(59,130,246,0.35);
+}
+.btn-desconto:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
 .btn-remove {
-  margin-left: 10px; border-radius: 50%; background: red;
+  margin-left: 10px; border-radius: 50%; background: var(--danger);
   color: white; border: none; width: 30px; height: 30px; cursor: pointer;
+  font-size: 14px; transition: var(--transition);
 }
+.btn-remove:hover { background: #DC2626; transform: scale(1.1); }
 
 /* Pay method group */
 .pay-group {
   margin-bottom: 10px;
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   overflow: hidden;
 }
 .pay-group-btn {
-  width: 100%; padding: 15px; border: none; cursor: pointer;
-  background: #9E3667; color: white;
-  font-size: 15px; font-weight: bold;
+  width: 100%; padding: 14px 16px; border: none; cursor: pointer;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  color: white;
+  font-size: 14px; font-weight: 700;
   display: flex; align-items: center; justify-content: space-between;
-  border-radius: 10px;
+  border-radius: var(--radius-md);
+  font-family: 'Inter', sans-serif;
+  transition: var(--transition);
+  letter-spacing: 0.3px;
+}
+.pay-group-btn:hover {
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-darker) 100%);
 }
 .pay-group.has-items .pay-group-btn {
-  border-radius: 10px 10px 0 0;
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
 }
 .pay-group-btn .pay-icon {
-  background: rgba(255,255,255,0.25); border-radius: 50%;
-  width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;
-  font-size: 20px; font-weight: bold;
+  background: rgba(255,255,255,0.2); border-radius: 50%;
+  width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;
+  font-size: 16px; font-weight: bold;
+  backdrop-filter: blur(4px);
 }
 .pay-group-items {
-  background: #fff;
-  border: 2px solid #f0c0d4;
+  background: var(--surface);
+  border: 2px solid rgba(158,54,103,0.15);
   border-top: none;
-  border-radius: 0 0 10px 10px;
-  padding: 8px 12px;
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+  padding: 10px 14px;
 }
 .pay-sub-item {
   display: flex; align-items: center; justify-content: space-between;
-  padding: 8px 0;
-  border-bottom: 1px solid #f0e0e8;
-  font-size: 14px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border-light);
+  font-size: 13px;
 }
 .pay-sub-item:last-child { border-bottom: none; }
+.pay-group-total ~ .pay-sub-item { border-bottom: none; }
 .pay-sub-info {
   display: flex; align-items: center; gap: 8px; flex-direction: column; align-items: flex-start;
 }
 .pay-sub-emoji { font-size: 18px; }
-.pay-sub-valor { font-weight: bold; color: #9E3667; margin-right: 6px; }
+.pay-sub-valor { font-weight: 700; color: var(--primary); margin-right: 6px; }
 .pay-sub-actions { display: flex; gap: 6px; align-items: center; }
-.pay-sub-parcelas { font-size: 11px; color: #888; }
+.pay-sub-parcelas { font-size: 11px; color: var(--text-muted); font-weight: 500; }
 .btn-edit-pay {
   background: none; border: none; cursor: pointer; font-size: 16px; padding: 2px 4px;
+  transition: var(--transition);
 }
+.btn-edit-pay:hover { transform: scale(1.2); }
 .btn-remove-pay {
-  background: red; color: white; border: none; border-radius: 50%;
-  width: 26px; height: 26px; cursor: pointer; font-size: 14px;
+  background: var(--danger); color: white; border: none; border-radius: 50%;
+  width: 26px; height: 26px; cursor: pointer; font-size: 13px;
   display: flex; align-items: center; justify-content: center;
+  transition: var(--transition);
 }
+.btn-remove-pay:hover { background: #DC2626; transform: scale(1.1); }
 .pay-group-total {
-  display: flex; justify-content: space-between; font-weight: bold;
-  padding-top: 6px; margin-top: 4px; border-top: 1px solid #ccc;
-  font-size: 13px; color: #9E3667;
+  display: flex; justify-content: space-between; font-weight: 700;
+  padding-top: 8px; margin-top: 6px; border-top: 1px solid var(--border);
+  font-size: 13px; color: var(--primary);
 }
 
 /* Consumidor identificado */
 .consumer-identified-bar {
-  background: #E8F5E9;
-  border: 1px solid #A5D6A7;
-  border-radius: 10px;
-  padding: 10px 14px;
-  margin-bottom: 15px;
+  background: linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 100%);
+  border: 1px solid #A7F3D0;
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+  margin-bottom: 20px;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   font-size: 14px;
 }
 .consumer-identified-bar .consumer-avatar {
-  width: 36px; height: 36px; background: #4CAF50; border-radius: 50%;
+  width: 38px; height: 38px; background: var(--success); border-radius: 50%;
   display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(16,185,129,0.3);
 }
 .consumer-identified-bar .consumer-avatar svg { width: 18px; height: 18px; fill: white; }
 .consumer-identified-bar .consumer-details { flex: 1; }
-.consumer-identified-bar .consumer-details .consumer-label { font-size: 11px; color: #666; text-transform: uppercase; }
-.consumer-identified-bar .consumer-details .consumer-name-val { font-weight: bold; color: #2E7D32; }
+.consumer-identified-bar .consumer-details .consumer-label { font-size: 10px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
+.consumer-identified-bar .consumer-details .consumer-name-val { font-weight: 700; color: #059669; font-size: 14px; }
 
 .footer {
   position: fixed; bottom: 0; left: 0; right: 0; height: 100px;
-  background: #FFE6EF; display: flex; align-items: center;
-  justify-content: space-between; padding: 0 20px;
+  background: linear-gradient(135deg, var(--primary-bg) 0%, #FDE8F0 100%);
+  display: flex; align-items: center;
+  justify-content: space-between; padding: 0 24px;
   box-sizing: border-box;
+  border-top: 1px solid rgba(158,54,103,0.1);
+  backdrop-filter: blur(10px);
 }
-.footer-left { font-size: 18px; font-weight: bold; }
+.footer-left { font-size: 16px; font-weight: 700; color: var(--text-primary); }
 .finish {
-  background: #22B14C; color: white; padding: 15px 20px;
-  border: none; border-radius: 10px; cursor: pointer;
-  white-space: nowrap; font-weight: bold; font-size: 15px;
+  background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+  color: white; padding: 14px 24px;
+  border: none; border-radius: var(--radius-md); cursor: pointer;
+  white-space: nowrap; font-weight: 700; font-size: 14px;
+  font-family: 'Inter', sans-serif;
+  transition: var(--transition);
+  box-shadow: 0 4px 12px rgba(16,185,129,0.3);
+  letter-spacing: 0.3px;
+}
+.finish:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(16,185,129,0.4);
 }
 .finish:disabled {
-  background: #aaa; cursor: not-allowed;
+  background: var(--border);
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
 }
 
 /* ========== OVERLAY DE PROCESSAMENTO PROFISSIONAL ========== */
 .overlay-processamento {
   position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  background: linear-gradient(135deg, #3D1228 0%, var(--primary-darker) 40%, var(--primary-dark) 70%, var(--primary) 100%);
   color: white; display: none;
   flex-direction: column; align-items: center; justify-content: center;
   text-align: center; padding: 20px; box-sizing: border-box;
   z-index: 2500;
 }
 .proc-terminal {
-  background: rgba(255,255,255,0.06);
+  background: rgba(255,255,255,0.08);
   border: 1px solid rgba(255,255,255,0.12);
-  border-radius: 16px;
+  border-radius: var(--radius-xl);
   padding: 40px 30px;
   max-width: 420px;
   width: 90%;
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 25px 50px rgba(0,0,0,0.3);
 }
 .proc-icon-container {
   width: 80px; height: 80px;
@@ -157,25 +279,28 @@ body {
   display: flex; align-items: center; justify-content: center;
   font-size: 36px;
   animation: pulseIcon 2s ease-in-out infinite;
+  border: 2px solid rgba(255,255,255,0.15);
 }
 @keyframes pulseIcon {
   0%, 100% { transform: scale(1); opacity: 1; }
   50% { transform: scale(1.08); opacity: 0.8; }
 }
 .proc-status {
-  font-size: 13px;
+  font-size: 11px;
   text-transform: uppercase;
-  letter-spacing: 2px;
+  letter-spacing: 3px;
   color: rgba(255,255,255,0.5);
   margin-bottom: 8px;
+  font-weight: 600;
 }
 .proc-message {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 700;
   margin-bottom: 20px;
   min-height: 56px;
   display: flex; align-items: center; justify-content: center;
   line-height: 1.3;
+  letter-spacing: -0.3px;
 }
 .proc-progress-bar {
   width: 100%;
@@ -187,7 +312,7 @@ body {
 }
 .proc-progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, #00d2ff, #3a7bd5, #00d2ff);
+  background: linear-gradient(90deg, var(--primary-light), #E91E8C, var(--primary-light));
   background-size: 200% 100%;
   border-radius: 4px;
   width: 0%;
@@ -199,22 +324,23 @@ body {
   100% { background-position: -200% 0; }
 }
 .proc-details {
-  background: rgba(0,0,0,0.2);
-  border-radius: 10px;
-  padding: 14px 18px;
+  background: rgba(0,0,0,0.25);
+  border-radius: var(--radius-md);
+  padding: 16px 20px;
   display: flex; justify-content: space-between; align-items: center;
   font-size: 14px;
+  border: 1px solid rgba(255,255,255,0.06);
 }
 .proc-details-left { text-align: left; }
-.proc-details-label { font-size: 11px; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 1px; }
-.proc-details-value { font-weight: bold; font-size: 22px; margin-top: 2px; }
+.proc-details-label { font-size: 10px; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600; }
+.proc-details-value { font-weight: 800; font-size: 22px; margin-top: 4px; letter-spacing: -0.5px; }
 .proc-details-method { text-align: right; }
-.proc-details-method-label { font-size: 11px; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 1px; }
-.proc-details-method-value { font-weight: 600; font-size: 13px; margin-top: 2px; color: rgba(255,255,255,0.8); }
+.proc-details-method-label { font-size: 10px; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600; }
+.proc-details-method-value { font-weight: 600; font-size: 13px; margin-top: 4px; color: rgba(255,255,255,0.8); }
 
 /* Spinner dots */
 .proc-dots {
-  display: flex; gap: 6px; justify-content: center; margin-bottom: 16px;
+  display: flex; gap: 8px; justify-content: center; margin-bottom: 16px;
 }
 .proc-dot {
   width: 8px; height: 8px; border-radius: 50%;
@@ -233,17 +359,19 @@ body {
   margin: 0 auto 20px;
   padding: 16px;
   background: white;
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
   display: inline-block;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
 }
 .proc-qr-container img {
   width: 180px; height: 180px; display: block;
 }
 .proc-qr-label {
-  font-size: 12px;
+  font-size: 11px;
   color: rgba(255,255,255,0.5);
-  margin-top: 10px;
-  letter-spacing: 1px;
+  margin-top: 12px;
+  letter-spacing: 2px;
+  font-weight: 600;
 }
 
 /* ========== FIM OVERLAY PROCESSAMENTO ========== */
@@ -251,7 +379,8 @@ body {
 /* Tela de Aprovação Verde */
 .overlay-aprovado {
   position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-  background: #4CAF50; color: white; display: none;
+  background: linear-gradient(135deg, #059669 0%, var(--success) 50%, #34D399 100%);
+  color: white; display: none;
   flex-direction: column; align-items: center; justify-content: center;
   text-align: center; padding: 20px; box-sizing: border-box;
   z-index: 3000;
@@ -266,6 +395,7 @@ body {
   display: flex; align-items: center; justify-content: center;
   margin-bottom: 30px;
   animation: popIn 0.5s ease 0.2s both;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
 }
 @keyframes popIn {
   from { transform: scale(0); }
@@ -273,39 +403,42 @@ body {
 }
 .check-circle svg { width: 60px; height: 60px; }
 .aprovado-titulo {
-  font-size: 28px; font-weight: bold; margin-bottom: 10px;
-  text-transform: uppercase; letter-spacing: 1px;
+  font-size: 26px; font-weight: 800; margin-bottom: 10px;
+  text-transform: uppercase; letter-spacing: 2px;
 }
-.aprovado-subtitulo { font-size: 16px; opacity: 0.9; margin-bottom: 40px; }
+.aprovado-subtitulo { font-size: 15px; opacity: 0.9; margin-bottom: 40px; font-weight: 400; }
 .btn-comprovante {
-  background: white; color: #4CAF50; border: none;
-  padding: 16px 40px; border-radius: 12px; font-size: 16px;
-  font-weight: bold; cursor: pointer; text-transform: uppercase;
+  background: white; color: var(--success); border: none;
+  padding: 16px 40px; border-radius: var(--radius-md); font-size: 14px;
+  font-weight: 800; cursor: pointer; text-transform: uppercase;
   letter-spacing: 1px;
-  transition: transform 0.2s, box-shadow 0.2s;
+  font-family: 'Inter', sans-serif;
+  transition: var(--transition);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
 }
 .btn-comprovante:hover {
   transform: scale(1.05);
-  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+  box-shadow: 0 6px 24px rgba(0,0,0,0.2);
 }
 
 /* Comprovante */
 .overlay-comprovante {
   position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-  background: rgba(0,0,0,0.6); display: none;
+  background: rgba(15, 23, 42, 0.7); display: none;
   align-items: center; justify-content: center;
   z-index: 4000;
+  backdrop-filter: blur(8px);
 }
 .comprovante {
-  background: #f5f0e8;
-  width: 340px; max-width: 92vw;
+  background: #FAF8F5;
+  width: 360px; max-width: 92vw;
   max-height: 85vh; overflow-y: auto;
-  border-radius: 4px;
-  padding: 25px 20px;
+  border-radius: 6px;
+  padding: 28px 24px;
   font-family: 'Courier New', Courier, monospace;
   font-size: 13px;
   color: #333;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+  box-shadow: var(--shadow-xl);
   position: relative;
 }
 .comprovante::before,
@@ -314,7 +447,7 @@ body {
   display: block;
   width: 100%;
   height: 8px;
-  background: linear-gradient(135deg, transparent 33.33%, #f5f0e8 33.33%, #f5f0e8 66.66%, transparent 66.66%);
+  background: linear-gradient(135deg, transparent 33.33%, #FAF8F5 33.33%, #FAF8F5 66.66%, transparent 66.66%);
   background-size: 12px 8px;
   position: absolute;
   left: 0;
@@ -339,89 +472,147 @@ body {
 .comp-pagamento { text-align: left; margin-top: 8px; font-weight: bold; font-size: 14px; }
 .comp-footer { text-align: center; margin-top: 15px; font-size: 11px; color: #888; }
 .btn-fechar-comprovante {
-  display: block; margin: 20px auto 0; background: #e74c3c; color: white;
-  border: none; padding: 12px 40px; border-radius: 8px;
-  font-size: 14px; font-weight: bold; cursor: pointer;
+  display: block; margin: 20px auto 0; background: var(--danger); color: white;
+  border: none; padding: 12px 40px; border-radius: var(--radius-sm);
+  font-size: 13px; font-weight: 700; cursor: pointer;
   text-transform: uppercase;
+  font-family: 'Inter', sans-serif;
+  transition: var(--transition);
 }
-.btn-fechar-comprovante:hover { background: #c0392b; }
+.btn-fechar-comprovante:hover { background: #DC2626; }
 
 /* Modais */
 .modal {
-  position: fixed; inset: 0; background: rgba(0,0,0,0.55);
+  position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(8px);
   display: none; align-items: center; justify-content: center; z-index: 1000;
 }
 .modal-box {
-  background: white; width: 340px; max-width: 90vw; border-radius: 14px;
-  padding: 20px; position: relative; box-sizing: border-box;
+  background: var(--surface); width: 360px; max-width: 90vw; border-radius: var(--radius-xl);
+  padding: 24px; position: relative; box-sizing: border-box;
+  box-shadow: var(--shadow-xl);
+  animation: modalIn 0.25s ease;
+}
+@keyframes modalIn {
+  from { opacity: 0; transform: scale(0.95) translateY(10px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
 }
 .modal-header {
   display: flex; justify-content: space-between; align-items: center;
-  margin-bottom: 15px; font-weight: bold;
+  margin-bottom: 18px; font-weight: 700; font-size: 15px; color: var(--text-primary);
 }
-.modal-close { cursor: pointer; font-size: 20px; color: #666; }
+.modal-close {
+  cursor: pointer; font-size: 18px; color: var(--text-muted);
+  width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
+  border-radius: 50%; transition: var(--transition);
+}
+.modal-close:hover { background: var(--surface-tertiary); color: var(--text-primary); }
 .option {
-  padding: 14px 0;
-  border-bottom: 1px solid #eee;
+  padding: 16px 8px;
+  border-bottom: 1px solid var(--border-light);
   cursor: pointer;
+  font-weight: 500;
+  font-size: 14px;
+  transition: var(--transition);
+  border-radius: var(--radius-sm);
 }
 .option:last-child { border-bottom: none; }
+.option:hover { background: var(--primary-bg); color: var(--primary); }
 
 /* Keypad */
 .keypad-header {
-  background: #9E3667; color: white; text-align: center;
-  padding: 24px 15px 18px; border-radius: 14px 14px 0 0;
-  margin: -20px -20px 15px -20px;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  color: white; text-align: center;
+  padding: 28px 15px 22px; border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  margin: -24px -24px 18px -24px;
 }
-.keypad-header .kp-valor { font-size: 32px; font-weight: bold; }
-.keypad-header .kp-label { font-size: 12px; opacity: 0.85; margin-top: 4px; }
+.keypad-header .kp-valor { font-size: 32px; font-weight: 800; letter-spacing: -1px; }
+.keypad-header .kp-label { font-size: 11px; opacity: 0.7; margin-top: 6px; letter-spacing: 1.5px; font-weight: 600; }
 .keypad {
   display: grid; grid-template-columns: repeat(3, 1fr);
-  gap: 12px; justify-items: center; margin-top: 10px;
+  gap: 10px; justify-items: center; margin-top: 10px;
 }
 .key {
   width: 56px; height: 56px; border-radius: 50%;
-  border: 2px solid #9E3667; background: #f9f9f9;
+  border: 2px solid rgba(158,54,103,0.2); background: var(--surface-secondary);
   font-size: 18px; cursor: pointer;
   display: flex; align-items: center; justify-content: center;
   padding: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  color: var(--text-primary);
+  transition: var(--transition);
 }
+.key:hover { background: var(--primary-bg); border-color: var(--primary); color: var(--primary); }
+.key:active { background: var(--primary); color: white; }
 .key.key-text {
-  font-size: 11px; font-weight: bold; letter-spacing: 0.5px;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.5px;
 }
 .actions {
-  display: flex; gap: 10px; margin-top: 15px;
+  display: flex; gap: 10px; margin-top: 18px;
 }
 .btn-red, .btn-green {
-  flex: 1; padding: 12px; border: none; border-radius: 12px;
-  color: white; font-weight: bold; cursor: pointer; font-size: 15px;
+  flex: 1; padding: 14px; border: none; border-radius: var(--radius-md);
+  color: white; font-weight: 700; cursor: pointer; font-size: 14px;
+  font-family: 'Inter', sans-serif;
+  transition: var(--transition);
 }
-.btn-red { background: #e74c3c; }
-.btn-green { background: #2ecc71; }
+.btn-red { background: var(--danger); }
+.btn-red:hover { background: #DC2626; }
+.btn-green { background: var(--success); }
+.btn-green:hover { background: #059669; }
 
 /* Modais de Erro e Login */
 #errorModal, #erroInvalidoModal, #loginModal, #erroLoginModal, #modalParcelas, #erroParcelas {
-  position: fixed; inset: 0; background: rgba(0,0,0,0.6);
+  position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(8px);
   display: none; align-items: center; justify-content: center;
   z-index: 2000;
 }
 #modalParcelas { z-index: 1500; }
 #erroParcelas { z-index: 1600; }
-#loginModal .modal-box { padding: 30px 25px; }
-#loginModal p { margin: 15px 0 6px 0; text-align: left; font-weight: bold; color: #333; }
-#loginModal input {
-  width: 100%; padding: 13px; margin-bottom: 18px;
-  border: 1px solid #ccc; border-radius: 8px; font-size: 16px;
-  box-sizing: border-box;
+#loginModal .modal-box {
+  padding: 0;
+  overflow: hidden;
 }
+#loginModal .modal-box .modal-header {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  color: white;
+  padding: 18px 24px;
+  margin-bottom: 0;
+  border-radius: 0;
+}
+#loginModal .modal-box .modal-close { color: rgba(255,255,255,0.7); }
+#loginModal .modal-box .modal-close:hover { color: white; background: rgba(255,255,255,0.1); }
+#loginModal p {
+  margin: 16px 24px 6px;
+  text-align: left; font-weight: 600;
+  color: var(--text-secondary); font-size: 11px;
+  text-transform: uppercase; letter-spacing: 0.5px;
+}
+#loginModal input {
+  width: calc(100% - 48px); padding: 12px 0; margin: 0 24px;
+  border: none; border-bottom: 2px solid var(--border);
+  font-size: 15px; box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+  outline: none;
+  transition: var(--transition);
+}
+#loginModal input:focus { border-bottom-color: var(--primary); }
 #loginModal button {
-  width: 100%; padding: 14px; background: #9E3667;
-  color: white; border: none; border-radius: 12px;
-  font-size: 16px; font-weight: bold; cursor: pointer;
-  margin-top: 10px;
+  width: calc(100% - 48px); padding: 14px; margin: 20px 24px 24px;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  color: white; border: none; border-radius: var(--radius-md);
+  font-size: 15px; font-weight: 700; cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  transition: var(--transition);
+}
+#loginModal button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(158,54,103,0.35);
 }
 
 /* Modal Parcelas */
@@ -429,21 +620,24 @@ body {
   text-align: center;
 }
 #modalParcelas .parcelas-title {
-  font-size: 18px; font-weight: bold; margin-bottom: 6px; color: #333;
+  font-size: 16px; font-weight: 700; margin-bottom: 6px; color: var(--text-primary);
 }
 #modalParcelas .parcelas-sub {
-  font-size: 14px; color: #666; margin-bottom: 20px;
+  font-size: 13px; color: var(--text-secondary); margin-bottom: 20px; font-weight: 500;
 }
 #modalParcelas input[type="number"] {
   width: 100%; padding: 14px; font-size: 24px; text-align: center;
-  border: 2px solid #9E3667; border-radius: 10px; box-sizing: border-box;
-  font-weight: bold; color: #333;
+  border: 2px solid var(--primary); border-radius: var(--radius-md); box-sizing: border-box;
+  font-weight: 800; color: var(--text-primary);
+  font-family: 'Inter', sans-serif;
+  transition: var(--transition);
 }
 #modalParcelas input[type="number"]:focus {
-  outline: none; border-color: #c2185b;
+  outline: none; border-color: var(--primary-dark);
+  box-shadow: 0 0 0 4px rgba(158,54,103,0.1);
 }
 .parcelas-info {
-  font-size: 13px; color: #888; margin-top: 8px; min-height: 20px;
+  font-size: 13px; color: var(--text-muted); margin-top: 10px; min-height: 20px; font-weight: 500;
 }
 
 /* MEDIA QUERIES */
@@ -452,23 +646,23 @@ body {
   .left { padding-bottom: 20px; }
   .right { min-width: unset; }
   .footer {
-    height: auto; min-height: 80px; padding: 10px 15px;
+    height: auto; min-height: 80px; padding: 12px 16px;
     flex-wrap: wrap; gap: 10px;
   }
-  .footer-left { font-size: 15px; }
+  .footer-left { font-size: 14px; }
   .valor { font-size: 28px; }
 }
 @media (max-width: 480px) {
   .footer-left { font-size: 13px; }
-  .finish { padding: 12px 15px; font-size: 14px; }
+  .finish { padding: 12px 16px; font-size: 13px; }
   .valor { font-size: 24px; }
   .key { width: 48px; height: 48px; font-size: 16px; }
-  .key.key-text { font-size: 10px; }
+  .key.key-text { font-size: 9px; }
   .aprovado-titulo { font-size: 22px; }
   .check-circle { width: 90px; height: 90px; }
   .check-circle svg { width: 45px; height: 45px; }
   .proc-terminal { padding: 30px 20px; }
-  .proc-message { font-size: 17px; }
+  .proc-message { font-size: 16px; }
 }
 </style>
 </head>
@@ -573,7 +767,7 @@ body {
 <!-- Tela de Aprovação Verde -->
 <div class="overlay-aprovado" id="aprovadoScreen">
   <div class="check-circle">
-    <svg viewBox="0 0 24 24" fill="none" stroke="#4CAF50" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <svg viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
       <polyline points="20 6 9 17 4 12"></polyline>
     </svg>
   </div>
@@ -629,8 +823,8 @@ body {
 
 <!-- Modal Teclado Numérico (pagamento) -->
 <div class="modal" id="modalKeypadPay">
-  <div class="modal-box" style="padding:0; overflow:hidden; border-radius:14px;">
-    <div class="keypad-header">
+  <div class="modal-box" style="padding:0; overflow:hidden; border-radius:var(--radius-xl);">
+    <div class="keypad-header" style="margin:0; border-radius:0;">
       <div class="kp-valor" id="displayPay">R$ 0,00</div>
       <div class="kp-label" id="labelPay">INFORME O VALOR - DINHEIRO</div>
     </div>
@@ -678,10 +872,10 @@ body {
 <!-- Modal Erro Parcelas -->
 <div id="erroParcelas">
   <div class="modal-box" style="text-align:center;">
-    <div style="font-size:18px; font-weight:bold; margin-bottom:12px;">VALOR INVÁLIDO</div>
-    <div style="font-size:15px; color:#666; margin-bottom:25px;">Informe um número de parcelas entre 1 e 12.</div>
+    <div style="font-size:16px; font-weight:700; margin-bottom:12px; color:var(--text-primary);">VALOR INVÁLIDO</div>
+    <div style="font-size:14px; color:var(--text-secondary); margin-bottom:25px;">Informe um número de parcelas entre 1 e 12.</div>
     <button onclick="document.getElementById('erroParcelas').style.display='none'"
-            style="background:#9E3667; color:white; padding:12px 40px; border:none; border-radius:12px; font-weight:bold; cursor:pointer;">
+            style="background:linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); color:white; padding:12px 40px; border:none; border-radius:var(--radius-md); font-weight:700; cursor:pointer; font-family:'Inter',sans-serif;">
       OK
     </button>
   </div>
@@ -690,10 +884,10 @@ body {
 <!-- Modal Erro Inválido -->
 <div id="erroInvalidoModal">
   <div class="modal-box">
-    <div style="font-size:18px; font-weight:bold; margin-bottom:12px;">EYE WEB</div>
-    <div style="font-size:15px; color:#666; margin-bottom:25px;">Valor inválido para o desconto</div>
+    <div style="font-size:16px; font-weight:700; margin-bottom:12px; color:var(--text-primary);">EYE WEB</div>
+    <div style="font-size:14px; color:var(--text-secondary); margin-bottom:25px;">Valor inválido para o desconto</div>
     <button onclick="fecharErroInvalido()" 
-            style="background:#9E3667; color:white; padding:12px 40px; border:none; border-radius:12px; font-weight:bold; cursor:pointer;">
+            style="background:linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); color:white; padding:12px 40px; border:none; border-radius:var(--radius-md); font-weight:700; cursor:pointer; font-family:'Inter',sans-serif;">
       OK
     </button>
   </div>
@@ -702,15 +896,15 @@ body {
 <!-- Modal Erro Autorização -->
 <div id="errorModal">
   <div class="modal-box">
-    <div id="errorTitle" style="font-size:18px; font-weight:bold; margin-bottom:15px;">AUTORIZAR</div>
-    <div id="errorMessage" style="font-size:15px; color:#666; margin-bottom:25px; line-height:1.5;"></div>
+    <div id="errorTitle" style="font-size:16px; font-weight:700; margin-bottom:15px; color:var(--text-primary);">AUTORIZAR</div>
+    <div id="errorMessage" style="font-size:14px; color:var(--text-secondary); margin-bottom:25px; line-height:1.6;"></div>
     <div style="display:flex; gap:12px; justify-content:center;">
       <button onclick="abrirModalLogin()" 
-              style="background:#e74c3c; color:white; padding:12px 30px; border:none; border-radius:12px; font-weight:bold;">
+              style="background:var(--danger); color:white; padding:12px 28px; border:none; border-radius:var(--radius-md); font-weight:700; font-family:'Inter',sans-serif; cursor:pointer;">
         Autorizar
       </button>
       <button onclick="fecharErroERetornar()" 
-              style="background:#9E3667; color:white; padding:12px 30px; border:none; border-radius:12px; font-weight:bold;">
+              style="background:linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); color:white; padding:12px 28px; border:none; border-radius:var(--radius-md); font-weight:700; font-family:'Inter',sans-serif; cursor:pointer;">
         OK
       </button>
     </div>
@@ -735,10 +929,10 @@ body {
 <!-- Modal Erro Login -->
 <div id="erroLoginModal">
   <div class="modal-box">
-    <div style="font-size:18px; font-weight:bold; color:#333; margin-bottom:10px;">EYE PRO</div>
-    <div style="font-size:15px; color:#666; margin-bottom:25px;">Usuário/senha incorreto</div>
+    <div style="font-size:16px; font-weight:700; color:var(--text-primary); margin-bottom:10px;">EYE PRO</div>
+    <div style="font-size:14px; color:var(--text-secondary); margin-bottom:25px;">Usuário/senha incorreto</div>
     <button onclick="fecharErroLogin()" 
-            style="background:#9E3667; color:white; padding:12px 40px; border:none; border-radius:12px; font-weight:bold;">
+            style="background:linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); color:white; padding:12px 40px; border:none; border-radius:var(--radius-md); font-weight:700; font-family:'Inter',sans-serif; cursor:pointer;">
       OK
     </button>
   </div>
@@ -780,7 +974,20 @@ Object.keys(cart).forEach(function(name) {
 
   var descontoLabel = '';
   if (descontoItem > 0) {
-    descontoLabel = '<div style="font-size:12px; color:#e74c3c;">Desconto: -R$ ' + descontoItem.toFixed(2) + '</div>';
+    descontoLabel = '<div style="font-size:12px; color:var(--danger); font-weight:500;">Desconto: -R$ ' + descontoItem.toFixed(2) + '</div>';
+  }
+
+  var displayName = name;
+  var complementLabel = '';
+  if (item.baseProduct) {
+    displayName = item.baseProduct;
+    complementLabel = '<div style="font-size:11px; color:var(--primary); font-weight:600; margin-top:2px;">● ' + (item.complemento || '') + '</div>';
+  } else if (item.complemento) {
+    complementLabel = '<div style="font-size:11px; color:var(--primary); font-weight:600; margin-top:2px;">● ' + item.complemento + '</div>';
+  }
+  var obsLabel = '';
+  if (item.obs) {
+    obsLabel = '<div style="font-size:11px; color:var(--text-muted); font-style:italic; margin-top:1px;">Obs: ' + item.obs + '</div>';
   }
 
   itemsDiv.innerHTML +=
@@ -788,12 +995,14 @@ Object.keys(cart).forEach(function(name) {
       '<div class="item-left">' +
         '<img src="' + item.img + '" class="item-img">' +
         '<div>' +
-          '<div class="item-name">' + name + '</div>' +
+          '<div class="item-name">' + displayName + '</div>' +
           '<div class="item-qty">x' + item.qty + '</div>' +
+          complementLabel +
+          obsLabel +
           descontoLabel +
         '</div>' +
       '</div>' +
-      '<div>R$ ' + itemTotal.toFixed(2) + '</div>' +
+      '<div style="font-weight:600; color:var(--text-primary);">R$ ' + itemTotal.toFixed(2) + '</div>' +
     '</div>';
 });
 
@@ -817,7 +1026,7 @@ function calcFinal() {
 }
 
 /* ======================= PAGAMENTOS MÚLTIPLOS ======================= */
-var pagamentos = []; // { id, metodo, valor, parcelas? }
+var pagamentos = [];
 var nextPayId = 1;
 var metodoAtual = null;
 var inputPay = "";
@@ -898,11 +1107,12 @@ function renderPayGroups() {
     if (hasItems) {
       html += '<div class="pay-group-items">';
       var subtotal = 0;
-      items.forEach(function(entry) {
+      items.forEach(function(entry, idx) {
         var p = entry.pay;
         var i = entry.index;
         subtotal += p.valor;
-        html += '<div class="pay-sub-item">';
+        var isLast = idx === items.length - 1;
+        html += '<div class="pay-sub-item"' + (isLast && items.length > 1 ? ' style="border-bottom:none;"' : '') + '>';
         html += '<div class="pay-sub-info">';
         html += '<div><span class="pay-sub-emoji">' + metodoEmojis[metodo] + '</span> <span>' + metodoLabels[metodo] + '</span></div>';
         if (p.parcelas && p.parcelas > 1) {
@@ -1055,9 +1265,7 @@ function adicionarPagamento(metodo, valor, parcelas) {
   atualizarTotais();
 }
 
-function checkAutoFinalizar() {
-  // não auto-mostrar aqui, mostrarTelaAprovado é chamado após simulações
-}
+function checkAutoFinalizar() {}
 
 /* ======================= MODAL PARCELAS ======================= */
 function abrirModalParcelas(valor) {
@@ -1112,7 +1320,6 @@ function simularCartaoProfissional(metodo, valor, parcelas) {
     parcelaInfo = ' (' + parcelas + 'x de R$ ' + (valor / parcelas).toFixed(2) + ')';
   }
 
-  // Reset
   icon.textContent = metodo === 'VAVR' ? '🍽️' : '💳';
   status.textContent = 'AGUARDANDO';
   msg.textContent = 'APROXIME, INSIRA OU PASSE O CARTÃO';
@@ -1121,7 +1328,6 @@ function simularCartaoProfissional(metodo, valor, parcelas) {
   metodoEl.textContent = metodoKeypadLabels[metodo] || 'CARTÃO';
   screen.style.display = 'flex';
 
-  // Step 1: 1.5s - Aguardando cartão
   setTimeout(function() {
     status.textContent = 'LENDO CARTÃO';
     msg.textContent = 'CARTÃO DETECTADO';
@@ -1129,14 +1335,12 @@ function simularCartaoProfissional(metodo, valor, parcelas) {
     icon.textContent = '🔍';
   }, 1500);
 
-  // Step 2: 3s - Lendo dados
   setTimeout(function() {
     status.textContent = 'PROCESSANDO';
     msg.textContent = 'LENDO DADOS DO CARTÃO...';
     progress.style.width = '30%';
   }, 3000);
 
-  // Step 3: 4.5s - Conectando com adquirente
   setTimeout(function() {
     status.textContent = 'COMUNICAÇÃO';
     msg.textContent = 'CONECTANDO COM A OPERADORA...';
@@ -1144,7 +1348,6 @@ function simularCartaoProfissional(metodo, valor, parcelas) {
     icon.textContent = '📡';
   }, 4500);
 
-  // Step 4: 6s - Autenticando transação
   setTimeout(function() {
     status.textContent = 'AUTENTICANDO';
     msg.textContent = 'AUTENTICANDO TRANSAÇÃO...';
@@ -1152,7 +1355,6 @@ function simularCartaoProfissional(metodo, valor, parcelas) {
     icon.textContent = '🔐';
   }, 6000);
 
-  // Step 5: 7.5s - Bandeira identificada
   setTimeout(function() {
     status.textContent = 'AUTORIZAÇÃO';
     msg.textContent = bandeira + parcelaInfo;
@@ -1160,7 +1362,6 @@ function simularCartaoProfissional(metodo, valor, parcelas) {
     icon.textContent = '✅';
   }, 7500);
 
-  // Step 6: 9s - Transação aprovada
   setTimeout(function() {
     status.textContent = 'APROVADO';
     msg.textContent = 'TRANSAÇÃO APROVADA';
@@ -1168,7 +1369,6 @@ function simularCartaoProfissional(metodo, valor, parcelas) {
     icon.textContent = '✅';
   }, 9000);
 
-  // Step 7: 10.5s - Finalizar e ir para tela verde
   setTimeout(function() {
     screen.style.display = 'none';
     adicionarPagamento(metodo, valor, parcelas);
@@ -1186,7 +1386,6 @@ function simularPixProfissional(valor) {
   var valorEl = document.getElementById('pixProcValor');
   var qrArea = document.getElementById('pixQrArea');
 
-  // Reset
   icon.textContent = '📲';
   status.textContent = 'INICIANDO';
   msg.textContent = 'GERANDO QR CODE PIX...';
@@ -1195,7 +1394,6 @@ function simularPixProfissional(valor) {
   qrArea.style.display = 'none';
   screen.style.display = 'flex';
 
-  // Step 1: 1.5s - Conectando com PSP
   setTimeout(function() {
     status.textContent = 'COMUNICAÇÃO';
     msg.textContent = 'CONECTANDO COM O BANCO CENTRAL...';
@@ -1203,7 +1401,6 @@ function simularPixProfissional(valor) {
     icon.textContent = '🏦';
   }, 1500);
 
-  // Step 2: 3s - QR Code gerado
   setTimeout(function() {
     status.textContent = 'QR CODE GERADO';
     msg.textContent = 'ESCANEIE O QR CODE PARA PAGAR';
@@ -1212,14 +1409,12 @@ function simularPixProfissional(valor) {
     qrArea.style.display = 'block';
   }, 3000);
 
-  // Step 3: 5s - Aguardando pagamento
   setTimeout(function() {
     status.textContent = 'AGUARDANDO PAGAMENTO';
     msg.textContent = 'AGUARDANDO CONFIRMAÇÃO DO PAGAMENTO...';
     progress.style.width = '60%';
   }, 5000);
 
-  // Step 4: 7s - Pagamento detectado
   setTimeout(function() {
     status.textContent = 'VERIFICANDO';
     msg.textContent = 'PAGAMENTO DETECTADO, VERIFICANDO...';
@@ -1228,7 +1423,6 @@ function simularPixProfissional(valor) {
     qrArea.style.display = 'none';
   }, 7000);
 
-  // Step 5: 8.5s - Aprovado
   setTimeout(function() {
     status.textContent = 'APROVADO';
     msg.textContent = 'PIX RECEBIDO COM SUCESSO';
@@ -1236,7 +1430,6 @@ function simularPixProfissional(valor) {
     icon.textContent = '✅';
   }, 8500);
 
-  // Step 6: 10s - Fechar e tela verde
   setTimeout(function() {
     screen.style.display = 'none';
     adicionarPagamento('PIX', valor);
@@ -1312,11 +1505,19 @@ function abrirComprovante() {
   Object.keys(cart).forEach(function(name) {
     var item = cart[name];
     var itemTotal = item.qty * item.price;
-    itensHTML += '<div class="comp-item"><span>' + name + '</span><span>R$ ' + itemTotal.toFixed(2) + '</span></div>';
+    var displayName = item.baseProduct || name;
+    itensHTML += '<div class="comp-item"><span>' + displayName + '</span><span>R$ ' + itemTotal.toFixed(2) + '</span></div>';
     itensHTML += '<div class="comp-item-detail">' + item.qty.toFixed(3) + ' x R$ ' + item.price.toFixed(3) + ' => R$ ' + itemTotal.toFixed(2) + '</div>';
+    if (item.complemento) {
+      itensHTML += '<div class="comp-item-detail" style="color:var(--primary);">Complemento: ' + item.complemento + '</div>';
+    }
+    if (item.obs) {
+      itensHTML += '<div class="comp-item-detail" style="font-style:italic;">Obs: ' + item.obs + '</div>';
+    }
   });
 
   var pagamentosHTML = '';
+  var totalPago = 0;
   pagamentos.forEach(function(p) {
     var label = metodoLabels[p.metodo] || p.metodo;
     label = label.toUpperCase();
@@ -1325,7 +1526,13 @@ function abrirComprovante() {
       parcelasTxt = ' (' + p.parcelas + 'x)';
     }
     pagamentosHTML += '<div class="comp-pagamento">' + label + parcelasTxt + '&nbsp;&nbsp;&nbsp;&nbsp;' + p.valor.toFixed(2) + '</div>';
+    totalPago += p.valor;
   });
+  var troco = totalPago - finalTotal;
+  var trocoHTML = '';
+  if (troco > 0.01) {
+    trocoHTML = '<div class="comp-total-row destaque" style="color:var(--success); margin-top:8px;"><span>TROCO R$ --></span><span>' + troco.toFixed(2) + '</span></div>';
+  }
 
   container.innerHTML =
     '<div class="comp-header">' +
@@ -1350,6 +1557,7 @@ function abrirComprovante() {
     '<div class="comp-total-row destaque"><span>Líquido R$ --></span><span>' + finalTotal.toFixed(2) + '</span></div>' +
     '<hr class="comp-divider">' +
     pagamentosHTML +
+    trocoHTML +
     '<div class="comp-footer">*** Obrigado, volte sempre! ***</div>' +
     '<button class="btn-fechar-comprovante" onclick="fecharComprovante()">FECHAR</button>';
 
