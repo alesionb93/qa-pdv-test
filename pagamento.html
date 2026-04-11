@@ -74,11 +74,12 @@ body {
 }
 .pay-sub-item:last-child { border-bottom: none; }
 .pay-sub-info {
-  display: flex; align-items: center; gap: 8px;
+  display: flex; align-items: center; gap: 8px; flex-direction: column; align-items: flex-start;
 }
 .pay-sub-emoji { font-size: 18px; }
 .pay-sub-valor { font-weight: bold; color: #9E3667; margin-right: 6px; }
 .pay-sub-actions { display: flex; gap: 6px; align-items: center; }
+.pay-sub-parcelas { font-size: 11px; color: #888; }
 .btn-edit-pay {
   background: none; border: none; cursor: pointer; font-size: 16px; padding: 2px 4px;
 }
@@ -129,16 +130,123 @@ body {
 .finish:disabled {
   background: #aaa; cursor: not-allowed;
 }
-.overlay {
+
+/* ========== OVERLAY DE PROCESSAMENTO PROFISSIONAL ========== */
+.overlay-processamento {
   position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-  background: #BD407B; color: white; display: none;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  color: white; display: none;
   flex-direction: column; align-items: center; justify-content: center;
   text-align: center; padding: 20px; box-sizing: border-box;
   z-index: 2500;
 }
-.loading { width: 80px; height: auto; margin-bottom: 20px; }
-.qr { width: 200px; max-width: 60vw; height: auto; margin-bottom: 20px; }
-.box { background: rgba(255,255,255,0.2); padding: 20px; border-radius: 12px; margin-top: 20px; max-width: 90vw; }
+.proc-terminal {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 16px;
+  padding: 40px 30px;
+  max-width: 420px;
+  width: 90%;
+  backdrop-filter: blur(10px);
+}
+.proc-icon-container {
+  width: 80px; height: 80px;
+  margin: 0 auto 24px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 36px;
+  animation: pulseIcon 2s ease-in-out infinite;
+}
+@keyframes pulseIcon {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.08); opacity: 0.8; }
+}
+.proc-status {
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: rgba(255,255,255,0.5);
+  margin-bottom: 8px;
+}
+.proc-message {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  min-height: 56px;
+  display: flex; align-items: center; justify-content: center;
+  line-height: 1.3;
+}
+.proc-progress-bar {
+  width: 100%;
+  height: 4px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+.proc-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #00d2ff, #3a7bd5, #00d2ff);
+  background-size: 200% 100%;
+  border-radius: 4px;
+  width: 0%;
+  transition: width 0.6s ease;
+  animation: shimmer 1.5s linear infinite;
+}
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+.proc-details {
+  background: rgba(0,0,0,0.2);
+  border-radius: 10px;
+  padding: 14px 18px;
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 14px;
+}
+.proc-details-left { text-align: left; }
+.proc-details-label { font-size: 11px; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 1px; }
+.proc-details-value { font-weight: bold; font-size: 22px; margin-top: 2px; }
+.proc-details-method { text-align: right; }
+.proc-details-method-label { font-size: 11px; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 1px; }
+.proc-details-method-value { font-weight: 600; font-size: 13px; margin-top: 2px; color: rgba(255,255,255,0.8); }
+
+/* Spinner dots */
+.proc-dots {
+  display: flex; gap: 6px; justify-content: center; margin-bottom: 16px;
+}
+.proc-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: rgba(255,255,255,0.3);
+  animation: dotPulse 1.4s ease-in-out infinite;
+}
+.proc-dot:nth-child(2) { animation-delay: 0.2s; }
+.proc-dot:nth-child(3) { animation-delay: 0.4s; }
+@keyframes dotPulse {
+  0%, 80%, 100% { background: rgba(255,255,255,0.3); transform: scale(1); }
+  40% { background: rgba(255,255,255,0.9); transform: scale(1.3); }
+}
+
+/* QR Code area (PIX) */
+.proc-qr-container {
+  margin: 0 auto 20px;
+  padding: 16px;
+  background: white;
+  border-radius: 12px;
+  display: inline-block;
+}
+.proc-qr-container img {
+  width: 180px; height: 180px; display: block;
+}
+.proc-qr-label {
+  font-size: 12px;
+  color: rgba(255,255,255,0.5);
+  margin-top: 10px;
+  letter-spacing: 1px;
+}
+
+/* ========== FIM OVERLAY PROCESSAMENTO ========== */
 
 /* Tela de Aprovação Verde */
 .overlay-aprovado {
@@ -301,7 +409,7 @@ body {
   z-index: 2000;
 }
 #modalParcelas { z-index: 1500; }
-#erroParcelas { z-index: 2100; }
+#erroParcelas { z-index: 1600; }
 #loginModal .modal-box { padding: 30px 25px; }
 #loginModal p { margin: 15px 0 6px 0; text-align: left; font-weight: bold; color: #333; }
 #loginModal input {
@@ -317,23 +425,25 @@ body {
 }
 
 /* Modal Parcelas */
-#modalParcelas .modal-box { padding: 30px 25px; text-align: center; }
-#modalParcelas .parcelas-title { font-size: 18px; font-weight: bold; margin-bottom: 6px; }
-#modalParcelas .parcelas-subtitle { font-size: 14px; color: #666; margin-bottom: 20px; }
-#modalParcelas .parcelas-input {
-  width: 80px; padding: 14px; font-size: 24px; text-align: center;
-  border: 2px solid #9E3667; border-radius: 10px; margin: 0 auto 20px;
-  display: block; outline: none;
+#modalParcelas .modal-box {
+  text-align: center;
 }
-#modalParcelas .parcelas-info {
-  font-size: 13px; color: #888; margin-bottom: 20px;
+#modalParcelas .parcelas-title {
+  font-size: 18px; font-weight: bold; margin-bottom: 6px; color: #333;
 }
-#modalParcelas .parcelas-actions {
-  display: flex; gap: 10px; justify-content: center;
+#modalParcelas .parcelas-sub {
+  font-size: 14px; color: #666; margin-bottom: 20px;
 }
-#modalParcelas .parcelas-actions button {
-  padding: 12px 30px; border: none; border-radius: 12px;
-  font-weight: bold; cursor: pointer; font-size: 15px; color: white;
+#modalParcelas input[type="number"] {
+  width: 100%; padding: 14px; font-size: 24px; text-align: center;
+  border: 2px solid #9E3667; border-radius: 10px; box-sizing: border-box;
+  font-weight: bold; color: #333;
+}
+#modalParcelas input[type="number"]:focus {
+  outline: none; border-color: #c2185b;
+}
+.parcelas-info {
+  font-size: 13px; color: #888; margin-top: 8px; min-height: 20px;
 }
 
 /* MEDIA QUERIES */
@@ -357,6 +467,8 @@ body {
   .aprovado-titulo { font-size: 22px; }
   .check-circle { width: 90px; height: 90px; }
   .check-circle svg { width: 45px; height: 45px; }
+  .proc-terminal { padding: 30px 20px; }
+  .proc-message { font-size: 17px; }
 }
 </style>
 </head>
@@ -398,24 +510,63 @@ body {
   </div>
 </div>
 
-<!-- Overlays -->
-<div class="overlay" id="cardScreen">
-  <img src="loading.gif" class="loading">
-  <h1 id="cardMessage">APROXIME, INSIRA OU PASSE O CARTÃO</h1>
-  <div class="box">
-    <p>💳 Cartão</p>
-    <p>Valor: R$ <span id="cardTotal"></span></p>
-    <small>Ambiente de teste</small>
+<!-- ========== OVERLAY DE PROCESSAMENTO (CARTÃO) ========== -->
+<div class="overlay-processamento" id="procScreen">
+  <div class="proc-terminal">
+    <div class="proc-icon-container" id="procIcon">💳</div>
+    <div class="proc-status" id="procStatus">AGUARDANDO</div>
+    <div class="proc-dots">
+      <div class="proc-dot"></div>
+      <div class="proc-dot"></div>
+      <div class="proc-dot"></div>
+    </div>
+    <div class="proc-message" id="procMessage">APROXIME, INSIRA OU PASSE O CARTÃO</div>
+    <div class="proc-progress-bar">
+      <div class="proc-progress-fill" id="procProgress"></div>
+    </div>
+    <div class="proc-details">
+      <div class="proc-details-left">
+        <div class="proc-details-label">Valor</div>
+        <div class="proc-details-value" id="procValor">R$ 0,00</div>
+      </div>
+      <div class="proc-details-method">
+        <div class="proc-details-method-label">Forma</div>
+        <div class="proc-details-method-value" id="procMetodo">CARTÃO</div>
+      </div>
+    </div>
   </div>
 </div>
 
-<div class="overlay" id="pixScreen">
-  <h1 id="pixMessage">CONSULTANDO STATUS DA TRANSAÇÃO VIA PIX</h1>
-  <img src="qrcode.avif" class="qr">
-  <div class="box">
-    <p>📲 PIX</p>
-    <p>Valor: R$ <span id="pixTotal"></span></p>
-    <small>Ambiente de teste</small>
+<!-- ========== OVERLAY DE PROCESSAMENTO (PIX) ========== -->
+<div class="overlay-processamento" id="pixProcScreen">
+  <div class="proc-terminal">
+    <div class="proc-icon-container" id="pixProcIcon">📲</div>
+    <div class="proc-status" id="pixProcStatus">AGUARDANDO</div>
+    <div class="proc-dots">
+      <div class="proc-dot"></div>
+      <div class="proc-dot"></div>
+      <div class="proc-dot"></div>
+    </div>
+    <div class="proc-message" id="pixProcMessage">GERANDO QR CODE PIX...</div>
+    <div id="pixQrArea" style="display:none; text-align:center;">
+      <div class="proc-qr-container">
+        <img src="qrcode.avif" alt="QR Code PIX">
+      </div>
+      <div class="proc-qr-label">ESCANEIE O QR CODE PARA PAGAR</div>
+    </div>
+    <div class="proc-progress-bar">
+      <div class="proc-progress-fill" id="pixProcProgress"></div>
+    </div>
+    <div class="proc-details">
+      <div class="proc-details-left">
+        <div class="proc-details-label">Valor</div>
+        <div class="proc-details-value" id="pixProcValor">R$ 0,00</div>
+      </div>
+      <div class="proc-details-method">
+        <div class="proc-details-method-label">Forma</div>
+        <div class="proc-details-method-value">PIX</div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -426,9 +577,9 @@ body {
       <polyline points="20 6 9 17 4 12"></polyline>
     </svg>
   </div>
-  <div class="aprovado-titulo">Pagamento Efetuado</div>
-  <div class="aprovado-subtitulo">Sua transação foi concluída com sucesso!</div>
-  <button class="btn-comprovante" onclick="abrirComprovante()">IMPRIMIR COMPROVANTE</button>
+  <div class="aprovado-titulo" id="aprovadoTitulo">Pagamento Efetuado</div>
+  <div class="aprovado-subtitulo" id="aprovadoSubtitulo">Sua transação foi concluída com sucesso!</div>
+  <button class="btn-comprovante" id="aprovadoBtn" onclick="abrirComprovante()">IMPRIMIR COMPROVANTE</button>
 </div>
 
 <!-- Comprovante de Venda -->
@@ -508,14 +659,18 @@ body {
 
 <!-- Modal Parcelas -->
 <div id="modalParcelas">
-  <div class="modal-box">
+  <div class="modal-box" style="padding: 30px 25px;">
+    <div class="modal-header">
+      <span>Parcelamento</span>
+      <span class="modal-close" onclick="cancelarParcelas()">✕</span>
+    </div>
     <div class="parcelas-title">Número de Parcelas</div>
-    <div class="parcelas-subtitle" id="parcelasSubtitle">Valor: R$ 0,00</div>
-    <input type="number" class="parcelas-input" id="inputParcelas" min="1" max="12" placeholder="1-12">
-    <div class="parcelas-info" id="parcelasInfo">Informe de 1 a 12 parcelas</div>
-    <div class="parcelas-actions">
-      <button style="background:#e74c3c;" onclick="cancelarParcelas()">Cancelar</button>
-      <button style="background:#2ecc71;" onclick="confirmarParcelas()">Confirmar</button>
+    <div class="parcelas-sub" id="parcelasValorTotal">Valor: R$ 0,00</div>
+    <input type="number" id="inputParcelas" min="1" max="12" placeholder="1 a 12" oninput="atualizarInfoParcelas()">
+    <div class="parcelas-info" id="parcelasInfo"></div>
+    <div class="actions" style="margin-top:20px;">
+      <button class="btn-red" onclick="cancelarParcelas()">Cancelar</button>
+      <button class="btn-green" onclick="confirmarParcelas()">Confirmar</button>
     </div>
   </div>
 </div>
@@ -523,10 +678,10 @@ body {
 <!-- Modal Erro Parcelas -->
 <div id="erroParcelas">
   <div class="modal-box" style="text-align:center;">
-    <div style="font-size:18px; font-weight:bold; margin-bottom:12px;">EYE WEB</div>
-    <div style="font-size:15px; color:#666; margin-bottom:25px;">Valor inválido para parcelas. Informe entre 1 e 12.</div>
-    <button onclick="fecharErroParcelas()" 
-            style="background:#9E3667; color:white; padding:12px 40px; border:none; border-radius:12px; font-weight:bold;">
+    <div style="font-size:18px; font-weight:bold; margin-bottom:12px;">VALOR INVÁLIDO</div>
+    <div style="font-size:15px; color:#666; margin-bottom:25px;">Informe um número de parcelas entre 1 e 12.</div>
+    <button onclick="document.getElementById('erroParcelas').style.display='none'"
+            style="background:#9E3667; color:white; padding:12px 40px; border:none; border-radius:12px; font-weight:bold; cursor:pointer;">
       OK
     </button>
   </div>
@@ -538,13 +693,13 @@ body {
     <div style="font-size:18px; font-weight:bold; margin-bottom:12px;">EYE WEB</div>
     <div style="font-size:15px; color:#666; margin-bottom:25px;">Valor inválido para o desconto</div>
     <button onclick="fecharErroInvalido()" 
-            style="background:#9E3667; color:white; padding:12px 40px; border:none; border-radius:12px; font-weight:bold;">
+            style="background:#9E3667; color:white; padding:12px 40px; border:none; border-radius:12px; font-weight:bold; cursor:pointer;">
       OK
     </button>
   </div>
 </div>
 
-<!-- Modal Limite Superior -->
+<!-- Modal Erro Autorização -->
 <div id="errorModal">
   <div class="modal-box">
     <div id="errorTitle" style="font-size:18px; font-weight:bold; margin-bottom:15px;">AUTORIZAR</div>
@@ -600,8 +755,6 @@ var itemsDiv = document.getElementById('items');
 var subtotalSpan = document.getElementById('subtotal');
 var totalSpan = document.getElementById('total');
 var valorFaltanteSpan = document.getElementById('valorFaltante');
-var cardTotal = document.getElementById('cardTotal');
-var pixTotal = document.getElementById('pixTotal');
 
 /* Mostrar consumidor identificado */
 if (consumidor && consumidor.nome) {
@@ -670,9 +823,8 @@ var metodoAtual = null;
 var inputPay = "";
 var isFirstDigitPay = false;
 var editandoIndex = -1;
-
-// Valor pendente para crédito parcelado (aguardando parcelas)
-var valorPendenteParcelado = 0;
+var parcelasPendentes = 0;
+var valorParcelasPendente = 0;
 
 var metodos = ['Dinheiro', 'Debito', 'Credito', 'CreditoParcelado', 'PIX', 'VAVR'];
 var metodoLabels = {
@@ -719,8 +871,6 @@ function atualizarTotais() {
 
   var faltante = valorFaltanteCalc();
   valorFaltanteSpan.innerText = faltante.toFixed(2);
-  cardTotal.innerText = final_.toFixed(2);
-  pixTotal.innerText = final_.toFixed(2);
 
   document.getElementById('btnFinalizar').disabled = (faltante > 0.01 || pagamentos.length === 0);
 
@@ -752,12 +902,14 @@ function renderPayGroups() {
         var p = entry.pay;
         var i = entry.index;
         subtotal += p.valor;
-        var extraInfo = '';
-        if (p.parcelas && p.parcelas > 1) {
-          extraInfo = ' <span style="font-size:12px; color:#666;">(' + p.parcelas + 'x de R$ ' + (p.valor / p.parcelas).toFixed(2) + ')</span>';
-        }
         html += '<div class="pay-sub-item">';
-        html += '<div class="pay-sub-info"><span class="pay-sub-emoji">' + metodoEmojis[metodo] + '</span><span>' + metodoLabels[metodo] + extraInfo + '</span></div>';
+        html += '<div class="pay-sub-info">';
+        html += '<div><span class="pay-sub-emoji">' + metodoEmojis[metodo] + '</span> <span>' + metodoLabels[metodo] + '</span></div>';
+        if (p.parcelas && p.parcelas > 1) {
+          var valorParcela = (p.valor / p.parcelas).toFixed(2);
+          html += '<div class="pay-sub-parcelas">' + p.parcelas + 'x de R$ ' + valorParcela + '</div>';
+        }
+        html += '</div>';
         html += '<div class="pay-sub-actions">';
         html += '<span class="pay-sub-valor">R$ ' + p.valor.toFixed(2) + '</span>';
         if (isDinheiro) {
@@ -884,50 +1036,53 @@ function confirmarPay() {
     checkAutoFinalizar();
   } else {
     if (metodoAtual === 'CreditoParcelado') {
-      // Abrir modal de parcelas antes de processar
-      valorPendenteParcelado = valor;
       abrirModalParcelas(valor);
     } else if (metodoAtual === 'Debito' || metodoAtual === 'Credito' || metodoAtual === 'VAVR') {
-      simularCartaoParcial(valor, metodoAtual);
+      simularCartaoProfissional(metodoAtual, valor);
     } else if (metodoAtual === 'PIX') {
-      simularPixParcial(valor);
+      simularPixProfissional(valor);
     } else {
       adicionarPagamento(metodoAtual, valor);
+      mostrarTelaAprovado();
     }
   }
 }
 
 function adicionarPagamento(metodo, valor, parcelas) {
-  var pay = { id: nextPayId++, metodo: metodo, valor: valor };
-  if (parcelas) pay.parcelas = parcelas;
-  pagamentos.push(pay);
+  var p = { id: nextPayId++, metodo: metodo, valor: valor };
+  if (parcelas) p.parcelas = parcelas;
+  pagamentos.push(p);
   atualizarTotais();
-  mostrarTelaAprovado();
 }
 
 function checkAutoFinalizar() {
-  var faltante = valorFaltanteCalc();
-  if (faltante <= 0.01 && pagamentos.length > 0) {
-    mostrarTelaAprovado();
-  }
+  // não auto-mostrar aqui, mostrarTelaAprovado é chamado após simulações
 }
 
 /* ======================= MODAL PARCELAS ======================= */
 function abrirModalParcelas(valor) {
-  document.getElementById('parcelasSubtitle').textContent = 'Valor: R$ ' + valor.toFixed(2).replace('.', ',');
+  valorParcelasPendente = valor;
+  document.getElementById('parcelasValorTotal').textContent = 'Valor: R$ ' + valor.toFixed(2).replace('.', ',');
   document.getElementById('inputParcelas').value = '';
-  document.getElementById('parcelasInfo').textContent = 'Informe de 1 a 12 parcelas';
+  document.getElementById('parcelasInfo').textContent = '';
   document.getElementById('modalParcelas').style.display = 'flex';
   document.getElementById('inputParcelas').focus();
 }
 
-function cancelarParcelas() {
-  document.getElementById('modalParcelas').style.display = 'none';
-  valorPendenteParcelado = 0;
+function atualizarInfoParcelas() {
+  var n = parseInt(document.getElementById('inputParcelas').value);
+  var info = document.getElementById('parcelasInfo');
+  if (isNaN(n) || n < 1 || n > 12) {
+    info.textContent = '';
+    return;
+  }
+  var valorParcela = (valorParcelasPendente / n).toFixed(2);
+  info.textContent = n + 'x de R$ ' + valorParcela.replace('.', ',');
 }
 
-function fecharErroParcelas() {
-  document.getElementById('erroParcelas').style.display = 'none';
+function cancelarParcelas() {
+  document.getElementById('modalParcelas').style.display = 'none';
+  valorParcelasPendente = 0;
 }
 
 function confirmarParcelas() {
@@ -937,36 +1092,156 @@ function confirmarParcelas() {
     return;
   }
   document.getElementById('modalParcelas').style.display = 'none';
-  var valor = valorPendenteParcelado;
-  valorPendenteParcelado = 0;
-  simularCartaoParcial(valor, 'CreditoParcelado', parcelas);
+  parcelasPendentes = parcelas;
+  simularCartaoProfissional('CreditoParcelado', valorParcelasPendente, parcelas);
 }
 
-/* ======================= SIMULAÇÕES PARCIAIS ======================= */
-function simularCartaoParcial(valor, metodo, parcelas) {
-  var screen = document.getElementById('cardScreen');
-  var msg = document.getElementById('cardMessage');
-  cardTotal.innerText = valor.toFixed(2);
-  screen.style.display = "flex";
-  msg.innerText = "APROXIME, INSIRA OU PASSE O CARTÃO";
-  setTimeout(function() { msg.innerText = "PROCESSANDO..."; }, 2000);
-  setTimeout(function() { msg.innerText = metodoCardMsg[metodo] || metodo; }, 4000);
+/* ======================= SIMULAÇÃO PROFISSIONAL - CARTÃO ======================= */
+function simularCartaoProfissional(metodo, valor, parcelas) {
+  var screen = document.getElementById('procScreen');
+  var icon = document.getElementById('procIcon');
+  var status = document.getElementById('procStatus');
+  var msg = document.getElementById('procMessage');
+  var progress = document.getElementById('procProgress');
+  var valorEl = document.getElementById('procValor');
+  var metodoEl = document.getElementById('procMetodo');
+
+  var bandeira = metodoCardMsg[metodo] || 'CARTÃO';
+  var parcelaInfo = '';
+  if (parcelas && parcelas > 1) {
+    parcelaInfo = ' (' + parcelas + 'x de R$ ' + (valor / parcelas).toFixed(2) + ')';
+  }
+
+  // Reset
+  icon.textContent = metodo === 'VAVR' ? '🍽️' : '💳';
+  status.textContent = 'AGUARDANDO';
+  msg.textContent = 'APROXIME, INSIRA OU PASSE O CARTÃO';
+  progress.style.width = '0%';
+  valorEl.textContent = 'R$ ' + valor.toFixed(2).replace('.', ',');
+  metodoEl.textContent = metodoKeypadLabels[metodo] || 'CARTÃO';
+  screen.style.display = 'flex';
+
+  // Step 1: 1.5s - Aguardando cartão
   setTimeout(function() {
-    screen.style.display = "none";
-    adicionarPagamento(metodo, valor, parcelas || null);
-  }, 8000);
+    status.textContent = 'LENDO CARTÃO';
+    msg.textContent = 'CARTÃO DETECTADO';
+    progress.style.width = '15%';
+    icon.textContent = '🔍';
+  }, 1500);
+
+  // Step 2: 3s - Lendo dados
+  setTimeout(function() {
+    status.textContent = 'PROCESSANDO';
+    msg.textContent = 'LENDO DADOS DO CARTÃO...';
+    progress.style.width = '30%';
+  }, 3000);
+
+  // Step 3: 4.5s - Conectando com adquirente
+  setTimeout(function() {
+    status.textContent = 'COMUNICAÇÃO';
+    msg.textContent = 'CONECTANDO COM A OPERADORA...';
+    progress.style.width = '50%';
+    icon.textContent = '📡';
+  }, 4500);
+
+  // Step 4: 6s - Autenticando transação
+  setTimeout(function() {
+    status.textContent = 'AUTENTICANDO';
+    msg.textContent = 'AUTENTICANDO TRANSAÇÃO...';
+    progress.style.width = '70%';
+    icon.textContent = '🔐';
+  }, 6000);
+
+  // Step 5: 7.5s - Bandeira identificada
+  setTimeout(function() {
+    status.textContent = 'AUTORIZAÇÃO';
+    msg.textContent = bandeira + parcelaInfo;
+    progress.style.width = '85%';
+    icon.textContent = '✅';
+  }, 7500);
+
+  // Step 6: 9s - Transação aprovada
+  setTimeout(function() {
+    status.textContent = 'APROVADO';
+    msg.textContent = 'TRANSAÇÃO APROVADA';
+    progress.style.width = '100%';
+    icon.textContent = '✅';
+  }, 9000);
+
+  // Step 7: 10.5s - Finalizar e ir para tela verde
+  setTimeout(function() {
+    screen.style.display = 'none';
+    adicionarPagamento(metodo, valor, parcelas);
+    mostrarTelaAprovado();
+  }, 10500);
 }
 
-function simularPixParcial(valor) {
-  var screen = document.getElementById('pixScreen');
-  var msg = document.getElementById('pixMessage');
-  pixTotal.innerText = valor.toFixed(2);
-  screen.style.display = "flex";
-  msg.innerText = "CONSULTANDO STATUS DA TRANSAÇÃO VIA PIX";
+/* ======================= SIMULAÇÃO PROFISSIONAL - PIX ======================= */
+function simularPixProfissional(valor) {
+  var screen = document.getElementById('pixProcScreen');
+  var icon = document.getElementById('pixProcIcon');
+  var status = document.getElementById('pixProcStatus');
+  var msg = document.getElementById('pixProcMessage');
+  var progress = document.getElementById('pixProcProgress');
+  var valorEl = document.getElementById('pixProcValor');
+  var qrArea = document.getElementById('pixQrArea');
+
+  // Reset
+  icon.textContent = '📲';
+  status.textContent = 'INICIANDO';
+  msg.textContent = 'GERANDO QR CODE PIX...';
+  progress.style.width = '0%';
+  valorEl.textContent = 'R$ ' + valor.toFixed(2).replace('.', ',');
+  qrArea.style.display = 'none';
+  screen.style.display = 'flex';
+
+  // Step 1: 1.5s - Conectando com PSP
   setTimeout(function() {
-    screen.style.display = "none";
-    adicionarPagamento('PIX', valor);
+    status.textContent = 'COMUNICAÇÃO';
+    msg.textContent = 'CONECTANDO COM O BANCO CENTRAL...';
+    progress.style.width = '20%';
+    icon.textContent = '🏦';
+  }, 1500);
+
+  // Step 2: 3s - QR Code gerado
+  setTimeout(function() {
+    status.textContent = 'QR CODE GERADO';
+    msg.textContent = 'ESCANEIE O QR CODE PARA PAGAR';
+    progress.style.width = '40%';
+    icon.textContent = '📱';
+    qrArea.style.display = 'block';
+  }, 3000);
+
+  // Step 3: 5s - Aguardando pagamento
+  setTimeout(function() {
+    status.textContent = 'AGUARDANDO PAGAMENTO';
+    msg.textContent = 'AGUARDANDO CONFIRMAÇÃO DO PAGAMENTO...';
+    progress.style.width = '60%';
   }, 5000);
+
+  // Step 4: 7s - Pagamento detectado
+  setTimeout(function() {
+    status.textContent = 'VERIFICANDO';
+    msg.textContent = 'PAGAMENTO DETECTADO, VERIFICANDO...';
+    progress.style.width = '80%';
+    icon.textContent = '🔍';
+    qrArea.style.display = 'none';
+  }, 7000);
+
+  // Step 5: 8.5s - Aprovado
+  setTimeout(function() {
+    status.textContent = 'APROVADO';
+    msg.textContent = 'PIX RECEBIDO COM SUCESSO';
+    progress.style.width = '100%';
+    icon.textContent = '✅';
+  }, 8500);
+
+  // Step 6: 10s - Fechar e tela verde
+  setTimeout(function() {
+    screen.style.display = 'none';
+    adicionarPagamento('PIX', valor);
+    mostrarTelaAprovado();
+  }, 10000);
 }
 
 /* ======================= FINALIZAR ======================= */
@@ -981,18 +1256,18 @@ function finalizar() {
 /* ======================= TELA APROVADO ======================= */
 function mostrarTelaAprovado() {
   var faltante = valorFaltanteCalc();
-  var btnEl = document.querySelector('#aprovadoScreen .btn-comprovante');
-  var tituloEl = document.querySelector('#aprovadoScreen .aprovado-titulo');
-  var subtituloEl = document.querySelector('#aprovadoScreen .aprovado-subtitulo');
+  var tituloEl = document.getElementById('aprovadoTitulo');
+  var subEl = document.getElementById('aprovadoSubtitulo');
+  var btnEl = document.getElementById('aprovadoBtn');
 
   if (faltante <= 0.01) {
     tituloEl.textContent = 'Pagamento Efetuado';
-    subtituloEl.textContent = 'Sua transação foi concluída com sucesso!';
+    subEl.textContent = 'Sua transação foi concluída com sucesso!';
     btnEl.textContent = 'IMPRIMIR COMPROVANTE';
     btnEl.onclick = function() { abrirComprovante(); };
   } else {
     tituloEl.textContent = 'Pagamento Registrado';
-    subtituloEl.textContent = 'Pagamento parcial registrado. Valor restante: R$ ' + faltante.toFixed(2);
+    subEl.textContent = 'Pagamento parcial registrado. Valor restante: R$ ' + faltante.toFixed(2);
     btnEl.textContent = 'RETORNAR PARA TELA DE PAGAMENTOS';
     btnEl.onclick = function() { document.getElementById('aprovadoScreen').style.display = 'none'; };
   }
@@ -1043,12 +1318,13 @@ function abrirComprovante() {
 
   var pagamentosHTML = '';
   pagamentos.forEach(function(p) {
-    var label = metodoLabels[p.metodo] ? metodoLabels[p.metodo].toUpperCase() : p.metodo;
-    var extra = '';
+    var label = metodoLabels[p.metodo] || p.metodo;
+    label = label.toUpperCase();
+    var parcelasTxt = '';
     if (p.parcelas && p.parcelas > 1) {
-      extra = ' (' + p.parcelas + 'x R$ ' + (p.valor / p.parcelas).toFixed(2) + ')';
+      parcelasTxt = ' (' + p.parcelas + 'x)';
     }
-    pagamentosHTML += '<div class="comp-pagamento">' + label + extra + '&nbsp;&nbsp;&nbsp;&nbsp;' + p.valor.toFixed(2) + '</div>';
+    pagamentosHTML += '<div class="comp-pagamento">' + label + parcelasTxt + '&nbsp;&nbsp;&nbsp;&nbsp;' + p.valor.toFixed(2) + '</div>';
   });
 
   container.innerHTML =
