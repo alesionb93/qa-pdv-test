@@ -26,7 +26,7 @@ body {
 }
 .item-name { font-weight: bold; }
 .item-qty { font-size: 12px; color: #666; }
-.right { flex: 1; background: #FFE6EF; padding: 20px; display: flex; flex-direction: column; justify-content: space-between; min-width: 280px; }
+.right { flex: 1; background: #FFE6EF; padding: 20px; display: flex; flex-direction: column; min-width: 280px; overflow-y: auto; padding-bottom: 120px; }
 .valor-faltante { text-align: center; margin-bottom: 20px; }
 .valor { font-size: 36px; font-weight: bold; margin: 10px 0; word-break: break-all; }
 .btn-desconto {
@@ -37,12 +37,61 @@ body {
   margin-left: 10px; border-radius: 50%; background: red;
   color: white; border: none; width: 30px; height: 30px; cursor: pointer;
 }
-.pay-buttons button {
-  width: 100%; padding: 15px; margin-bottom: 10px;
-  border: none; border-radius: 8px; cursor: pointer;
-  background: #9E3667; color: white;
+
+/* Pay method group */
+.pay-group {
+  margin-bottom: 10px;
+  border-radius: 10px;
+  overflow: hidden;
 }
-.selected { outline: 3px solid #000; }
+.pay-group-btn {
+  width: 100%; padding: 15px; border: none; cursor: pointer;
+  background: #9E3667; color: white;
+  font-size: 15px; font-weight: bold;
+  display: flex; align-items: center; justify-content: space-between;
+  border-radius: 10px;
+}
+.pay-group.has-items .pay-group-btn {
+  border-radius: 10px 10px 0 0;
+}
+.pay-group-btn .pay-icon {
+  background: rgba(255,255,255,0.25); border-radius: 50%;
+  width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;
+  font-size: 20px; font-weight: bold;
+}
+.pay-group-items {
+  background: #fff;
+  border: 2px solid #f0c0d4;
+  border-top: none;
+  border-radius: 0 0 10px 10px;
+  padding: 8px 12px;
+}
+.pay-sub-item {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #f0e0e8;
+  font-size: 14px;
+}
+.pay-sub-item:last-child { border-bottom: none; }
+.pay-sub-info {
+  display: flex; align-items: center; gap: 8px;
+}
+.pay-sub-emoji { font-size: 18px; }
+.pay-sub-valor { font-weight: bold; color: #9E3667; margin-right: 6px; }
+.pay-sub-actions { display: flex; gap: 6px; align-items: center; }
+.btn-edit-pay {
+  background: none; border: none; cursor: pointer; font-size: 16px; padding: 2px 4px;
+}
+.btn-remove-pay {
+  background: red; color: white; border: none; border-radius: 50%;
+  width: 26px; height: 26px; cursor: pointer; font-size: 14px;
+  display: flex; align-items: center; justify-content: center;
+}
+.pay-group-total {
+  display: flex; justify-content: space-between; font-weight: bold;
+  padding-top: 6px; margin-top: 4px; border-top: 1px solid #ccc;
+  font-size: 13px; color: #9E3667;
+}
 
 /* Consumidor identificado */
 .consumer-identified-bar {
@@ -57,32 +106,13 @@ body {
   font-size: 14px;
 }
 .consumer-identified-bar .consumer-avatar {
-  width: 36px;
-  height: 36px;
-  background: #4CAF50;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
+  width: 36px; height: 36px; background: #4CAF50; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
 }
-.consumer-identified-bar .consumer-avatar svg {
-  width: 18px;
-  height: 18px;
-  fill: white;
-}
-.consumer-identified-bar .consumer-details {
-  flex: 1;
-}
-.consumer-identified-bar .consumer-details .consumer-label {
-  font-size: 11px;
-  color: #666;
-  text-transform: uppercase;
-}
-.consumer-identified-bar .consumer-details .consumer-name-val {
-  font-weight: bold;
-  color: #2E7D32;
-}
+.consumer-identified-bar .consumer-avatar svg { width: 18px; height: 18px; fill: white; }
+.consumer-identified-bar .consumer-details { flex: 1; }
+.consumer-identified-bar .consumer-details .consumer-label { font-size: 11px; color: #666; text-transform: uppercase; }
+.consumer-identified-bar .consumer-details .consumer-name-val { font-weight: bold; color: #2E7D32; }
 
 .footer {
   position: fixed; bottom: 0; left: 0; right: 0; height: 100px;
@@ -94,13 +124,17 @@ body {
 .finish {
   background: #22B14C; color: white; padding: 15px 20px;
   border: none; border-radius: 10px; cursor: pointer;
-  white-space: nowrap;
+  white-space: nowrap; font-weight: bold; font-size: 15px;
+}
+.finish:disabled {
+  background: #aaa; cursor: not-allowed;
 }
 .overlay {
   position: fixed; top: 0; left: 0; width: 100%; height: 100%;
   background: #BD407B; color: white; display: none;
   flex-direction: column; align-items: center; justify-content: center;
   text-align: center; padding: 20px; box-sizing: border-box;
+  z-index: 2500;
 }
 .loading { width: 80px; height: auto; margin-bottom: 20px; }
 .qr { width: 200px; max-width: 60vw; height: auto; margin-bottom: 20px; }
@@ -129,16 +163,12 @@ body {
   from { transform: scale(0); }
   to { transform: scale(1); }
 }
-.check-circle svg {
-  width: 60px; height: 60px;
-}
+.check-circle svg { width: 60px; height: 60px; }
 .aprovado-titulo {
   font-size: 28px; font-weight: bold; margin-bottom: 10px;
   text-transform: uppercase; letter-spacing: 1px;
 }
-.aprovado-subtitulo {
-  font-size: 16px; opacity: 0.9; margin-bottom: 40px;
-}
+.aprovado-subtitulo { font-size: 16px; opacity: 0.9; margin-bottom: 40px; }
 .btn-comprovante {
   background: white; color: #4CAF50; border: none;
   padding: 16px 40px; border-radius: 12px; font-size: 16px;
@@ -186,10 +216,7 @@ body {
 .comp-header { text-align: center; margin-bottom: 15px; }
 .comp-header .nome { font-size: 16px; font-weight: bold; }
 .comp-header .endereco { font-size: 11px; color: #666; }
-.comp-divider {
-  border: none; border-top: 1px dashed #999;
-  margin: 10px 0;
-}
+.comp-divider { border: none; border-top: 1px dashed #999; margin: 10px 0; }
 .comp-info { font-size: 12px; color: #555; margin-bottom: 4px; }
 .comp-item {
   display: flex; justify-content: space-between;
@@ -201,10 +228,7 @@ body {
   padding: 4px 0; font-size: 13px;
 }
 .comp-total-row.destaque { font-weight: bold; font-size: 15px; }
-.comp-pagamento {
-  text-align: left; margin-top: 8px;
-  font-weight: bold; font-size: 14px;
-}
+.comp-pagamento { text-align: left; margin-top: 8px; font-weight: bold; font-size: 14px; }
 .comp-footer { text-align: center; margin-top: 15px; font-size: 11px; color: #888; }
 .btn-fechar-comprovante {
   display: block; margin: 20px auto 0; background: #e74c3c; color: white;
@@ -236,124 +260,109 @@ body {
 .option:last-child { border-bottom: none; }
 
 /* Keypad */
-#display { text-align: center; font-size: 34px; margin: 10px 0; }
-#label { text-align: center; margin-bottom: 15px; color: #666; }
+.keypad-header {
+  background: #9E3667; color: white; text-align: center;
+  padding: 24px 15px 18px; border-radius: 14px 14px 0 0;
+  margin: -20px -20px 15px -20px;
+}
+.keypad-header .kp-valor { font-size: 32px; font-weight: bold; }
+.keypad-header .kp-label { font-size: 12px; opacity: 0.85; margin-top: 4px; }
 .keypad {
   display: grid; grid-template-columns: repeat(3, 1fr);
   gap: 12px; justify-items: center; margin-top: 10px;
 }
 .key {
   width: 56px; height: 56px; border-radius: 50%;
-  border: 2px solid #9E3667; background: #f2f2f2;
+  border: 2px solid #9E3667; background: #f9f9f9;
   font-size: 18px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  padding: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.key.key-text {
+  font-size: 11px; font-weight: bold; letter-spacing: 0.5px;
 }
 .actions {
   display: flex; gap: 10px; margin-top: 15px;
 }
 .btn-red, .btn-green {
   flex: 1; padding: 12px; border: none; border-radius: 12px;
-  color: white; font-weight: bold; cursor: pointer;
+  color: white; font-weight: bold; cursor: pointer; font-size: 15px;
 }
 .btn-red { background: #e74c3c; }
 .btn-green { background: #2ecc71; }
 
 /* Modais de Erro e Login */
-#errorModal, #erroInvalidoModal, #loginModal, #erroLoginModal {
+#errorModal, #erroInvalidoModal, #loginModal, #erroLoginModal, #modalParcelas, #erroParcelas {
   position: fixed; inset: 0; background: rgba(0,0,0,0.6);
   display: none; align-items: center; justify-content: center;
   z-index: 2000;
 }
-
-/* Login */
-#loginModal .modal-box {
-  padding: 30px 25px;
-}
-#loginModal p {
-  margin: 15px 0 6px 0;
-  text-align: left;
-  font-weight: bold;
-  color: #333;
-}
+#modalParcelas { z-index: 1500; }
+#erroParcelas { z-index: 2100; }
+#loginModal .modal-box { padding: 30px 25px; }
+#loginModal p { margin: 15px 0 6px 0; text-align: left; font-weight: bold; color: #333; }
 #loginModal input {
-  width: 100%; 
-  padding: 13px; 
-  margin-bottom: 18px;
-  border: 1px solid #ccc; 
-  border-radius: 8px; 
-  font-size: 16px;
+  width: 100%; padding: 13px; margin-bottom: 18px;
+  border: 1px solid #ccc; border-radius: 8px; font-size: 16px;
   box-sizing: border-box;
 }
 #loginModal button {
-  width: 100%; 
-  padding: 14px; 
-  background: #9E3667;
-  color: white; 
-  border: none; 
-  border-radius: 12px;
-  font-size: 16px; 
-  font-weight: bold; 
-  cursor: pointer;
+  width: 100%; padding: 14px; background: #9E3667;
+  color: white; border: none; border-radius: 12px;
+  font-size: 16px; font-weight: bold; cursor: pointer;
   margin-top: 10px;
+}
+
+/* Modal Parcelas */
+#modalParcelas .modal-box { padding: 30px 25px; text-align: center; }
+#modalParcelas .parcelas-title { font-size: 18px; font-weight: bold; margin-bottom: 6px; }
+#modalParcelas .parcelas-subtitle { font-size: 14px; color: #666; margin-bottom: 20px; }
+#modalParcelas .parcelas-input {
+  width: 80px; padding: 14px; font-size: 24px; text-align: center;
+  border: 2px solid #9E3667; border-radius: 10px; margin: 0 auto 20px;
+  display: block; outline: none;
+}
+#modalParcelas .parcelas-info {
+  font-size: 13px; color: #888; margin-bottom: 20px;
+}
+#modalParcelas .parcelas-actions {
+  display: flex; gap: 10px; justify-content: center;
+}
+#modalParcelas .parcelas-actions button {
+  padding: 12px 30px; border: none; border-radius: 12px;
+  font-weight: bold; cursor: pointer; font-size: 15px; color: white;
 }
 
 /* MEDIA QUERIES */
 @media (max-width: 768px) {
-  body {
-    flex-direction: column;
-  }
-  .left {
-    padding-bottom: 20px;
-  }
-  .right {
-    min-width: unset;
-  }
+  body { flex-direction: column; }
+  .left { padding-bottom: 20px; }
+  .right { min-width: unset; }
   .footer {
-    height: auto;
-    min-height: 80px;
-    padding: 10px 15px;
-    flex-wrap: wrap;
-    gap: 10px;
+    height: auto; min-height: 80px; padding: 10px 15px;
+    flex-wrap: wrap; gap: 10px;
   }
-  .footer-left {
-    font-size: 15px;
-  }
-  .valor {
-    font-size: 28px;
-  }
+  .footer-left { font-size: 15px; }
+  .valor { font-size: 28px; }
 }
-
 @media (max-width: 480px) {
-  .footer-left {
-    font-size: 13px;
-  }
-  .finish {
-    padding: 12px 15px;
-    font-size: 14px;
-  }
-  .valor {
-    font-size: 24px;
-  }
-  .key {
-    width: 48px;
-    height: 48px;
-    font-size: 16px;
-  }
-  .aprovado-titulo {
-    font-size: 22px;
-  }
-  .check-circle {
-    width: 90px; height: 90px;
-  }
-  .check-circle svg {
-    width: 45px; height: 45px;
-  }
+  .footer-left { font-size: 13px; }
+  .finish { padding: 12px 15px; font-size: 14px; }
+  .valor { font-size: 24px; }
+  .key { width: 48px; height: 48px; font-size: 16px; }
+  .key.key-text { font-size: 10px; }
+  .aprovado-titulo { font-size: 22px; }
+  .check-circle { width: 90px; height: 90px; }
+  .check-circle svg { width: 45px; height: 45px; }
 }
 </style>
 </head>
 <body>
 
 <div class="left">
-  <!-- Consumidor identificado -->
   <div class="consumer-identified-bar" id="consumerBar" style="display:none;">
     <div class="consumer-avatar">
       <svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
@@ -375,11 +384,7 @@ body {
         <button class="btn-desconto" onclick="abrirTipoDesconto()">APLICAR DESCONTO</button>
       </div>
     </div>
-    <div class="pay-buttons">
-      <button onclick="selectPayment('Dinheiro', this)">Dinheiro</button>
-      <button onclick="selectPayment('Cartao', this)">Cartão</button>
-      <button onclick="selectPayment('PIX', this)">PIX</button>
-    </div>
+    <div id="payGroupsContainer"></div>
   </div>
 </div>
 
@@ -389,7 +394,7 @@ body {
     TOTAL: R$ <span id="total">0</span>
   </div>
   <div class="footer-right" style="display:flex; justify-content:flex-end; align-items:center;">
-    <button class="finish" onclick="finalizar()">Finalizar Venda</button>
+    <button class="finish" id="btnFinalizar" onclick="finalizar()" disabled>Finalizar Venda</button>
   </div>
 </div>
 
@@ -428,8 +433,7 @@ body {
 
 <!-- Comprovante de Venda -->
 <div class="overlay-comprovante" id="comprovanteScreen">
-  <div class="comprovante" id="comprovanteConteudo">
-  </div>
+  <div class="comprovante" id="comprovanteConteudo"></div>
 </div>
 
 <!-- Modal Tipo de Desconto -->
@@ -439,34 +443,92 @@ body {
       <span>Tipo de desconto</span>
       <span class="modal-close" onclick="fecharModal()">✕</span>
     </div>
-    <div class="option" onclick="abrirInput('percent')">(%) Percentual</div>
-    <div class="option" onclick="abrirInput('valor')">(R$) Valor</div>
+    <div class="option" onclick="abrirInputDesconto('percent')">(%) Percentual</div>
+    <div class="option" onclick="abrirInputDesconto('valor')">(R$) Valor</div>
   </div>
 </div>
 
-<!-- Modal Teclado Numérico -->
-<div class="modal" id="modalInput">
+<!-- Modal Teclado Numérico (desconto) -->
+<div class="modal" id="modalInputDesconto">
   <div class="modal-box">
-    <h2 id="display">0</h2>
-    <p id="label"></p>
+    <div class="keypad-header">
+      <div class="kp-valor" id="displayDesconto">R$ 0,00</div>
+      <div class="kp-label" id="labelDesconto">INFORME O VALOR</div>
+    </div>
     <div class="keypad">
-      <button class="key" onclick="dig(1)">1</button>
-      <button class="key" onclick="dig(2)">2</button>
-      <button class="key" onclick="dig(3)">3</button>
-      <button class="key" onclick="dig(4)">4</button>
-      <button class="key" onclick="dig(5)">5</button>
-      <button class="key" onclick="dig(6)">6</button>
-      <button class="key" onclick="dig(7)">7</button>
-      <button class="key" onclick="dig(8)">8</button>
-      <button class="key" onclick="dig(9)">9</button>
-      <button class="key" onclick="clearInput()">C</button>
-      <button class="key" onclick="dig(0)">0</button>
-      <button class="key" onclick="del()">⌫</button>
+      <button class="key" onclick="digDesconto(1)">1</button>
+      <button class="key" onclick="digDesconto(2)">2</button>
+      <button class="key" onclick="digDesconto(3)">3</button>
+      <button class="key" onclick="digDesconto(4)">4</button>
+      <button class="key" onclick="digDesconto(5)">5</button>
+      <button class="key" onclick="digDesconto(6)">6</button>
+      <button class="key" onclick="digDesconto(7)">7</button>
+      <button class="key" onclick="digDesconto(8)">8</button>
+      <button class="key" onclick="digDesconto(9)">9</button>
+      <button class="key key-text" onclick="clearDesconto()">LIMPAR</button>
+      <button class="key" onclick="digDesconto(0)">0</button>
+      <button class="key" onclick="delDesconto()">⌫</button>
     </div>
     <div class="actions">
-      <button class="btn-red" onclick="cancelarInput()">Cancelar</button>
+      <button class="btn-red" onclick="cancelarDesconto()">Cancelar</button>
       <button class="btn-green" onclick="validarEDescontar()">Avançar</button>
     </div>
+  </div>
+</div>
+
+<!-- Modal Teclado Numérico (pagamento) -->
+<div class="modal" id="modalKeypadPay">
+  <div class="modal-box" style="padding:0; overflow:hidden; border-radius:14px;">
+    <div class="keypad-header">
+      <div class="kp-valor" id="displayPay">R$ 0,00</div>
+      <div class="kp-label" id="labelPay">INFORME O VALOR - DINHEIRO</div>
+    </div>
+    <div style="padding: 20px;">
+      <div class="keypad">
+        <button class="key" onclick="digPay(1)">1</button>
+        <button class="key" onclick="digPay(2)">2</button>
+        <button class="key" onclick="digPay(3)">3</button>
+        <button class="key" onclick="digPay(4)">4</button>
+        <button class="key" onclick="digPay(5)">5</button>
+        <button class="key" onclick="digPay(6)">6</button>
+        <button class="key" onclick="digPay(7)">7</button>
+        <button class="key" onclick="digPay(8)">8</button>
+        <button class="key" onclick="digPay(9)">9</button>
+        <button class="key key-text" onclick="clearPay()">LIMPAR</button>
+        <button class="key" onclick="digPay(0)">0</button>
+        <button class="key" onclick="delPay()">⌫</button>
+      </div>
+      <div class="actions">
+        <button class="btn-red" onclick="cancelarPay()">Cancelar</button>
+        <button class="btn-green" onclick="confirmarPay()">Avançar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Parcelas -->
+<div id="modalParcelas">
+  <div class="modal-box">
+    <div class="parcelas-title">Número de Parcelas</div>
+    <div class="parcelas-subtitle" id="parcelasSubtitle">Valor: R$ 0,00</div>
+    <input type="number" class="parcelas-input" id="inputParcelas" min="1" max="12" placeholder="1-12">
+    <div class="parcelas-info" id="parcelasInfo">Informe de 1 a 12 parcelas</div>
+    <div class="parcelas-actions">
+      <button style="background:#e74c3c;" onclick="cancelarParcelas()">Cancelar</button>
+      <button style="background:#2ecc71;" onclick="confirmarParcelas()">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Erro Parcelas -->
+<div id="erroParcelas">
+  <div class="modal-box" style="text-align:center;">
+    <div style="font-size:18px; font-weight:bold; margin-bottom:12px;">EYE WEB</div>
+    <div style="font-size:15px; color:#666; margin-bottom:25px;">Valor inválido para parcelas. Informe entre 1 e 12.</div>
+    <button onclick="fecharErroParcelas()" 
+            style="background:#9E3667; color:white; padding:12px 40px; border:none; border-radius:12px; font-weight:bold;">
+      OK
+    </button>
   </div>
 </div>
 
@@ -530,16 +592,16 @@ body {
 
 <script>
 /* ======================= DADOS ======================= */
-const cart = JSON.parse(localStorage.getItem('cart')) || {};
-const serviceFeeEnabled = JSON.parse(localStorage.getItem('serviceFeeEnabled')) || false;
-const consumidor = JSON.parse(localStorage.getItem('consumidor')) || null;
+var cart = JSON.parse(localStorage.getItem('cart')) || {};
+var serviceFeeEnabled = JSON.parse(localStorage.getItem('serviceFeeEnabled')) || false;
+var consumidor = JSON.parse(localStorage.getItem('consumidor')) || null;
 
-const itemsDiv = document.getElementById('items');
-const subtotalSpan = document.getElementById('subtotal');
-const totalSpan = document.getElementById('total');
-const valorFaltanteSpan = document.getElementById('valorFaltante');
-const cardTotal = document.getElementById('cardTotal');
-const pixTotal = document.getElementById('pixTotal');
+var itemsDiv = document.getElementById('items');
+var subtotalSpan = document.getElementById('subtotal');
+var totalSpan = document.getElementById('total');
+var valorFaltanteSpan = document.getElementById('valorFaltante');
+var cardTotal = document.getElementById('cardTotal');
+var pixTotal = document.getElementById('pixTotal');
 
 /* Mostrar consumidor identificado */
 if (consumidor && consumidor.nome) {
@@ -547,15 +609,15 @@ if (consumidor && consumidor.nome) {
   document.getElementById('consumerBarName').textContent = consumidor.nome;
 }
 
-let somaProdutos = 0;
-let somaDescontosItens = 0;
+var somaProdutos = 0;
+var somaDescontosItens = 0;
 
-Object.keys(cart).forEach(name => {
-  const item = cart[name];
-  const itemTotal = item.qty * item.price;
+Object.keys(cart).forEach(function(name) {
+  var item = cart[name];
+  var itemTotal = item.qty * item.price;
   somaProdutos += itemTotal;
 
-  let descontoItem = 0;
+  var descontoItem = 0;
   if (item.descontoTipo === 'percent') {
     descontoItem = itemTotal * item.desconto / 100;
   } else if (item.descontoTipo === 'valor') {
@@ -563,7 +625,7 @@ Object.keys(cart).forEach(name => {
   }
   somaDescontosItens += descontoItem;
 
-  let descontoLabel = '';
+  var descontoLabel = '';
   if (descontoItem > 0) {
     descontoLabel = '<div style="font-size:12px; color:#e74c3c;">Desconto: -R$ ' + descontoItem.toFixed(2) + '</div>';
   }
@@ -583,108 +645,382 @@ Object.keys(cart).forEach(name => {
 });
 
 /* ======================= DESCONTO DO PAGAMENTO ======================= */
-let desconto = 0;
-let tipo = null;
-let input = "";
-const LIMITE_PERCENTUAL = 10;
+var desconto = 0;
+var tipoDesconto = null;
+var inputDesconto = "";
+var LIMITE_PERCENTUAL = 10;
 
-let descontoPendente = null;
-let tipoPendente = null;
+var descontoPendente = null;
+var tipoPendente = null;
 
-function calcFinal(){
-  let subtotalComDescontos = somaProdutos - somaDescontosItens;
-
-  let descontoPagamento = 0;
-  if (tipo === "percent") descontoPagamento = subtotalComDescontos * desconto / 100;
-  else if (tipo === "valor") descontoPagamento = desconto;
-
-  let liquido = subtotalComDescontos - descontoPagamento;
+function calcFinal() {
+  var subtotalComDescontos = somaProdutos - somaDescontosItens;
+  var descontoPagamento = 0;
+  if (tipoDesconto === "percent") descontoPagamento = subtotalComDescontos * desconto / 100;
+  else if (tipoDesconto === "valor") descontoPagamento = desconto;
+  var liquido = subtotalComDescontos - descontoPagamento;
   if (liquido < 0) liquido = 0;
-
   return serviceFeeEnabled ? liquido * 1.10 : liquido;
 }
 
-function atualizarTotais(){
-  const final = calcFinal();
+/* ======================= PAGAMENTOS MÚLTIPLOS ======================= */
+var pagamentos = []; // { id, metodo, valor, parcelas? }
+var nextPayId = 1;
+var metodoAtual = null;
+var inputPay = "";
+var isFirstDigitPay = false;
+var editandoIndex = -1;
+
+// Valor pendente para crédito parcelado (aguardando parcelas)
+var valorPendenteParcelado = 0;
+
+var metodos = ['Dinheiro', 'Debito', 'Credito', 'CreditoParcelado', 'PIX', 'VAVR'];
+var metodoLabels = {
+  'Dinheiro': 'Dinheiro',
+  'Debito': 'Débito',
+  'Credito': 'Crédito',
+  'CreditoParcelado': 'Crédito Parcelado',
+  'PIX': 'PIX',
+  'VAVR': 'VA/VR'
+};
+var metodoEmojis = {
+  'Dinheiro': '💵',
+  'Debito': '💳',
+  'Credito': '💳',
+  'CreditoParcelado': '💳',
+  'PIX': '📲',
+  'VAVR': '🍽️'
+};
+var metodoKeypadLabels = {
+  'Dinheiro': 'DINHEIRO',
+  'Debito': 'DÉBITO',
+  'Credito': 'CRÉDITO',
+  'CreditoParcelado': 'CRÉDITO PARCELADO',
+  'PIX': 'PIX',
+  'VAVR': 'VA/VR'
+};
+var metodoCardMsg = {
+  'Debito': 'DÉBITO NUBANK',
+  'Credito': 'CRÉDITO NUBANK',
+  'CreditoParcelado': 'CRÉDITO PARCELADO NUBANK',
+  'VAVR': 'VALE ALIMENTAÇÃO - SODEXO'
+};
+
+function valorFaltanteCalc() {
+  var total = calcFinal();
+  var pago = pagamentos.reduce(function(s, p) { return s + p.valor; }, 0);
+  return Math.max(0, parseFloat((total - pago).toFixed(2)));
+}
+
+function atualizarTotais() {
+  var final_ = calcFinal();
   subtotalSpan.innerText = somaProdutos.toFixed(2);
-  totalSpan.innerText = final.toFixed(2);
-  valorFaltanteSpan.innerText = final.toFixed(2);
-  cardTotal.innerText = final.toFixed(2);
-  pixTotal.innerText = final.toFixed(2);
+  totalSpan.innerText = final_.toFixed(2);
+
+  var faltante = valorFaltanteCalc();
+  valorFaltanteSpan.innerText = faltante.toFixed(2);
+  cardTotal.innerText = final_.toFixed(2);
+  pixTotal.innerText = final_.toFixed(2);
+
+  document.getElementById('btnFinalizar').disabled = (faltante > 0.01 || pagamentos.length === 0);
+
+  renderPayGroups();
 }
 
-/* ======================= PAGAMENTO ======================= */
-let paymentMethod = null;
-function selectPayment(method, btn) {
-  paymentMethod = method;
-  document.querySelectorAll('.pay-buttons button').forEach(b => b.classList.remove('selected'));
-  btn.classList.add('selected');
+function renderPayGroups() {
+  var container = document.getElementById('payGroupsContainer');
+  var html = '';
+
+  metodos.forEach(function(metodo) {
+    var items = [];
+    pagamentos.forEach(function(p, i) {
+      if (p.metodo === metodo) items.push({ pay: p, index: i });
+    });
+    var hasItems = items.length > 0;
+    var isDinheiro = metodo === 'Dinheiro';
+
+    html += '<div class="pay-group' + (hasItems ? ' has-items' : '') + '">';
+    html += '<button class="pay-group-btn" onclick="abrirKeypadPagamento(\'' + metodo + '\')">';
+    html += '<span>' + metodoLabels[metodo] + '</span>';
+    html += '<span class="pay-icon">+</span>';
+    html += '</button>';
+
+    if (hasItems) {
+      html += '<div class="pay-group-items">';
+      var subtotal = 0;
+      items.forEach(function(entry) {
+        var p = entry.pay;
+        var i = entry.index;
+        subtotal += p.valor;
+        var extraInfo = '';
+        if (p.parcelas && p.parcelas > 1) {
+          extraInfo = ' <span style="font-size:12px; color:#666;">(' + p.parcelas + 'x de R$ ' + (p.valor / p.parcelas).toFixed(2) + ')</span>';
+        }
+        html += '<div class="pay-sub-item">';
+        html += '<div class="pay-sub-info"><span class="pay-sub-emoji">' + metodoEmojis[metodo] + '</span><span>' + metodoLabels[metodo] + extraInfo + '</span></div>';
+        html += '<div class="pay-sub-actions">';
+        html += '<span class="pay-sub-valor">R$ ' + p.valor.toFixed(2) + '</span>';
+        if (isDinheiro) {
+          html += '<button class="btn-edit-pay" onclick="editarPagamento(' + i + ')" title="Editar">✏️</button>';
+        }
+        html += '<button class="btn-remove-pay" onclick="removerPagamento(' + i + ')" title="Remover">✕</button>';
+        html += '</div>';
+        html += '</div>';
+      });
+      if (items.length > 1) {
+        html += '<div class="pay-group-total"><span>TOTAL:</span><span>R$ ' + subtotal.toFixed(2) + '</span></div>';
+      }
+      html += '</div>';
+    }
+
+    html += '</div>';
+  });
+
+  container.innerHTML = html;
 }
 
-function finalizar() {
-  if (!paymentMethod) return alert("Selecione uma forma de pagamento!");
-  if (paymentMethod === "Cartao") simularCartao();
-  else if (paymentMethod === "PIX") simularPix();
-  else {
-    alert("Pagamento em dinheiro recebido");
+function removerPagamento(index) {
+  pagamentos.splice(index, 1);
+  atualizarTotais();
+}
+
+function editarPagamento(index) {
+  editandoIndex = index;
+  metodoAtual = pagamentos[index].metodo;
+  var valCents = Math.round(pagamentos[index].valor * 100);
+  inputPay = valCents.toString();
+  isFirstDigitPay = true;
+  abrirKeypadModal();
+}
+
+/* ======================= KEYPAD PAGAMENTO ======================= */
+function abrirKeypadPagamento(metodo) {
+  if (metodo === 'Dinheiro') {
+    var temDinheiro = pagamentos.some(function(p) { return p.metodo === 'Dinheiro'; });
+    if (temDinheiro) {
+      alert('Já existe um pagamento em dinheiro. Use o botão ✏️ para editar o valor.');
+      return;
+    }
+  }
+
+  var faltante = valorFaltanteCalc();
+  if (faltante <= 0.01) {
+    alert('Valor total já atingido!');
+    return;
+  }
+
+  editandoIndex = -1;
+  metodoAtual = metodo;
+  var valCents = Math.round(faltante * 100);
+  inputPay = valCents.toString();
+  isFirstDigitPay = true;
+  abrirKeypadModal();
+}
+
+function abrirKeypadModal() {
+  document.getElementById('labelPay').innerText = 'INFORME O VALOR - ' + (metodoKeypadLabels[metodoAtual] || metodoAtual);
+  atualizarDisplayPay();
+  document.getElementById('modalKeypadPay').style.display = 'flex';
+}
+
+function digPay(n) {
+  if (isFirstDigitPay) { inputPay = ""; isFirstDigitPay = false; }
+  inputPay += n;
+  atualizarDisplayPay();
+}
+function delPay() {
+  isFirstDigitPay = false;
+  inputPay = inputPay.slice(0, -1);
+  atualizarDisplayPay();
+}
+function clearPay() {
+  isFirstDigitPay = false;
+  inputPay = "";
+  atualizarDisplayPay();
+}
+
+function atualizarDisplayPay() {
+  var val = (parseFloat(inputPay) || 0) / 100;
+  document.getElementById('displayPay').innerText = 'R$ ' + val.toFixed(2).replace('.', ',');
+}
+
+function cancelarPay() {
+  inputPay = "";
+  editandoIndex = -1;
+  isFirstDigitPay = false;
+  document.getElementById('modalKeypadPay').style.display = 'none';
+}
+
+function confirmarPay() {
+  var valor = (parseFloat(inputPay) || 0) / 100;
+  if (valor <= 0) {
+    alert('Informe um valor válido!');
+    return;
+  }
+
+  var faltante;
+  if (editandoIndex >= 0) {
+    faltante = valorFaltanteCalc() + pagamentos[editandoIndex].valor;
+  } else {
+    faltante = valorFaltanteCalc();
+  }
+
+  if (valor > faltante + 0.01 && metodoAtual !== 'Dinheiro') {
+    alert('Valor excede o faltante de R$ ' + faltante.toFixed(2));
+    return;
+  }
+
+  if (metodoAtual !== 'Dinheiro' && valor > faltante) {
+    valor = faltante;
+  }
+
+  document.getElementById('modalKeypadPay').style.display = 'none';
+  isFirstDigitPay = false;
+
+  if (editandoIndex >= 0) {
+    pagamentos[editandoIndex].valor = valor;
+    editandoIndex = -1;
+    atualizarTotais();
+    checkAutoFinalizar();
+  } else {
+    if (metodoAtual === 'CreditoParcelado') {
+      // Abrir modal de parcelas antes de processar
+      valorPendenteParcelado = valor;
+      abrirModalParcelas(valor);
+    } else if (metodoAtual === 'Debito' || metodoAtual === 'Credito' || metodoAtual === 'VAVR') {
+      simularCartaoParcial(valor, metodoAtual);
+    } else if (metodoAtual === 'PIX') {
+      simularPixParcial(valor);
+    } else {
+      adicionarPagamento(metodoAtual, valor);
+    }
+  }
+}
+
+function adicionarPagamento(metodo, valor, parcelas) {
+  var pay = { id: nextPayId++, metodo: metodo, valor: valor };
+  if (parcelas) pay.parcelas = parcelas;
+  pagamentos.push(pay);
+  atualizarTotais();
+  mostrarTelaAprovado();
+}
+
+function checkAutoFinalizar() {
+  var faltante = valorFaltanteCalc();
+  if (faltante <= 0.01 && pagamentos.length > 0) {
     mostrarTelaAprovado();
   }
 }
 
-function simularCartao() {
-  const screen = document.getElementById('cardScreen');
-  const msg = document.getElementById('cardMessage');
+/* ======================= MODAL PARCELAS ======================= */
+function abrirModalParcelas(valor) {
+  document.getElementById('parcelasSubtitle').textContent = 'Valor: R$ ' + valor.toFixed(2).replace('.', ',');
+  document.getElementById('inputParcelas').value = '';
+  document.getElementById('parcelasInfo').textContent = 'Informe de 1 a 12 parcelas';
+  document.getElementById('modalParcelas').style.display = 'flex';
+  document.getElementById('inputParcelas').focus();
+}
+
+function cancelarParcelas() {
+  document.getElementById('modalParcelas').style.display = 'none';
+  valorPendenteParcelado = 0;
+}
+
+function fecharErroParcelas() {
+  document.getElementById('erroParcelas').style.display = 'none';
+}
+
+function confirmarParcelas() {
+  var parcelas = parseInt(document.getElementById('inputParcelas').value);
+  if (isNaN(parcelas) || parcelas < 1 || parcelas > 12) {
+    document.getElementById('erroParcelas').style.display = 'flex';
+    return;
+  }
+  document.getElementById('modalParcelas').style.display = 'none';
+  var valor = valorPendenteParcelado;
+  valorPendenteParcelado = 0;
+  simularCartaoParcial(valor, 'CreditoParcelado', parcelas);
+}
+
+/* ======================= SIMULAÇÕES PARCIAIS ======================= */
+function simularCartaoParcial(valor, metodo, parcelas) {
+  var screen = document.getElementById('cardScreen');
+  var msg = document.getElementById('cardMessage');
+  cardTotal.innerText = valor.toFixed(2);
   screen.style.display = "flex";
   msg.innerText = "APROXIME, INSIRA OU PASSE O CARTÃO";
-  setTimeout(function(){ msg.innerText = "PROCESSANDO..."; }, 2000);
-  setTimeout(function(){ msg.innerText = "DÉBITO NUBANK"; }, 4000);
-  setTimeout(function(){
+  setTimeout(function() { msg.innerText = "PROCESSANDO..."; }, 2000);
+  setTimeout(function() { msg.innerText = metodoCardMsg[metodo] || metodo; }, 4000);
+  setTimeout(function() {
     screen.style.display = "none";
-    mostrarTelaAprovado();
+    adicionarPagamento(metodo, valor, parcelas || null);
   }, 8000);
 }
 
-function simularPix() {
-  const screen = document.getElementById('pixScreen');
-  const msg = document.getElementById('pixMessage');
+function simularPixParcial(valor) {
+  var screen = document.getElementById('pixScreen');
+  var msg = document.getElementById('pixMessage');
+  pixTotal.innerText = valor.toFixed(2);
   screen.style.display = "flex";
   msg.innerText = "CONSULTANDO STATUS DA TRANSAÇÃO VIA PIX";
-  setTimeout(function(){
+  setTimeout(function() {
     screen.style.display = "none";
-    mostrarTelaAprovado();
+    adicionarPagamento('PIX', valor);
   }, 5000);
+}
+
+/* ======================= FINALIZAR ======================= */
+function finalizar() {
+  if (valorFaltanteCalc() > 0.01) {
+    alert('Valor faltante ainda não foi atingido!');
+    return;
+  }
+  mostrarTelaAprovado();
 }
 
 /* ======================= TELA APROVADO ======================= */
 function mostrarTelaAprovado() {
+  var faltante = valorFaltanteCalc();
+  var btnEl = document.querySelector('#aprovadoScreen .btn-comprovante');
+  var tituloEl = document.querySelector('#aprovadoScreen .aprovado-titulo');
+  var subtituloEl = document.querySelector('#aprovadoScreen .aprovado-subtitulo');
+
+  if (faltante <= 0.01) {
+    tituloEl.textContent = 'Pagamento Efetuado';
+    subtituloEl.textContent = 'Sua transação foi concluída com sucesso!';
+    btnEl.textContent = 'IMPRIMIR COMPROVANTE';
+    btnEl.onclick = function() { abrirComprovante(); };
+  } else {
+    tituloEl.textContent = 'Pagamento Registrado';
+    subtituloEl.textContent = 'Pagamento parcial registrado. Valor restante: R$ ' + faltante.toFixed(2);
+    btnEl.textContent = 'RETORNAR PARA TELA DE PAGAMENTOS';
+    btnEl.onclick = function() { document.getElementById('aprovadoScreen').style.display = 'none'; };
+  }
   document.getElementById('aprovadoScreen').style.display = 'flex';
 }
 
 /* ======================= COMPROVANTE ======================= */
 function abrirComprovante() {
-  const container = document.getElementById('comprovanteConteudo');
-  const agora = new Date();
-  const dataStr = agora.toLocaleDateString('pt-BR') + ' ' + agora.toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit', second:'2-digit'});
+  var container = document.getElementById('comprovanteConteudo');
+  var agora = new Date();
+  var dataStr = agora.toLocaleDateString('pt-BR') + ' ' + agora.toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit', second:'2-digit'});
 
-  const finalTotal = calcFinal();
-  const totalDescontos = somaDescontosItens + (tipo === "percent" ? (somaProdutos - somaDescontosItens) * desconto / 100 : (tipo === "valor" ? desconto : 0));
+  var finalTotal = calcFinal();
+  var totalDescontos = somaDescontosItens + (tipoDesconto === "percent" ? (somaProdutos - somaDescontosItens) * desconto / 100 : (tipoDesconto === "valor" ? desconto : 0));
 
-  let liquidoSemTaxa = somaProdutos - somaDescontosItens;
-  let descontoPagamento = 0;
-  if (tipo === "percent") descontoPagamento = liquidoSemTaxa * desconto / 100;
-  else if (tipo === "valor") descontoPagamento = desconto;
+  var liquidoSemTaxa = somaProdutos - somaDescontosItens;
+  var descontoPagamento = 0;
+  if (tipoDesconto === "percent") descontoPagamento = liquidoSemTaxa * desconto / 100;
+  else if (tipoDesconto === "valor") descontoPagamento = desconto;
   liquidoSemTaxa = Math.max(0, liquidoSemTaxa - descontoPagamento);
-  const valorTaxaServico = serviceFeeEnabled ? liquidoSemTaxa * 0.10 : 0;
+  var valorTaxaServico = serviceFeeEnabled ? liquidoSemTaxa * 0.10 : 0;
 
-  let taxaServicoHTML = '';
+  var taxaServicoHTML = '';
   if (serviceFeeEnabled) {
     taxaServicoHTML = '<div class="comp-total-row"><span>Taxa Serviço (10%) R$ --></span><span>' + valorTaxaServico.toFixed(2) + '</span></div>';
   }
 
-  let metodoLabel = paymentMethod === 'Cartao' ? 'CARTÃO' : paymentMethod === 'PIX' ? 'PIX' : 'DINHEIRO';
-
-  /* Consumidor no comprovante */
-  let consumidorHTML = '<div class="comp-info">1 CONSUMIDOR</div>';
+  var consumidorHTML = '<div class="comp-info">1 CONSUMIDOR</div>';
   if (consumidor && consumidor.nome) {
     consumidorHTML =
       '<div class="comp-info" style="font-weight:bold;">' + consumidor.nome + '</div>' +
@@ -697,12 +1033,22 @@ function abrirComprovante() {
     consumidorHTML += '<div class="comp-info">Obs: ' + consumidor.obs + '</div>';
   }
 
-  let itensHTML = '';
+  var itensHTML = '';
   Object.keys(cart).forEach(function(name) {
-    const item = cart[name];
-    const itemTotal = item.qty * item.price;
+    var item = cart[name];
+    var itemTotal = item.qty * item.price;
     itensHTML += '<div class="comp-item"><span>' + name + '</span><span>R$ ' + itemTotal.toFixed(2) + '</span></div>';
     itensHTML += '<div class="comp-item-detail">' + item.qty.toFixed(3) + ' x R$ ' + item.price.toFixed(3) + ' => R$ ' + itemTotal.toFixed(2) + '</div>';
+  });
+
+  var pagamentosHTML = '';
+  pagamentos.forEach(function(p) {
+    var label = metodoLabels[p.metodo] ? metodoLabels[p.metodo].toUpperCase() : p.metodo;
+    var extra = '';
+    if (p.parcelas && p.parcelas > 1) {
+      extra = ' (' + p.parcelas + 'x R$ ' + (p.valor / p.parcelas).toFixed(2) + ')';
+    }
+    pagamentosHTML += '<div class="comp-pagamento">' + label + extra + '&nbsp;&nbsp;&nbsp;&nbsp;' + p.valor.toFixed(2) + '</div>';
   });
 
   container.innerHTML =
@@ -727,7 +1073,7 @@ function abrirComprovante() {
     taxaServicoHTML +
     '<div class="comp-total-row destaque"><span>Líquido R$ --></span><span>' + finalTotal.toFixed(2) + '</span></div>' +
     '<hr class="comp-divider">' +
-    '<div class="comp-pagamento">' + metodoLabel + '&nbsp;&nbsp;&nbsp;&nbsp;' + finalTotal.toFixed(2) + '</div>' +
+    pagamentosHTML +
     '<div class="comp-footer">*** Obrigado, volte sempre! ***</div>' +
     '<button class="btn-fechar-comprovante" onclick="fecharComprovante()">FECHAR</button>';
 
@@ -740,41 +1086,54 @@ function fecharComprovante() {
   window.location.href = "carrinho.html";
 }
 
-/* ======================= MODAIS ======================= */
-function abrirTipoDesconto(){
-  if (tipo !== null) return;
+/* ======================= MODAIS DESCONTO ======================= */
+function abrirTipoDesconto() {
+  if (tipoDesconto !== null) return;
   document.getElementById('modalTipo').style.display = "flex";
 }
 
-function abrirInput(t){
-  tipo = t;
-  input = "";
+function abrirInputDesconto(t) {
+  tipoDesconto = t;
+  inputDesconto = "";
   document.getElementById('modalTipo').style.display = "none";
-  document.getElementById('modalInput').style.display = "flex";
-  document.getElementById('label').innerText = t==="percent" ? "PERCENTUAL (%)" : "VALOR (R$)";
-  atualizarDisplay();
+  document.getElementById('modalInputDesconto').style.display = "flex";
+  document.getElementById('labelDesconto').innerText = t === "percent" ? "PERCENTUAL (%)" : "VALOR (R$)";
+  atualizarDisplayDesconto();
 }
 
-function fecharModal(){
-  document.querySelectorAll('.modal').forEach(m => m.style.display = "none");
+function fecharModal() {
+  document.querySelectorAll('.modal').forEach(function(m) { m.style.display = "none"; });
 }
 
-function cancelarInput(){
-  tipo = null;
-  input = "";
+function cancelarDesconto() {
+  tipoDesconto = null;
+  inputDesconto = "";
   fecharModal();
 }
 
-/* ======================= VALIDAÇÃO ======================= */
-function validarEDescontar(){
-  const base = somaProdutos - somaDescontosItens;
-  const limiteGlobal = somaProdutos * (LIMITE_PERCENTUAL / 100);
-  const disponivelParaPagamento = Math.max(0, limiteGlobal - somaDescontosItens);
-  let valorDigitado = parseFloat(input) || 0;
+function digDesconto(n) { inputDesconto += n; atualizarDisplayDesconto(); }
+function delDesconto() { inputDesconto = inputDesconto.slice(0, -1); atualizarDisplayDesconto(); }
+function clearDesconto() { inputDesconto = ""; atualizarDisplayDesconto(); }
 
-  let novoDescontoReais = 0;
+function atualizarDisplayDesconto() {
+  if (tipoDesconto === "percent") {
+    document.getElementById('displayDesconto').innerText = (inputDesconto || "0") + "%";
+  } else {
+    var val = (parseFloat(inputDesconto) || 0) / 100;
+    document.getElementById('displayDesconto').innerText = "R$ " + val.toFixed(2).replace('.', ',');
+  }
+}
 
-  if (tipo === "percent") {
+/* ======================= VALIDAÇÃO DESCONTO ======================= */
+function validarEDescontar() {
+  var base = somaProdutos - somaDescontosItens;
+  var limiteGlobal = somaProdutos * (LIMITE_PERCENTUAL / 100);
+  var disponivelParaPagamento = Math.max(0, limiteGlobal - somaDescontosItens);
+  var valorDigitado = parseFloat(inputDesconto) || 0;
+
+  var novoDescontoReais = 0;
+
+  if (tipoDesconto === "percent") {
     if (valorDigitado <= 0 || valorDigitado >= 100) {
       mostrarModalErroInvalido();
       return;
@@ -789,21 +1148,22 @@ function validarEDescontar(){
   }
 
   if (somaDescontosItens + novoDescontoReais > limiteGlobal) {
-    descontoPendente = tipo === "percent" ? valorDigitado : novoDescontoReais;
-    tipoPendente = tipo;
+    descontoPendente = tipoDesconto === "percent" ? valorDigitado : novoDescontoReais;
+    tipoPendente = tipoDesconto;
     mostrarModalLimiteSuperior(
       'Não é possivel adicionar o desconto.<br>O limite total de desconto é de ' + LIMITE_PERCENTUAL + '% (R$ ' + limiteGlobal.toFixed(2) + ').<br>Já utilizado nos itens: R$ ' + somaDescontosItens.toFixed(2) + '.<br>Disponível: R$ ' + disponivelParaPagamento.toFixed(2)
     );
     return;
   }
 
-  if (tipo === "percent") {
+  if (tipoDesconto === "percent") {
     desconto = valorDigitado;
   } else {
     desconto = novoDescontoReais;
   }
 
   fecharModal();
+  pagamentos = [];
   atualizarTotais();
   atualizarBotaoDesconto();
 }
@@ -811,7 +1171,6 @@ function validarEDescontar(){
 function mostrarModalErroInvalido() {
   document.getElementById('erroInvalidoModal').style.display = "flex";
 }
-
 function fecharErroInvalido() {
   document.getElementById('erroInvalidoModal').style.display = "none";
 }
@@ -829,14 +1188,15 @@ function abrirModalLogin() {
 }
 
 function tentarLogin() {
-  const user = document.getElementById('username').value.trim();
-  const pass = document.getElementById('password').value.trim();
+  var user = document.getElementById('username').value.trim();
+  var pass = document.getElementById('password').value.trim();
 
   if (user === "candidato" && pass === "Candidato.22") {
     desconto = descontoPendente;
-    tipo = tipoPendente;
+    tipoDesconto = tipoPendente;
     document.getElementById('loginModal').style.display = "none";
     fecharModal();
+    pagamentos = [];
     atualizarTotais();
     atualizarBotaoDesconto();
     descontoPendente = null;
@@ -861,10 +1221,10 @@ function fecharTodosModais() {
   document.getElementById('erroLoginModal').style.display = "none";
 }
 
-/* ======================= ATUALIZAR BOTÃO ======================= */
+/* ======================= ATUALIZAR BOTÃO DESCONTO ======================= */
 function atualizarBotaoDesconto() {
-  const area = document.getElementById('descontoArea');
-  let texto = tipo === "percent" 
+  var area = document.getElementById('descontoArea');
+  var texto = tipoDesconto === "percent" 
     ? 'APLICADO DESCONTO DE ' + desconto + '%' 
     : 'APLICADO DESCONTO DE R$ ' + desconto.toFixed(2);
 
@@ -873,25 +1233,14 @@ function atualizarBotaoDesconto() {
     '<button class="btn-remove" onclick="removerDesconto()">✕</button>';
 }
 
-function removerDesconto(){
+function removerDesconto() {
   desconto = 0;
-  tipo = null;
-  input = "";
+  tipoDesconto = null;
+  inputDesconto = "";
   document.getElementById('descontoArea').innerHTML =
     '<button class="btn-desconto" onclick="abrirTipoDesconto()">APLICAR DESCONTO</button>';
+  pagamentos = [];
   atualizarTotais();
-}
-
-/* ======================= KEYPAD ======================= */
-function dig(n){ input += n; atualizarDisplay(); }
-function del(){ input = input.slice(0,-1); atualizarDisplay(); }
-function clearInput(){ input = ""; atualizarDisplay(); }
-
-function atualizarDisplay(){
-  document.getElementById('display').innerText =
-    tipo === "percent" 
-      ? (input || "0") + "%" 
-      : "R$ " + ((parseFloat(input)||0)/100).toFixed(2);
 }
 
 /* INIT */
