@@ -41,6 +41,50 @@ body {
   color: white;
   margin: 0;
   font-size: 20px;
+  flex: 1;
+}
+
+/* ÍCONE CONSUMIDOR */
+.consumer-icon {
+  width: 44px;
+  height: 44px;
+  background: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  transition: transform 0.2s;
+  position: relative;
+}
+.consumer-icon:hover {
+  transform: scale(1.08);
+}
+.consumer-icon svg {
+  width: 24px;
+  height: 24px;
+  fill: #9E3667;
+}
+.consumer-icon.identified {
+  outline: 3px solid #4CAF50;
+}
+.consumer-icon.identified::after {
+  content: '✓';
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  background: #4CAF50;
+  color: white;
+  font-size: 10px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
 }
 
 /* ABAS DE GRUPO */
@@ -234,6 +278,15 @@ body {
   bottom: 20px;
   font-weight: bold;
   font-size: 18px;
+}
+
+.consumer-name-footer {
+  position: absolute;
+  left: 15px;
+  bottom: 60px;
+  font-size: 14px;
+  font-weight: bold;
+  color: #9E3667;
 }
 
 /* SETA */
@@ -491,6 +544,8 @@ button {
   text-align: center;
   width: 300px;
   max-width: 90vw;
+  max-height: 90vh;
+  overflow-y: auto;
 }
 
 .modal-header {
@@ -585,6 +640,137 @@ button {
 .btn-yes { background: #4caf50; color: white; }
 .btn-no { background: #e53935; color: white; }
 
+/* ======================= MODAIS CONSUMIDOR ======================= */
+.consumer-modal-header {
+  background: #9E3667;
+  color: white;
+  padding: 16px 20px;
+  border-radius: 12px 12px 0 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: bold;
+  font-size: 16px;
+}
+.consumer-modal-header .back-arrow {
+  cursor: pointer;
+  font-size: 22px;
+}
+
+.consumer-input-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.consumer-input-row input {
+  flex: 1;
+  padding: 12px 14px;
+  border: none;
+  border-bottom: 2px solid #ccc;
+  font-size: 16px;
+  outline: none;
+  background: transparent;
+  border-radius: 0;
+}
+.consumer-input-row input:focus {
+  border-bottom-color: #9E3667;
+}
+.consumer-search-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #00BCD4;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.consumer-search-btn svg {
+  width: 20px;
+  height: 20px;
+  fill: white;
+}
+.consumer-filter-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #eee;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.consumer-filter-btn svg {
+  width: 20px;
+  height: 20px;
+  fill: #666;
+}
+
+.consumer-field {
+  text-align: left;
+  margin-bottom: 14px;
+}
+.consumer-field label {
+  display: block;
+  font-size: 12px;
+  color: #999;
+  margin-bottom: 4px;
+}
+.consumer-field input,
+.consumer-field select {
+  width: 100%;
+  padding: 10px 0;
+  border: none;
+  border-bottom: 1px solid #ddd;
+  font-size: 15px;
+  outline: none;
+  background: transparent;
+  box-sizing: border-box;
+}
+.consumer-field input:focus,
+.consumer-field select:focus {
+  border-bottom-color: #9E3667;
+}
+
+.consumer-bottom-btns {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+.consumer-bottom-btns button {
+  flex: 1;
+  padding: 14px;
+  border: none;
+  border-radius: 25px;
+  font-weight: bold;
+  font-size: 14px;
+  cursor: pointer;
+  text-transform: uppercase;
+}
+.btn-consumer-cancel {
+  background: #2196F3;
+  color: white;
+}
+.btn-consumer-confirm {
+  background: #00BCD4;
+  color: white;
+}
+
+/* Consumidor identificado no carrinho */
+.consumer-name-cart {
+  padding: 8px 15px;
+  font-weight: bold;
+  font-size: 14px;
+  color: #9E3667;
+  border-top: 1px solid #eee;
+}
+
 /* MEDIA QUERIES */
 @media (max-width: 768px) {
   .header h1 {
@@ -651,6 +837,9 @@ button {
   <div class="header-top">
     <div class="menu-btn" onclick="toggleMenu()">☰</div>
     <h1>Venda de Produtos</h1>
+    <div class="consumer-icon" id="consumerIcon" onclick="abrirModalConsumidor()">
+      <svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
+    </div>
   </div>
   <div class="group-tabs">
     <div class="group-tab active" onclick="selectGroup('PROTEINAS')" id="tab-PROTEINAS">PROTEÍNAS</div>
@@ -672,6 +861,8 @@ button {
 
 <div class="cart-overlay" id="cartOverlay">
   <div class="cart" id="cart"></div>
+
+  <div class="consumer-name-cart" id="consumerNameCart" style="display:none;"></div>
 
   <div class="total-cart">
     Total: R$ <span id="totalCart">0</span>
@@ -695,6 +886,7 @@ button {
 </div>
 
 <div class="footer-bar">
+  <div class="consumer-name-footer" id="consumerNameFooter" style="display:none;"></div>
   <div class="total-box">
     Total: R$ <span id="total">0</span>
   </div>
@@ -821,10 +1013,215 @@ button {
   </div>
 </div>
 
+<!-- ======================= MODAIS CONSUMIDOR ======================= -->
+
+<!-- Modal Identificar Consumidor (CPF/CNPJ) -->
+<div class="modal" id="consumerSearchModal">
+  <div class="modal-box" style="padding:0; overflow:hidden; width:340px;">
+    <div class="consumer-modal-header">
+      <span class="back-arrow" onclick="fecharConsumerSearch()">‹</span>
+      <span>IDENTIFICAR VENDA</span>
+    </div>
+    <div style="padding: 20px 25px 25px;">
+      <div class="consumer-input-row">
+        <input type="text" id="consumerCpfInput" placeholder="CPF / CNPJ">
+        <button class="consumer-search-btn" onclick="buscarConsumidor()">
+          <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+        </button>
+      </div>
+
+      <div class="consumer-field">
+        <input type="text" id="consumerMesa" placeholder="Número da mesa">
+      </div>
+      <div class="consumer-field">
+        <input type="text" id="consumerObs" placeholder="Observações">
+      </div>
+
+      <div class="consumer-bottom-btns">
+        <button class="btn-consumer-cancel" onclick="limparConsumerSearch()">LIMPAR</button>
+        <button class="btn-consumer-confirm" onclick="confirmarConsumerSearch()">CONFIRMAR</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Consumidor Não Encontrado -->
+<div class="modal" id="consumerNotFoundModal">
+  <div class="modal-box">
+    <h3 style="margin-bottom:8px;">CONSUMIDOR NÃO ENCONTRADO</h3>
+    <p style="color:#666; margin-bottom:20px;">Deseja cadastrar o consumidor?</p>
+    <div class="modal-buttons">
+      <button class="btn-no" style="padding:12px 30px; border-radius:25px; font-weight:bold;" onclick="fecharConsumerNotFound()">NÃO</button>
+      <button class="btn-yes" style="padding:12px 30px; border-radius:25px; font-weight:bold; background:#00BCD4;" onclick="abrirCadastroConsumidor()">SIM</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Cadastrar Consumidor -->
+<div class="modal" id="consumerRegisterModal">
+  <div class="modal-box" style="padding:0; overflow-x:hidden; overflow-y:auto; width:340px;">
+    <div class="consumer-modal-header">
+      <span class="back-arrow" onclick="fecharCadastroConsumidor()">‹</span>
+      <span>CADASTRAR CONSUMIDOR</span>
+    </div>
+    <div style="padding: 20px 25px 25px;">
+      <div class="consumer-field">
+        <label>CPF / CNPJ</label>
+        <input type="text" id="regCpf" readonly>
+      </div>
+      <div class="consumer-field">
+        <label>Telefone</label>
+        <input type="text" id="regTelefone" placeholder="Telefone">
+      </div>
+      <div class="consumer-field">
+        <label>Nome *</label>
+        <input type="text" id="regNome" placeholder="Nome">
+      </div>
+      <div class="consumer-field">
+        <label>E-mail</label>
+        <input type="email" id="regEmail" placeholder="E-mail">
+      </div>
+      <div class="consumer-field">
+        <label>Nascimento</label>
+        <input type="date" id="regNascimento">
+      </div>
+      <div class="consumer-field">
+        <label>Gênero</label>
+        <select id="regGenero">
+          <option value="">Não especificado</option>
+          <option value="masculino">Masculino</option>
+          <option value="feminino">Feminino</option>
+          <option value="outro">Outro</option>
+        </select>
+      </div>
+
+      <div class="consumer-bottom-btns">
+        <button class="btn-consumer-cancel" onclick="fecharCadastroConsumidor()">Cancelar</button>
+        <button class="btn-consumer-confirm" style="background:#e74c3c;" onclick="confirmarCadastroConsumidor()">Concluir</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
 
 let cart = {};
 let itemToRemove = null;
+
+/* ======================= CONSUMIDOR ======================= */
+let consumidorIdentificado = null; // { nome, cpf, telefone, email, nascimento, genero }
+
+function abrirModalConsumidor() {
+  document.getElementById('consumerCpfInput').value = '';
+  document.getElementById('consumerMesa').value = '';
+  document.getElementById('consumerObs').value = '';
+  document.getElementById('consumerSearchModal').style.display = 'flex';
+}
+
+function fecharConsumerSearch() {
+  document.getElementById('consumerSearchModal').style.display = 'none';
+}
+
+function limparConsumerSearch() {
+  document.getElementById('consumerCpfInput').value = '';
+  document.getElementById('consumerMesa').value = '';
+  document.getElementById('consumerObs').value = '';
+  // Remover consumidor identificado
+  consumidorIdentificado = null;
+  localStorage.removeItem('consumidor');
+  atualizarConsumerUI();
+}
+
+function buscarConsumidor() {
+  const cpf = document.getElementById('consumerCpfInput').value.trim();
+  if (!cpf) return;
+  // Hardcode: sempre não encontrado
+  document.getElementById('consumerNotFoundModal').style.display = 'flex';
+}
+
+function confirmarConsumerSearch() {
+  const mesa = document.getElementById('consumerMesa').value.trim();
+  const obs = document.getElementById('consumerObs').value.trim();
+  if (consumidorIdentificado) {
+    consumidorIdentificado.mesa = mesa;
+    consumidorIdentificado.obs = obs;
+    localStorage.setItem('consumidor', JSON.stringify(consumidorIdentificado));
+  } else if (mesa || obs) {
+    // Save mesa/obs even without identified consumer
+    consumidorIdentificado = { nome: '', cpf: '', mesa: mesa, obs: obs };
+    localStorage.setItem('consumidor', JSON.stringify(consumidorIdentificado));
+  }
+  fecharConsumerSearch();
+}
+
+function fecharConsumerNotFound() {
+  document.getElementById('consumerNotFoundModal').style.display = 'none';
+}
+
+function abrirCadastroConsumidor() {
+  document.getElementById('consumerNotFoundModal').style.display = 'none';
+  const cpf = document.getElementById('consumerCpfInput').value.trim();
+  document.getElementById('regCpf').value = cpf;
+  document.getElementById('regTelefone').value = '';
+  document.getElementById('regNome').value = '';
+  document.getElementById('regEmail').value = '';
+  document.getElementById('regNascimento').value = '';
+  document.getElementById('regGenero').value = '';
+  document.getElementById('consumerRegisterModal').style.display = 'flex';
+}
+
+function fecharCadastroConsumidor() {
+  document.getElementById('consumerRegisterModal').style.display = 'none';
+}
+
+function confirmarCadastroConsumidor() {
+  const nome = document.getElementById('regNome').value.trim();
+  if (!nome) {
+    alert('O campo Nome é obrigatório!');
+    return;
+  }
+  consumidorIdentificado = {
+    nome: nome,
+    cpf: document.getElementById('regCpf').value.trim(),
+    telefone: document.getElementById('regTelefone').value.trim(),
+    email: document.getElementById('regEmail').value.trim(),
+    nascimento: document.getElementById('regNascimento').value,
+    genero: document.getElementById('regGenero').value,
+    mesa: document.getElementById('consumerMesa').value.trim(),
+    obs: document.getElementById('consumerObs').value.trim()
+  };
+  localStorage.setItem('consumidor', JSON.stringify(consumidorIdentificado));
+  document.getElementById('consumerRegisterModal').style.display = 'none';
+  document.getElementById('consumerSearchModal').style.display = 'none';
+  atualizarConsumerUI();
+}
+
+function atualizarConsumerUI() {
+  const icon = document.getElementById('consumerIcon');
+  const nameFooter = document.getElementById('consumerNameFooter');
+  const nameCart = document.getElementById('consumerNameCart');
+
+  if (consumidorIdentificado) {
+    icon.classList.add('identified');
+    nameFooter.textContent = consumidorIdentificado.nome;
+    nameFooter.style.display = 'block';
+    nameCart.textContent = '👤 ' + consumidorIdentificado.nome;
+    nameCart.style.display = 'block';
+  } else {
+    icon.classList.remove('identified');
+    nameFooter.style.display = 'none';
+    nameCart.style.display = 'none';
+  }
+}
+
+// Carregar consumidor do localStorage ao iniciar
+(function() {
+  const saved = localStorage.getItem('consumidor');
+  if (saved) {
+    consumidorIdentificado = JSON.parse(saved);
+    atualizarConsumerUI();
+  }
+})();
 
 /* TAXA */
 let serviceFeeEnabled = false;
@@ -863,36 +1260,34 @@ function logout() {
 // ======================= PRODUTOS POR GRUPO =======================
 const produtosPorGrupo = {
   PROTEINAS: [
-    // ⬇️ COLOQUE A IMAGEM DE CADA PRODUTO NO CAMPO "img" ABAIXO
-    { nome: "Whey Concentrado",    preco: 155, img: "top-whey-protein-concentrado-1kg-growth-supplements-3.jpg" /* ex: "D_NQ_NP_877710-MLA99447989168_112025-O.webp" */ },
-    { nome: "Dose Whey Concentrado", preco: 6,  img: "dose-whey-protein-concentrado-30gr-growth-supplements-6.png" /* ex: "dose-whey.jpg" */ },
-    { nome: "Bebida Láctea",       preco: 9,   img: "bebida-l-ctea-uht-de-prote-nas-growth-supplements.jpg" /* ex: "bebida-lactea.jpg" */ },
-    { nome: "Barra de Proteína",   preco: 40,  img: "barra-de-prote-na-barrinha-de-prote-na-display-c-12-un-growth-supplements-2.jpg" /* ex: "barra-proteina.jpg" */ },
-    { nome: "Whey Isolado",        preco: 310, img: "top-whey-protein-isolado-1kg-growth-supplements-3.jpg" /* ex: "whey-isolado.jpg" */ },
-    { nome: "Medium Whey",         preco: 100, img: "medium-whey-protein-1kg-growth-supplements.jpg" /* ex: "medium-whey.jpg" */ },
-    { nome: "Basic Whey",          preco: 55,  img: "basic-whey-protein-1kg-growth-supplements.jpg" /* ex: "basic-whey.jpg" */ },
+    { nome: "Whey Concentrado",    preco: 155, img: "top-whey-protein-concentrado-1kg-growth-supplements-3.jpg" },
+    { nome: "Dose Whey Concentrado", preco: 6,  img: "dose-whey-protein-concentrado-30gr-growth-supplements-6.png" },
+    { nome: "Bebida Láctea",       preco: 9,   img: "bebida-l-ctea-uht-de-prote-nas-growth-supplements.jpg" },
+    { nome: "Barra de Proteína",   preco: 40,  img: "barra-de-prote-na-barrinha-de-prote-na-display-c-12-un-growth-supplements-2.jpg" },
+    { nome: "Whey Isolado",        preco: 310, img: "top-whey-protein-isolado-1kg-growth-supplements-3.jpg" },
+    { nome: "Medium Whey",         preco: 100, img: "medium-whey-protein-1kg-growth-supplements.jpg" },
+    { nome: "Basic Whey",          preco: 55,  img: "basic-whey-protein-1kg-growth-supplements.jpg" },
   ],
   AMINOACIDOS: [
-    { nome: "Creatina",            preco: 50,  img: "creatina-monohidratada-250g-growth-supplements.jpg" /* ex: "creatina.jpg" */ },
-    { nome: "Creatina Creapure",   preco: 110, img: "creatina-250g-creapure-growth-supplements-1.jpg" /* ex: "creatina-creapure.jpg" */ },
-    { nome: "Glutamina",           preco: 50,  img: "l-glutamina-250g-growth-supplements-1.jpg" /* ex: "glutamina.jpg" */ },
-    { nome: "Beta-Alanina",        preco: 70,  img: "beta-alanina-em-p-growth-supplements.jpg" /* ex: "beta-alanina.jpg" */ },
-    { nome: "BCAA",                preco: 55,  img: "bcaa-10-1-1-200g-em-p-growth-supplements.jpg" /* ex: "bcaa.jpg" */ },
-    { nome: "Arginina",            preco: 30,  img: "arginina-powder-250g-growth-supplements.jpg" /* ex: "arginina.jpg" */ },
-    { nome: "Leucina",             preco: 43,  img: "l-leucine-200gr-growth-supplements-2.jpg" /* ex: "leucina.jpg" */ },
+    { nome: "Creatina",            preco: 50,  img: "creatina-monohidratada-250g-growth-supplements.jpg" },
+    { nome: "Creatina Creapure",   preco: 110, img: "creatina-250g-creapure-growth-supplements-1.jpg" },
+    { nome: "Glutamina",           preco: 50,  img: "l-glutamina-250g-growth-supplements-1.jpg" },
+    { nome: "Beta-Alanina",        preco: 70,  img: "beta-alanina-em-p-growth-supplements.jpg" },
+    { nome: "BCAA",                preco: 55,  img: "bcaa-10-1-1-200g-em-p-growth-supplements.jpg" },
+    { nome: "Arginina",            preco: 30,  img: "arginina-powder-250g-growth-supplements.jpg" },
+    { nome: "Leucina",             preco: 43,  img: "l-leucine-200gr-growth-supplements-2.jpg" },
   ],
   VITAMINAS: [
-    { nome: "Multivitamínico",     preco: 48,  img: "multivitam-nico-120-c-ps-nova-f-rmula-growth-supplements-1.jpg" /* ex: "multivitaminico.jpg" */ },
-    { nome: "Vitamina D",          preco: 32,  img: "vitamina-d-ultra-2000ui-120-caps-growth-supplements-1.jpg" /* ex: "vitamina-d.jpg" */ },
-    { nome: "Vitamina B12",        preco: 22,  img: "vitamina-b12-com-120-c-psulas-growth-supplements.jpg" /* ex: "vitamina-b12.jpg" */ },
-    { nome: "ZMA",                 preco: 25,  img: "zma-120-caps-growth-supplements.jpg" /* ex: "zma.jpg" */ },
-    { nome: "Vitamina C",          preco: 17,  img: "vitamina-c-120-caps-growth-supplements-1.jpg" /* ex: "vitamina-c.jpg" */ },
-    { nome: "Complexo B",          preco: 22,  img: "complexo-b-120-caps-growth-supplements.jpg" /* ex: "complexo-b.jpg" */ },
-    { nome: "Vitamina E",          preco: 14,  img: "vitamina-e-75caps-growth-supplements.jpg" /* ex: "vitamina-e.jpg" */ },
+    { nome: "Multivitamínico",     preco: 48,  img: "multivitam-nico-120-c-ps-nova-f-rmula-growth-supplements-1.jpg" },
+    { nome: "Vitamina D",          preco: 32,  img: "vitamina-d-ultra-2000ui-120-caps-growth-supplements-1.jpg" },
+    { nome: "Vitamina B12",        preco: 22,  img: "vitamina-b12-com-120-c-psulas-growth-supplements.jpg" },
+    { nome: "ZMA",                 preco: 25,  img: "zma-120-caps-growth-supplements.jpg" },
+    { nome: "Vitamina C",          preco: 17,  img: "vitamina-c-120-caps-growth-supplements-1.jpg" },
+    { nome: "Complexo B",          preco: 22,  img: "complexo-b-120-caps-growth-supplements.jpg" },
+    { nome: "Vitamina E",          preco: 14,  img: "vitamina-e-75caps-growth-supplements.jpg" },
   ]
 };
 
-// Gera lista plana para busca no carrinho
 function getAllProducts() {
   let all = [];
   Object.values(produtosPorGrupo).forEach(arr => { all = all.concat(arr); });
@@ -917,25 +1312,23 @@ function renderProducts() {
     const idSafe = p.nome.replace(/\s/g, '-');
     const qty = cart[p.nome] ? cart[p.nome].qty : 0;
     const imgHTML = p.img
-      ? `<img src="${p.img}" class="product-img">`
-      : `<div style="color:#ccc;font-size:40px;">📦</div>`;
+      ? '<img src="' + p.img + '" class="product-img">'
+      : '<div style="color:#ccc;font-size:40px;">📦</div>';
 
-    productsDiv.innerHTML += `
-      <div class="product" onclick="addProduct('${p.nome}')">
-        <div class="product-image-box">
-          ${imgHTML}
-        </div>
-        <div class="product-info">
-          <div class="product-price">R$ ${p.preco}</div>
-          <div class="product-name">${p.nome}</div>
-        </div>
-        <div class="badge" id="badge-${idSafe}" style="${qty > 0 ? 'display:flex' : 'display:none'}">${qty > 0 ? qty : ''}</div>
-      </div>
-    `;
+    productsDiv.innerHTML += 
+      '<div class="product" onclick="addProduct(\'' + p.nome.replace(/'/g, "\\'") + '\')">' +
+        '<div class="product-image-box">' +
+          imgHTML +
+        '</div>' +
+        '<div class="product-info">' +
+          '<div class="product-price">R$ ' + p.preco + '</div>' +
+          '<div class="product-name">' + p.nome + '</div>' +
+        '</div>' +
+        '<div class="badge" id="badge-' + idSafe + '" style="' + (qty > 0 ? 'display:flex' : 'display:none') + '">' + (qty > 0 ? qty : '') + '</div>' +
+      '</div>';
   });
 }
 
-// Render inicial
 renderProducts();
 
 function addProduct(name) {
@@ -955,7 +1348,6 @@ function updateUI() {
   let somaProdutos = 0;
   let somaDescontos = 0;
 
-  // Atualiza badges na tela atual
   renderProducts();
 
   Object.keys(cart).forEach(name => {
@@ -972,40 +1364,37 @@ function updateUI() {
     somaDescontos += descontoValor;
 
     const imgHTML = item.img
-      ? `<img src="${item.img}">`
-      : `<div style="font-size:30px;">📦</div>`;
+      ? '<img src="' + item.img + '">'
+      : '<div style="font-size:30px;">📦</div>';
 
     let descontoHTML = '';
     if (item.descontoTipo) {
-      descontoHTML = `
-        <div class="desconto-aplicado">
-          <button class="btn-remove-desconto" onclick="event.stopPropagation(); removerDescontoItem('${name}')">✕</button>
-          <span>desconto de R$ ${descontoValor.toFixed(2)}</span>
-        </div>
-      `;
+      descontoHTML =
+        '<div class="desconto-aplicado">' +
+          '<button class="btn-remove-desconto" onclick="event.stopPropagation(); removerDescontoItem(\'' + name.replace(/'/g, "\\'") + '\')">✕</button>' +
+          '<span>desconto de R$ ' + descontoValor.toFixed(2) + '</span>' +
+        '</div>';
     } else {
-      descontoHTML = `
-        <button class="btn-desconto-item" onclick="event.stopPropagation(); abrirDescontoItem('${name}')">APLICAR DESCONTO</button>
-      `;
+      descontoHTML =
+        '<button class="btn-desconto-item" onclick="event.stopPropagation(); abrirDescontoItem(\'' + name.replace(/'/g, "\\'") + '\')">APLICAR DESCONTO</button>';
     }
 
-    cartDiv.innerHTML += `
-      <div class="cart-item">
-        <div class="cart-img-box">
-          ${imgHTML}
-        </div>
-        <div class="cart-info">
-          <div class="cart-name">${name} x${item.qty}</div>
-          <div class="cart-price">R$ ${itemTotal}</div>
-        </div>
-        <div class="cart-actions">
-          <button class="delete-btn" onclick="askRemove('${name}')">
-            <img src="lixeira.ico">
-          </button>
-          ${descontoHTML}
-        </div>
-      </div>
-    `;
+    cartDiv.innerHTML +=
+      '<div class="cart-item">' +
+        '<div class="cart-img-box">' +
+          imgHTML +
+        '</div>' +
+        '<div class="cart-info">' +
+          '<div class="cart-name">' + name + ' x' + item.qty + '</div>' +
+          '<div class="cart-price">R$ ' + itemTotal + '</div>' +
+        '</div>' +
+        '<div class="cart-actions">' +
+          '<button class="delete-btn" onclick="askRemove(\'' + name.replace(/'/g, "\\'") + '\')">' +
+            '<img src="lixeira.ico">' +
+          '</button>' +
+          descontoHTML +
+        '</div>' +
+      '</div>';
   });
 
   const subtotalComDesconto = somaProdutos - somaDescontos;
@@ -1117,7 +1506,7 @@ function discValidarEDescontar() {
     discTipoPendente = discTipo;
     const disponivel = Math.max(0, limiteGlobal - descontosExistentes);
     discMostrarLimiteSuperior(
-      `Não é possivel adicionar o desconto.<br>O limite total de desconto é de ${DISC_LIMITE_PERCENTUAL}% (R$ ${limiteGlobal.toFixed(2)}).<br>Disponível: R$ ${disponivel.toFixed(2)}`
+      'Não é possivel adicionar o desconto.<br>O limite total de desconto é de ' + DISC_LIMITE_PERCENTUAL + '% (R$ ' + limiteGlobal.toFixed(2) + ').<br>Disponível: R$ ' + disponivel.toFixed(2)
     );
     return;
   }
