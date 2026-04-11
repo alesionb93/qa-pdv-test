@@ -198,10 +198,10 @@ body {
 /* MENU LATERAL */
 .side-menu {
   position: fixed;
-  top: 110px;
+  top: 0;
   left: -280px;
   width: 270px;
-  height: calc(100vh - 110px);
+  height: 100vh;
   background: var(--surface);
   box-shadow: var(--shadow-xl);
   transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -715,6 +715,8 @@ button {
   overflow-y: auto;
   box-shadow: var(--shadow-xl);
   animation: modalIn 0.25s ease;
+  display: flex;
+  flex-direction: column;
 }
 
 @keyframes modalIn {
@@ -1083,19 +1085,19 @@ button {
   animation: modalIn 0.25s ease;
   display: flex; flex-direction: column;
 }
-.longpress-body { padding: 24px; flex: 1; display: flex; flex-direction: column; }
+.longpress-body { padding: 24px; flex: 1; display: flex; flex-direction: column; overflow-y: auto; min-height: 0; }
 .longpress-obs-textarea {
-  width: 100%; flex: 1; min-height: 250px;
+  width: 100%; flex: 1; min-height: 120px;
   border: 2px solid var(--border); border-radius: var(--radius-md);
   padding: 16px; font-family: 'Inter', sans-serif; font-size: 14px;
   resize: none; outline: none; transition: var(--transition); color: var(--text-primary);
 }
 .longpress-obs-textarea::placeholder { color: var(--text-muted); }
 .longpress-obs-textarea:focus { border-color: var(--primary); }
-.longpress-dots { display: flex; justify-content: center; gap: 8px; margin-top: 20px; }
+.longpress-dots { display: flex; justify-content: center; gap: 8px; margin-top: 12px; }
 .longpress-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--border); transition: var(--transition); }
 .longpress-dot.active { background: var(--info); }
-.longpress-actions { display: flex; gap: 12px; padding: 16px 24px 24px; }
+.longpress-actions { display: flex; gap: 12px; padding: 16px 24px 24px; flex-shrink: 0; }
 .longpress-btn-cancel {
   flex: 1; padding: 14px; border: none; border-radius: 25px;
   background: var(--danger); color: white; font-weight: 700; font-size: 14px;
@@ -1114,14 +1116,14 @@ button {
 .longpress-product-name { font-size: 15px; font-weight: 600; color: var(--text-primary); }
 .longpress-product-price { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
 .longpress-qty-display {
-  text-align: center; font-size: 32px; font-weight: 700; color: var(--text-primary);
-  padding: 10px 0; border-bottom: 2px solid var(--border); margin-bottom: 8px;
+  text-align: center; font-size: 28px; font-weight: 700; color: var(--text-primary);
+  padding: 6px 0; border-bottom: 2px solid var(--border); margin-bottom: 8px;
 }
 .longpress-total { text-align: center; font-size: 14px; color: var(--text-secondary); margin-bottom: 16px; font-weight: 500; }
 .longpress-total span { font-weight: 700; color: var(--text-primary); }
-.longpress-keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; justify-items: center; }
+.longpress-keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; justify-items: center; }
 .longpress-key {
-  width: 64px; height: 64px; border-radius: 50%; border: none;
+  width: 56px; height: 56px; border-radius: 50%; border: none;
   background: var(--surface-tertiary); font-size: 20px; font-weight: 600;
   cursor: pointer; font-family: 'Inter', sans-serif; color: var(--text-primary);
   transition: var(--transition); display: flex; align-items: center; justify-content: center;
@@ -1164,8 +1166,9 @@ button {
   font-weight: 600;
   font-size: 15px;
   letter-spacing: 0.3px;
+  flex-shrink: 0;
 }
-.combo-modal-body { padding: 24px; }
+.combo-modal-body { padding: 24px; flex: 1; overflow-y: auto; min-height: 0; }
 .combo-item-row {
   display: flex;
   align-items: center;
@@ -1189,13 +1192,14 @@ button {
 .combo-modal-footer {
   display: flex; gap: 12px; padding: 16px 24px;
   border-top: 1px solid var(--border);
+  flex-shrink: 0;
 }
 .combo-price-info {
   flex: 1; display: flex; flex-direction: column; justify-content: center;
 }
 .combo-price-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 600; }
 .combo-price-value { font-size: 18px; font-weight: 700; color: var(--primary); }
-.combo-modal-actions { display: flex; gap: 12px; padding: 0 24px 24px; }
+.combo-modal-actions { display: flex; gap: 12px; padding: 0 24px 24px; flex-shrink: 0; }
 .combo-btn-cancel {
   flex: 1; padding: 14px; border: none; border-radius: 25px;
   background: var(--danger); color: white; font-weight: 700; font-size: 14px;
@@ -1260,6 +1264,11 @@ button {
   animation: modalIn 0.25s ease;
   display: flex; flex-direction: column;
 }
+.complement-modal-scrollable {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+}
 .complement-modal-header {
   background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
   color: white;
@@ -1270,6 +1279,7 @@ button {
   font-weight: 600;
   font-size: 15px;
   letter-spacing: 0.3px;
+  flex-shrink: 0;
 }
 .complement-modal-subtitle {
   padding: 12px 24px 0;
@@ -1279,8 +1289,6 @@ button {
 }
 .complement-modal-body {
   padding: 16px 24px;
-  overflow-y: auto;
-  flex: 1;
 }
 .complement-option {
   display: flex;
@@ -1372,6 +1380,7 @@ button {
   display: flex; gap: 12px;
   padding: 16px 24px 24px;
   border-top: 1px solid var(--border);
+  flex-shrink: 0;
 }
 .complement-btn-cancel {
   flex: 1; padding: 14px; border: none; border-radius: 25px;
@@ -2752,13 +2761,15 @@ function getComplementGroups() {
     <div class="complement-modal-header">
       <span id="complementModalTitle">COMPLEMENTOS</span>
     </div>
-    <div class="complement-modal-subtitle" id="complementModalSubtitle">Selecione entre 1 e 1 itens</div>
-    <div class="complement-modal-body" id="complementModalBody"></div>
-    <div class="complement-obs-section">
-      <div class="complement-obs-label">Observações</div>
-      <textarea class="complement-obs-textarea" id="complementObsText" placeholder="Ex: sem açúcar, extra gelado..."></textarea>
+    <div class="complement-modal-scrollable">
+      <div class="complement-modal-subtitle" id="complementModalSubtitle">Selecione entre 1 e 1 itens</div>
+      <div class="complement-modal-body" id="complementModalBody"></div>
+      <div class="complement-obs-section">
+        <div class="complement-obs-label">Observações</div>
+        <textarea class="complement-obs-textarea" id="complementObsText" placeholder="Ex: sem açúcar, extra gelado..."></textarea>
+      </div>
+      <div class="complement-error" id="complementError">⚠ Selecione um complemento para continuar</div>
     </div>
-    <div class="complement-error" id="complementError">⚠ Selecione um complemento para continuar</div>
     <div class="complement-modal-actions">
       <button class="complement-btn-cancel" onclick="fecharComplementModal()">CANCELAR</button>
       <button class="complement-btn-confirm" onclick="confirmarComplementModal()">CONFIRMAR</button>
